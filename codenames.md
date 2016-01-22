@@ -1,10 +1,10 @@
-###Larry - UI
+###Larry - *UI*
 
-###Robert - Engine
+###Robert - *Engine*
 
-###Andy - Image Fetcher
+###Andy - *Image Fetcher*
 
-###Frank - Route Planner
+###Frank - *Route Planner*
 
-###Peter - Image Processor
+###Peter - *Image Processor*
 
