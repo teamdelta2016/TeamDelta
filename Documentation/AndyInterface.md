@@ -12,9 +12,7 @@ with the Image objects compared to arrays of bytes. The function also contains s
 API_KEY for Google Street View, so the entire class implements a separate interface that defines the key, but that interface 
 is never revealed to the public. 
 
-# Helper Classes:
-
-## Params
+## Parameters:
 ```java
 + int width - Value ranging from 0 to 400. Represents the width of the image. 
 + int height - Value ranging from 0 to 640. Represents the height of the image.
@@ -27,6 +25,7 @@ Essentially represents the zoom, with smaller values adding more zoom.
 + int pitch - Value ranging from -90 to 90, indicating the vertical angle of the camera, with 90 being 
 straight upwards and -90 being straight downwards. 
 ```
+# Helper Classes:
 
 ## ImageInputSet
 ```java
