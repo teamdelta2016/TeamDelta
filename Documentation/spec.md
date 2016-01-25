@@ -94,17 +94,17 @@ Several further criteria for success must be applied relating to the management 
 
 ###Technical
 
-We are using GitHub to manage our project repository. It is very well established, with strong community support and clear documentation, and each of us has prior experience using GitHub. Following best practices of software development, we are creating a separate feature branch for each of our modules, corresponding to the UI, the Engine, the Image Fetcher, the Route Planner, and the Image Processor, as well as a Core module for sharing helper classes between modules. Each pull request will be reviewed *by two other team members*, who are responsible for looking through the changes and making comments.
+We are using GitHub to manage our project repository. It is very well established, with strong community support and clear documentation, and each of us has prior experience using GitHub. Following best practices of software development, we are creating a separate feature branch for each of our modules, corresponding to the UI, the Engine, the Image Fetcher, the Route Planner, and the Image Processor, as well as a Core module for sharing helper classes between modules. Each pull request will be reviewed **by two other team members**, who are responsible for looking through the changes and making comments.
 
-Only *after the code has been approved* will it be merged as part of the master branch, thus ensuring that new features can be integrated with the rest of the project while reducing the potential for introducing new bugs.
+Only **after the code has been approved** will it be merged as part of the master branch, thus ensuring that new features can be integrated with the rest of the project while reducing the potential for introducing new bugs.
 
-We will also do extensive testing, creating many unit tests *as code is written* to check that our functions behave as expected given certain inputs. Ideally, we will be testing our functions with typical inputs, extremes, and even null or illegal values. We will also manually test for stress/failure conditions using both Black Box and White Box Testing. *Initially, the team member who wrote a piece of code is also responsible for writing tests for it, although by the end of the project all team members will be testing one another's code.* 
+We will also do extensive testing, creating many unit tests **as code is written** to check that our functions behave as expected given certain inputs. Ideally, we will be testing our functions with typical inputs, extremes, and even null or illegal values. We will also manually test for stress/failure conditions using both Black Box and White Box Testing. **Initially, the team member who wrote a piece of code is also responsible for writing tests for it, although by the end of the project all team members will be testing one another's code.** 
 
-*We aim to test the image-processing components with older drivers to see if they provide a realistic view of the road in their opinion.*
+**We aim to test the image-processing components with older drivers to see if they provide a realistic view of the road in their opinion.**
 
-*The majority of our code will be written in Java, which provides great portability and means that our application can be used on a variety of operating systems. We will use IntelliJ as our Java IDE.*
+**The majority of our code will be written in Java, which provides great portability and means that our application can be used on a variety of operating systems. We will use IntelliJ as our Java IDE.**
 
-To build our project, we will use Gradle, an open source system *specialized for Java* that supports incremental builds, which are important for the development cycle of our application. Gradle also allows us to link our modules together easily.
+To build our project, we will use Gradle, an open source system **specialized for Java** that supports incremental builds, which are important for the development cycle of our application. Gradle also allows us to link our modules together easily.
 
 ###Group Organisation
 
