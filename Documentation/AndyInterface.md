@@ -18,10 +18,10 @@ is never revealed to the public.
 ```java
 + int width - Value ranging from 0 to 400. Represents the width of the image. 
 + int height - Value ranging from 0 to 640. Represents the height of the image.
-+ double latitude - Value representing the degrees in latitude of the image's location.
-+ double longitude - Value representing the degrees in longitude of the image's location.
++ double latitude - Value representing the degrees in latitude of the image location.
++ double longitude - Value representing the degrees in longitude of the image location.
 + int fov - Value ranging from 0 to 120, representing the horizontal field of view of the image. 
-Essentially, this represents the zoom, with smaller values adding more zoom.
+Essentially represents the zoom, with smaller values adding more zoom.
 + int heading - Value ranging from 0 to 360 to represent the compass direction. 0 to 360 represent North,
 90 is East, 180 is South, and 270 is West.
 + int pitch - Value ranging from -90 to 90, indicating the vertical angle of the camera, with 90 being 
