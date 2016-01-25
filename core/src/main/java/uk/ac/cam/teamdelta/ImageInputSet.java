@@ -1,9 +1,9 @@
 package uk.ac.cam.teamdelta;
 import java.awt.Image;
 
-public class ImageSet
+public class ImageInputSet
 {
-	public ImageSet
+	public ImageInputSet
 	(
 		Image frontLeft_,
 		Image frontRight_,
