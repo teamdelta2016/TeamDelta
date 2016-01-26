@@ -102,7 +102,7 @@ We will also do extensive testing, creating many unit tests **as code is written
 
 **We aim to test the image-processing components with older drivers to see if they provide a realistic view of the road in their opinion.**
 
-**The majority of our code will be written in Java, which provides great portability and means that our application can be used on a variety of operating systems. We will use IntelliJ as our Java IDE.**
+**The majority of our code will be written in Java, which provides great portability and means that our application can be used on a variety of operating systems. We will use the Intellij IDEA as our Java IDE.**
 
 To build our project, we will use Gradle, an open source system **specialized for Java** that supports incremental builds, which are important for the development cycle of our application. Gradle also allows us to link our modules together easily.
 
