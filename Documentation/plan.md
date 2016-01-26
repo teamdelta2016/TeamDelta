@@ -1,3 +1,68 @@
+#Core Classes
+These classes are shared between all modules of the project;
+generally, they encapsulate data that need to be transferred
+betwixt modules.
+
+## Location
+Represents a latitude/longitude pair,
+the standard location primitive for the project.
+
+```java
++ Location(float latitude, float longitude)
++ float getLatitude()
++ float getLongitude()
+```
+
+## Direction
+Represents a (planar) direction in polar coordinates.
+Useful for e.g. which way the car is pointing.
+
+```java
++ float getDegrees()
+```
+
+## JunctionInfo
+Represents information about intersections of roads.
+
+```java
++ Location loc
++ Set<Direction> directions
+```
+
+## ImageInputSet
+Contains images that have been retrieved from google,
+but not yet stitched/processed into an `ImageOutputSet`.
+
+```java
++ Image frontLeft
++ Image frontRight
++ Image left
++ Image right
++ Image back
+```
+
+## ImageOutputSet
+Contains images that have been stitched and processed for display.
+Notably contains one fewer image than an `ImageInputSet`,
+as the front two images have been combined.
+
+```java
++ Image front
++ Image left
++ Image right
++ Image back
+```
+
+## Frame
+This represents a single render step for the UI:
+it contains the images to display on the four "windows",
+and information about the junctions (if any) that need to be displayed.
+
+```java
++ ImageOutputSet images
++ JunctionInfo ji
+```
+
 # Interface: PeterInterface
 ## Functions:
 
@@ -21,64 +86,42 @@ class. This function blocks until the result is given.
 ### ImageParams
 Yet to be fully decided, but simple parameters such as blur amount
 
-### ImageOutputSet
-```java
-+ Image frontImage;
-+ Image leftWindow;
-+ Image rightWindow;
-+ Image backWindow
-```
+# Interface: EngineInterface
+This module contains the `Engine` class,
+the object which contains logic for driving the car
+and orchestrating the other modules.
 
-### ImageInputSet
-```java
-+ Image frontImageLeft;
-+ Image frontImageRight;
-+ Image leftWindow;
-+ Image rightWindow;
-+ Image backWindow
-```# Interface: EngineInterface
-## Functions:
+As it is the only object that knows about the state of the system,
+it is also responsible for pre-caching results from nearby points
+in order to improve performance.
 
 ```java
 + EventInterface(String location_query)
 ```
 
-Constructor should query other subsystems to determine initial state,
-then be ready start operation.
+The engine constructor should use this query
+(from the UI: a human-readable description such as "Robinson College, CB3 9AN")
+to compute the initial state (i.e. position and direction)
+and start producing frames for the UI.
 
 ```java
 + Frame nextFrame(UserInput input)
 ```
 
-Update the state of the engine depending on the user input:
-e.g. go forwards a few metres if they pressed forward,
+When the UI calls this function,
+the engine should return a `Frame` for it to render, hopefully pre-cached.
+
+Additionally, the engine should update the state of the engine
+depending on the user input: e.g. go forwards a few metres if they pressed forward,
 or down a junction if they chose a junction.
-Then, return the `Frame` for the new state.
 
 ```java
 + Location getLocation()
 + Direction getDirection()
 ```
+These methods are to allow the UI to display the current position and direction
+for informational purposes.
 
-Retrieve location/direction: possibly useful for UI?
-
-## Helper Classes:
-
-### Frame
-Encapsulates all the information that the UI needs to know in one object.
-
-```java
-+ ImageSet getImages()
-```
-
-Get the images from a frame for display.
-
-```java
-+ int numJunctions()
-```
-
-The number of junctions available at the current state: if 0,
-we can only keep driving and no choice should be presented.
 # Interface: RouteFinderInterface
 ## Functions: 
 ```java
@@ -104,48 +147,3 @@ we can only keep driving and no choice should be presented.
 The route planning module should provide interface for the driving engine that it can use to retrieve positional information required, such as the next position and orientation of the car on the road, based on its current position and orientation. If the next position of the car is a junction, it should also provide the orientation of all the out-coming roads from there, so that it can be passed further to the UI to provide the user with a choice.
 
 We plan to implement the Route Planner using the OpenStreetMap Overpass API. Depending on the latency of the API and data processing of it, it might be necessary to for the route planning module to be a little more complex, e.g. making decisions on which positions to precompute in order to decrease the latency. 
-#Core Classes
-## Location
-Represents a lat/long location.
-
-```java
-+ float getLatitude()
-+ float getLongitude()
-```
-
-## Direction
-Represents the direction the car is facing.
-
-```java
-+ float getDegrees()
-```
-## JunctionInfo
-```java
-+ Location loc
-+ HashSet<Direction> directions
-```
-## ImageInputSet
-Contains all the images for displaying a frame.
-
-```java
-+ Image frontLeft
-+ Image frontRight
-+ Image left
-+ Image right
-+ Image back
-```
-## ImageOutputSet 
-Contains all the processed images. 
-
-```java
-+ Image front
-+ Image left
-+ Image right
-+ Image back
-```
-## Frame
-
-```java
-+ ImageOutputset images
-+ JunctionInfo ji
-```
