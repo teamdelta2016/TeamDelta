@@ -2,3 +2,7 @@ Andy/*.class
 Andy/ImageGrabberOld.java
 Andy/KeyInterface.java
 Andy/*.jpg
+.DS_Store
+.gradle
+build
+
