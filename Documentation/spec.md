@@ -54,6 +54,8 @@ The image processing component should simulate the following age-related vision 
 Because older people can have particular difficulty driving in the dark if their vision has deteriorated, it will be possible to view the simulation in night-mode. The daytime images will be processed to have a twilight appearance and an ambient street-light effect should be added.
 The night-mode will also add car headlights and an appropriate amount of glare to images.
 
+To achieve these effects we are going to use the OpenCV library. This is a native library written in C++ that we will then call using the prebuilt Java bindings. It lets us efficiently access and change the raw pixels of an image as well as apply various hardware accelerated filters.
+
 ##Success Criteria
 
 Ideally, we would successfully implement every item from the requirements. However, despite our best efforts in putting them together, it may be that some features turn out not to be feasible in the time allocated. Therefore, the following functional criteria must necessarily be met for the project to be considered a success:
