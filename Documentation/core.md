@@ -13,10 +13,12 @@ Represents the direction the car is facing.
 ```java
 + float getDegrees()
 ```
-
+## JunctionInfo
+```java
++ Location loc
++ HashSet<Direction> directions
+```
 ## ImageInputSet
-FIXME: why Image*Input*Set?
-
 Contains all the images for displaying a frame.
 
 ```java
@@ -25,4 +27,19 @@ Contains all the images for displaying a frame.
 + Image left
 + Image right
 + Image back
+```
+## ImageOutputSet 
+Contains all the processed images. 
+
+```java
++ Image front
++ Image left
++ Image right
++ Image back
+```
+## Frame
+
+```java
++ ImageOutputset images
++ JunctionInfo ji
 ```
