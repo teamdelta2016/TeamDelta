@@ -16,7 +16,7 @@ The ‘LocationScreen’ has a text input field into which the user types the ad
 
 The ‘ParameterScreen’ has various sliders for adjusting the degree of the different image processing techniques employed. 
 
-There is a singleton ‘LarrySettings’ object, which holds a Location object and an ImageParams object which have their data set as the user clicks through those respective screens. When the ‘RunningScreen’ is reached, the Driving Engine is constructed, and when the user chooses which direction to go in next, the UI calls nextFrame() on the driving engine. This returns the set of new images to be displayed.
+There is a singleton ‘LarrySettings’ object, which holds a `Location` and an `ImageParams` which have their data set as the user clicks through those respective screens. When the ‘RunningScreen’ is reached, the Driving Engine is constructed, and when the user chooses which direction to go in next, the UI calls nextFrame() on the driving engine. This returns the set of new images to be displayed.
 
 
 ##Driving Engine
@@ -60,35 +60,35 @@ We plan to implement the Route Planner using the OpenStreetMap Overpass API. Dep
 -This function takes the `Location` of the car on the road and the clockwise angle from North in degrees to specify which direction it is heading. It returns `JunctionInfo` of the next position that the car will be after the time specified as input if it continues along the road at the speed as specified. It should be possible to call this function without time and speed specified, as the speed might be infered from the type of road and the time might be fixed, once we see how fast is the rest of the API that we rely on.
 
 ##Image Fetcher
-The image fetcher module takes a JunctionInfo object, outputted from the Route Planner, and returns an ImageInputSet object 
+The image fetcher module takes a `JunctionInfo` object, outputted from the Route Planner, and returns an `ImageInputSet` 
 of five BufferedImage objects, corresponding to the right, front right, front left, left, and back windows. We split the image
 for the front window into two images because the maximum width and height are fixed at 400 and 640 pixels respectively, and 
 the front window is naturally wider than the right and left windows. 
 
 The image fetcher grabs images using the Google Street View API with a single function call, based on the input provided
-by the JunctionInfo object. The parameters include the latitude, longitude, width, height, heading, field of view, and pitch.
+by the `JunctionInfo` object. The parameters include the latitude, longitude, width, height, heading, field of view, and pitch.
 
-Essentially, the function will first find the general location of the image based on the direction (which corresponds to the
-heading), latitude, and longitude. Then, the images for the right, left, and back windows can be fetched as simple changes to 
+Essentially, the function will first find the general location of the image based on the `Direction` (which corresponds to the
+heading) and `Location`. Then, the images for the right, left, and back windows can be fetched as simple changes to 
 the heading. The rest of the parameters, if not provided, will have default values. 
 
 Each request to the Google Street View API is accompanied by an API Key, which is kept as a constant in a separate 
 interface and is never committed when making changes on GitHub to ensure that our unique key for accessing the API is secure. 
 
 Because each API request takes some time to complete, having users of our application wait for the next image to be fetched
-would be unfeasible, so the image fetcher puts the fetched images in an ImageInputSet object, allowing us to prefetch and 
+would be unfeasible, so the image fetcher puts the fetched images in an `ImageInputSet`, allowing us to prefetch and 
 cache the images.
 
 
 ##Image Processor
 
-The image processor module is a single class instance that runs a single method for every given ImageInputSet. This method itself calls the OpenCV native method via the OpenCV Java bindings, extracted from the OpenCV build.
+The image processor module is a single class instance that runs a single method for every given `ImageInputSet`. This method itself calls the OpenCV native method via the OpenCV Java bindings, extracted from the OpenCV build.
 
-The instance carries an image parameter object that specifies the parameters of the image processing. This includes the blur radius of the peripheral vision, the extend to which the peripheral is dimmed, the saturation of the output images and the sensitivity to various sources of glare.
+The instance carries an `ImageParams` object that specifies the parameters of the image processing. This includes the blur radius of the peripheral vision, the extend to which the peripheral is dimmed, the saturation of the output images and the sensitivity to various sources of glare.
 
-These parameters are given in the constructor when the ImageProcessor instance is created and cannot be changed throughout the instance's lifetime. It is passed as an ImageParameter object.
+These parameters are given in the constructor when the ImageProcessor instance is created and cannot be changed throughout the instance's lifetime. It is passed as an `ImageParams` object.
 
-The instance then has a 'process' method that accepts an ImageInputSet, performs the neccessary image filters based on the parameters, and gives back an ImageOutputSet. This process method will block for the duration of the processing and give back the results as the return value.
+The instance then has a 'process' method that accepts an `ImageInputSet`, performs the neccessary image filters based on the parameters, and gives back an `ImageOutputSet`. This process method will block for the duration of the processing and give back the results as the return value.
 
 To achieve these effects we are going to use the OpenCV library. This is a native library written in C++ that we will then call using the prebuilt Java bindings. It lets us efficiently access and change the raw pixels of an image as well as apply various hardware accelerated filters.
 
