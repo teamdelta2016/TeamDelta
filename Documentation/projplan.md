@@ -1,6 +1,14 @@
 #Project Plan
 
 ##User Interface
+The user interface module is built upon the JavaFX framework from Oracle. It is the entry point of the program and instantiates all the other modules. 
+There is a StackPane object which holds all the different screens in the UI (eg. Start screen, screen to pick location etc.). For each screen in the UI, loadScreen() gets called at the beginning, such that the layout hierarchies (specified in FXML files) are loaded ahead of the screen being displayed. Also, each loaded screen is added to a HashSet so they can be kept track of.
+The starting screen is displayed with setScreen(),and switching screens is then a case of further calls to setScreen(), which pops a screen off the StackPane, and pushes a new one on.
+Each screen has an associated layout controller which receives events such as button clicks or text input.
+The ‘LocationScreen’ has a text input field into which the user types the address of where they would like to begin driving. When they click the ‘next’ button, the Google Geocoding Java API is queried with a static call to GeocodingApi.geocode(). Using method chaining a preferential region for results is also added (the UK), and the call is set to synchronous so that the process blocks until a result is obtained.
+The ‘ParameterScreen’ has various sliders for adjusting the degree of the different image processing techniques employed. 
+There is a singleton ‘LarrySettings’ object, which holds a Location object and an ImageParams object which have their data set as the user clicks through those respective screens. When the ‘RunningScreen’ is reached, the Driving Engine is constructed, and when the user chooses which direction to go in next, the UI calls nextFrame() on the driving engine. This returns the set of new images to be displayed.
+
 
 ##Driving Engine
 
