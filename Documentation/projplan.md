@@ -100,7 +100,7 @@ To achieve these effects we are going to use the OpenCV library. This is a nativ
 ## Core Classes
 These classes are shared between all modules of the project;
 generally, they encapsulate data that need to be transferred
-betwixt modules.
+between modules.
 
 ### Location
 Represents a latitude/longitude pair,
