@@ -20,13 +20,13 @@ The user interface should display the current location to the user.
 
 At a junction, they should be able to choose which road to take. When appropriate, they will also be able to turn round.
 
-The user will be able to switch between four views; windscreen, and left, right and rear windows.
+The user will be able to view the windscreen view, and left and right, or switch to view the rear window.
 
 Before the user enters the simulation, they should be able to choose their starting location by inputting a postal code, address or coordinates, choose between day and night mode, and vary the severity of assorted age-related vision problems.
 
 The severity of each vision problem should be varied with a slider.
 
-The user interface should be intuitive, and (with the exception of the keystroke to hop through the simulation) should be click based.
+The user interface should be intuitive, and should be click and keyboard-controlled
 
 It will include a short tutorial on first use which can be disabled or replayed by the user.
 
