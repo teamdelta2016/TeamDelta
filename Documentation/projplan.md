@@ -55,7 +55,8 @@ We plan to implement the Route Planner using the OpenStreetMap Overpass API. Dep
 
 ### Functions: 
 ```java
-+JunctionInfo get_next_position(Coordinates current_position, int current_orientation, int speed, int time)
++JunctionInfo get_next_position(Coordinates current_position, 
+int current_orientation, int speed, int time)
 ```
 -This function takes the `Location` of the car on the road and the clockwise angle from North in degrees to specify which direction it is heading. It returns `JunctionInfo` of the next position that the car will be after the time specified as input if it continues along the road at the speed as specified. It should be possible to call this function without time and speed specified, as the speed might be infered from the type of road and the time might be fixed, once we see how fast is the rest of the API that we rely on.
 
