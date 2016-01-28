@@ -47,8 +47,6 @@ Additionally, the engine should update the state of the engine
 depending on the user input: e.g. go forwards a few metres if they pressed forward,
 or down a junction if they chose a junction.
 
-![LarryUML](https://github.com/teamdelta2016/TeamDelta/blob/master/Documentation/LarryUML.png)
-
 ##Route Planner
 
 The route planning module should provide interface for the driving engine that it can use to retrieve positional information required, such as the next `Location` and `Direction` of the car on the road, based on its `Location` and `Direction`. If the next position of the car is a junction, it should also provide the orientation of all the out-coming roads from there, so that it can be passed further to the UI to provide the user with a choice.
@@ -61,7 +59,6 @@ We plan to implement the Route Planner using the OpenStreetMap Overpass API. Dep
 ```
 -This function takes the `Location` of the car on the road and the clockwise angle from North in degrees to specify which direction it is heading. It returns `JunctionInfo` of the next position that the car will be after the time specified as input if it continues along the road at the speed as specified. It should be possible to call this function without time and speed specified, as the speed might be infered from the type of road and the time might be fixed, once we see how fast is the rest of the API that we rely on.
 
-![FrankUML](https://github.com/teamdelta2016/TeamDelta/blob/master/Documentation/FrankUML.png)
 
 ##Image Fetcher
 The image fetcher module takes a `JunctionInfo` object, outputted from the Route Planner, and returns an `ImageInputSet` 
