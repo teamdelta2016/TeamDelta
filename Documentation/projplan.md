@@ -99,6 +99,7 @@ These classes are shared between all modules of the project;
 generally, they encapsulate data that need to be transferred
 between modules.
 
+
 ### Location
 Represents a latitude/longitude pair,
 the standard location primitive for the project.
