@@ -2,4 +2,4 @@
 
 ####This section contains UML diagrams for the UI and the Route Planner
 
-###Route Planner
+###User Interface
