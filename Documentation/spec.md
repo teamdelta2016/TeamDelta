@@ -84,7 +84,7 @@ Additionally:
 
 - The quality of the image processing must provide a reasonably realistic simulation of vision problems faced by elderly people on the road
 
-- The product as whole must provide educational value, helping younger people see the road from the perspective of an older driver and understand why they should be more aware of and sensitive to these road users
+- The product as whole must provide educational value, helping younger people see the road from the perspective of an older driver and understand why they should be more aware of and sensitive towards these road users
 
 - The products should educate without being insensitive towards older people or those with disabilities and recognise that drivers of the same age may have vastly different standards of vision and awareness
 
@@ -126,7 +126,7 @@ Informal face-to-face team meetings will be held at least twice per week in the 
 
 ###End User
 
-The product's user interface is designed to be very intuitive with fairly limited options user input. Consequently, a formal user's manual seems unnecessary. A short in-application tutorial on the first use should suffice; this will involve pop-up explanations of how to use the buttons and settings. 
+The product's user interface is designed to be very intuitive with fairly limited options user for input. Consequently, a formal user's manual seems unnecessary. A short in-application tutorial on the first use should suffice; this will involve pop-up explanations of how to use the buttons and settings. 
 
 ###Technical
 
