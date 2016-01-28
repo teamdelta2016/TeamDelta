@@ -14,6 +14,8 @@ Finally, the brief suggested that the user should be able to drive as someone of
 We will build a desktop application which allows the user to click through images sourced from Google's Street View API, while applying various degrees of image processing to simulate the road through the eyes of an older person. This system will comprise three main components; User Interface, Driving Engine and Image Processing, and the requirements for each are listed below:
 
 ####User Interface
+*This component displays images to the user and requests and processes their responses (e.g. advancing, changing the view or choosing a junction). It will be developed by Alex (approx. 15-20 hours) and Anna (approx. 5-10 hours).*
+
 The user should be able to advance to the next location along the road with a new Street View image by holding the forwards arrow key (a “hop”).
 
 The user interface should display the current location to the user.
@@ -33,6 +35,8 @@ It will include a short tutorial on first use which can be disabled or replayed 
 The user interface should also display facts and statistics relating to elderly drivers, for example while the simulation is loading.
 
 ####Driving Engine
+*This component contains the system logic. It is reponsible for getting and processing route information, fetching images and feeding them to the image processor, and interacting with the user interface. The core engine will be developed by Michael (approx. 15-20 hours), while the route planner will be developed by Basha (approx. 15-20 hours) and the image fetcher by Anthoney (approx. 10-15 hours).*
+
 The system will fetch and cache five images per location (two views from the front and one each from left, right and rear windows) along the expected path – this caching will reduce latency.
 
 It will also analyse the road map to find the orientation of the road as well as anticipate junctions and dead ends.
@@ -44,6 +48,8 @@ An approximate hop length should be inferred from the type of road.
 To create a more realistic experience, and to allow users across the country to try the simulation in their local area, it should be possible to drive on any UK road which has street view images
 
 ####Image Processing
+*This component will transform the raw images to a view of the road through the eyes of an elderly driving by applying appropriate algorithms to simulate vision problems. It will be developed by Sam (approx. 15-20 hours) and Anna (approx. 5-10 hours).*
+
 The image processing component should simulate the following age-related vision problems: 
 - Blurriness
 - Loss of peripheral vision
@@ -96,17 +102,17 @@ Several further criteria for success must be applied relating to the management 
 
 ###Technical
 
-We are using GitHub to manage our project repository. It is very well established, with strong community support and clear documentation, and each of us has prior experience using GitHub. Following best practices of software development, we are creating a separate feature branch for each of our modules, corresponding to the UI, the Engine, the Image Fetcher, the Route Planner, and the Image Processor, as well as a Core module for sharing helper classes between modules. Each pull request will be reviewed **by two other team members**, who are responsible for looking through the changes and making comments.
+We are using GitHub to manage our project repository. It is very well established, with strong community support and clear documentation, and each of us has prior experience using GitHub. Following best practices of software development, we are creating a separate feature branch for each of our modules, corresponding to the UI, the Engine, the Image Fetcher, the Route Planner, and the Image Processor, as well as a Core module for sharing helper classes between modules. Each pull request will be reviewed by two other team members, who are responsible for looking through the changes and making comments.
 
-Only **after the code has been approved** will it be merged as part of the master branch, thus ensuring that new features can be integrated with the rest of the project while reducing the potential for introducing new bugs.
+Only after the code has been approved will it be merged as part of the master branch, thus ensuring that new features can be integrated with the rest of the project while reducing the potential for introducing new bugs.
 
-We will also do extensive testing, creating many unit tests **as code is written** to check that our functions behave as expected given certain inputs. Ideally, we will be testing our functions with typical inputs, extremes, and even null or illegal values. We will also manually test for stress/failure conditions using both Black Box and White Box Testing. **Initially, the team member who wrote a piece of code is also responsible for writing tests for it, although by the end of the project all team members will be testing one another's code.** 
+We will also do extensive testing, creating many unit tests as code is written to check that our functions behave as expected given certain inputs. Ideally, we will be testing our functions with typical inputs, extremes, and even null or illegal values. We will also manually test for stress/failure conditions using both Black Box and White Box Testing. Initially, the team member who wrote a piece of code is also responsible for writing tests for it, although by the end of the project all team members will be testing one another's code.
 
-**We aim to test the image-processing components with older drivers to see if they provide a realistic view of the road in their opinion.**
+We aim to test the image-processing components with older drivers to see if they provide a realistic view of the road in their opinion.
 
-**The majority of our code will be written in Java, which provides great portability and means that our application can be used on a variety of operating systems. We will use the Intellij IDEA as our Java IDE.**
+The majority of our code will be written in Java, which provides great portability and means that our application can be used on a variety of operating systems. We will use the Intellij IDEA as our Java IDE.
 
-To build our project, we will use Gradle, an open source system **specialized for Java** that supports incremental builds, which are important for the development cycle of our application. Gradle also allows us to link our modules together easily.
+To build our project, we will use Gradle, an open source system specialized for Java that supports incremental builds, which are important for the development cycle of our application. Gradle also allows us to link our modules together easily.
 
 ###Group Organisation
 
