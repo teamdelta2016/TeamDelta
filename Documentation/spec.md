@@ -12,7 +12,7 @@ Finally, the brief suggested that the user should be able to drive as someone of
 ##System Components and Requirements
 
 We will build a desktop application which allows the user to click through images sourced from Google's Street View API, while applying various degrees of image processing to simulate the road through the eyes of an older person. This system will comprise three main components; User Interface, Driving Engine and Image Processing:
-***
+
 <sub><sup>1. Albus Dumbledore, <em>Harry Potter and the Order of the Phoenix, J.K. Rowling</em><sup><sub>
 
 ####User Interface
