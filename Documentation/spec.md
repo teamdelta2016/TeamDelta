@@ -13,8 +13,6 @@ Finally, the brief suggested that the user should be able to drive as someone of
 
 We will build a desktop application which allows the user to click through images sourced from Google's Street View API, while applying various degrees of image processing to simulate the road through the eyes of an older person. This system will comprise three main components; User Interface, Driving Engine and Image Processing:
 
-<sub><sup>1. Albus Dumbledore, <em>Harry Potter and the Order of the Phoenix, J.K. Rowling</em><sup><sub>
-
 ####User Interface
 *This component displays images to the user and requests and processes their responses (e.g. advancing, changing the view or choosing a junction). It will be developed by Alex (approx. 15-20 hours) and Anna (approx. 5-10 hours).*
 
@@ -133,4 +131,7 @@ The product's user interface is designed to be very intuitive with fairly limite
 The project will involve multiple people working on distinct modules with interdependencies, so it is vital that all our code is well-documented as well as readable and understandable so that everyone's approach to the implementation is consistent. Each team member will annotate their code with JavaDoc comments, which can then be used to automatically generate documentation for each class. This means we can have rigourous documentation without expending unnecessary effort.  It is especially important that we document the image processing classes well, since these could be extended in the future. 
 
 Team members working with external APIs (for example, Street View or OpenCV) should also document these thoroughly. Proper and consistent documentation should one of the criteria to check against during code reviews; this will make sure the whole team is documenting their code in a consistent way.
+***
+<sub><sup>1. Albus Dumbledore, <em>Harry Potter and the Order of the Phoenix, J.K. Rowling</em><sup><sub>
+
 
