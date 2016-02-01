@@ -2,3 +2,5 @@ Andy/*.class
 Andy/ImageGrabberOld.java
 Andy/KeyInterface.java
 Andy/*.jpg
+core/*.class
+.DS_Store
