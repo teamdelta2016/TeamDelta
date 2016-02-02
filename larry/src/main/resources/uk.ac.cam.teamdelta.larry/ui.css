@@ -1,0 +1,60 @@
+.button:hover {
+    -fx-background-color: #3c7d4a;
+}
+
+.button:pressed {
+    -fx-effect: null;
+}
+
+.button {
+    -fx-font-size: 45px ;
+    -fx-font-family: "Nexa Bold";
+    -fx-text-fill: whitesmoke;
+    -fx-background-color: #4c8858;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px 20px 20px 20px;
+    -fx-effect: dropshadow(gaussian,#444444,8,0,-1,1);
+}
+
+.label {
+    -fx-font-size: 20pt;
+    -fx-font-family: "Nexa Bold";
+    -fx-text-fill: white;
+    -fx-opacity: 0.8;
+}
+.titleLabel {
+    -fx-font-size: 35pt;
+    -fx-font-family: "Nexa Bold";
+    -fx-text-fill: white;
+    -fx-opacity: 0.9;
+    -fx-effect: dropshadow(gaussian,#444444,8,0,-1,1);
+}
+.text-field{
+    -fx-padding: 10px 0 15px 8px;
+    -fx-font-family: "Museo Slab 500";
+    -fx-font-size: 15px;
+    -fx-border-width: 5px;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 2px;
+    -fx-background-color: #4c8858;
+    -fx-text-fill: #cccccc;
+}
+
+.text-field.error {
+    -fx-border-color: #962327;
+}
+
+.HBox {
+    -fx-background-color: #4c8858;
+    -fx-background-insets: 10px;
+    -fx-background-radius: 10px;
+}
+
+.gridPane {
+    -fx-background-color: #4f9476;
+    /*-fx-background-insets: 10px;*/
+}
+
+* {
+    /*-fx-focus-color: transparent;*/
+}
