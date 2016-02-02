@@ -10,6 +10,8 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 
+import uk.ac.cam.teamdelta.*;
+
 public class Test {
 
     static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
@@ -22,156 +24,118 @@ public class Test {
     }
 
     Test(){
-        process();
-    }
+        // process();
+        ImageProc ip = ImageProc.getImageProc(null);
 
-    public void process(){
         try{
-            String dir = "./misc";
 
-            File fL = new File(dir + "/testleft1.jpeg");
+            String dir = "./misc";
+            File fL = new File(dir + "/testleft2.jpeg");
             BufferedImage imgL = ImageIO.read(fL);
 
-            Mat sourceLeft = bufferedImageToMat(imgL);
-
-
-            File fR = new File(dir + "/testright1.jpeg");
+            File fR = new File(dir + "/testright2.jpeg");
             BufferedImage imgR = ImageIO.read(fR);
 
-            Mat sourceRight = bufferedImageToMat(imgR);
+            ImageInputSet set = new ImageInputSet(imgL, imgR, null, null, null);
 
-            long t = System.currentTimeMillis();
+            ImageOutputSet out = ip.process(set);
 
-            Mat joined = Stitcher.stitchImages(sourceLeft, sourceRight);
-
-            long t1 = System.currentTimeMillis();
-
-            System.out.println((t1 - t));
-
-            Mat dest = joined;
-
-            BufferedImage result = matToBufferedImage(dest);
-
-            File outputfile = new File(dir + "/test1joinresult.jpg");
-            ImageIO.write(result, "jpg", outputfile);
-
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-
-
-    public void process1(){
-        try{
-            String dir = "./misc";
-
-            File f = new File(dir + "/streetview1.jpeg");
-            BufferedImage img = ImageIO.read(f);
-
-            Mat source = bufferedImageToMat(img);
-            Size size = source.size();
-
-            System.out.println(size);
-
-            long t = System.currentTimeMillis();
-
-            Mat stretch = stretchImage(source, ghostingValX, ghostingValY);
-
-            Mat ghosted = overlayImage(source, stretch, 0.5);
-
-            long t1 = System.currentTimeMillis();
-            Mat blurred = ghosted.clone();
-            blurImage(blurred, 31);
-
-            Mat centerMask = makeCenterMask(blurred, false);
-            Mat centerMaskInvert = makeCenterMask(blurred, true);
-
-            Mat ghostCenter = new Mat();
-            Core.multiply(ghosted, centerMaskInvert, ghostCenter, 1/255.0);
-
-            Mat blurCenter = new Mat();
-            Core.multiply(blurred, centerMask, blurCenter, 1/255.0);
-
-            Mat r = new Mat();
-            Core.addWeighted(ghostCenter, 1.0, blurCenter, 1.0, 0.0, r);
-
-
-            System.out.println("time: " + (t1 - t));
-
-            Mat dest = r;
-
-            BufferedImage result = matToBufferedImage(dest);
-
-            File outputfile = new File(dir + "/test1result.jpg");
-            ImageIO.write(result, "jpg", outputfile);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public static Mat makeCenterMask(Mat from, boolean invert){
-        Size size = from.size();
-        double maxRadius = Math.sqrt(size.width*size.width/4 + size.height*size.height/4);
-        System.out.println(maxRadius);
-        Mat centerMask = new Mat((int)size.height, (int)size.width, from.type());
-        for(int x = 0; x < size.height; x++){
-            for(int y = 0; y < size.width; y++){
-                double dX = (x - size.height / 2);
-                double dY = (y - size.width / 2);
-                double radius = Math.sqrt(dX*dX + dY*dY);
-                double value = radius / maxRadius;
-                if(invert){
-                    value = 1.0 - value;
-                }
-                double[] pix = centerMask.get(x, y);
-                for(int i=0; i<pix.length; i++){
-                    pix[i] = value * 255.0;
-                }
-                centerMask.put(x, y, pix);
+            try{
+                File outputfile = new File(dir + "/test1joinresult.jpg");
+                ImageIO.write(out.front, "jpg", outputfile);
+            }catch(Exception e){
+                e.printStackTrace();
             }
+        }catch(Exception e){
+            e.printStackTrace();
         }
-        return centerMask;
+
     }
 
-    public static void blurImage(Mat source, int radius){
-        Imgproc.GaussianBlur(source, source, new Size(radius, radius), radius);
-    }
+    // public void process(){
+    //     try{
+    //         String dir = "./misc";
 
-    public static Mat overlayImage(Mat bottom, Mat top, double opacity){
-        Mat img = new Mat();
-        Core.addWeighted(bottom, 1.0 - opacity, top, opacity, 0.0, img);
-        return img;
-    }
+    //         File fL = new File(dir + "/testleft1.jpeg");
+    //         BufferedImage imgL = ImageIO.read(fL);
 
-    public static Mat stretchImage(Mat source, double factorX, double factorY){
-        Mat img = new Mat();
-        Size orig = source.size();
-        Size sz = new Size(orig.width * factorX, orig.height * factorY);
-        Imgproc.resize(source, img, sz);
-        Rect roi = new Rect((int)(orig.width * (factorX-1.0) / 2.0),
-                            (int)(orig.height * (factorY-1.0)/2.0),
-                            (int)orig.width,
-                            (int)orig.height);
+    //         Mat sourceLeft = bufferedImageToMat(imgL);
 
-        return new Mat(img, roi);
-    }
 
-    public static Mat bufferedImageToMat(BufferedImage bi) {
-        Mat mat = new Mat(bi.getHeight(), bi.getWidth(), CvType.CV_8UC3);
-        byte[] data = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
-        mat.put(0, 0, data);
-        return mat;
-    }
+    //         File fR = new File(dir + "/testright1.jpeg");
+    //         BufferedImage imgR = ImageIO.read(fR);
 
-    public static BufferedImage matToBufferedImage(Mat mat) throws IOException{
-        MatOfByte bytemat = new MatOfByte();
-        Highgui.imencode(".jpg", mat, bytemat);
-        byte[] bytes = bytemat.toArray();
-        InputStream in = new ByteArrayInputStream(bytes);
-        BufferedImage img = ImageIO.read(in);
-        return img;
-    }
+    //         Mat sourceRight = bufferedImageToMat(imgR);
+
+    //         long t = System.currentTimeMillis();
+
+    //         Mat joined = Stitcher.stitchImages(sourceLeft, sourceRight);
+
+    //         long t1 = System.currentTimeMillis();
+
+    //         System.out.println((t1 - t));
+
+    //         Mat dest = joined;
+
+    //         BufferedImage result = matToBufferedImage(dest);
+
+    //         File outputfile = new File(dir + "/test1joinresult.jpg");
+    //         ImageIO.write(result, "jpg", outputfile);
+
+    //     }catch(Exception e){
+    //         e.printStackTrace();
+    //     }
+    // }
+
+
+
+    // public void process1(){
+    //     try{
+    //         String dir = "./misc";
+
+    //         File f = new File(dir + "/streetview1.jpeg");
+    //         BufferedImage img = ImageIO.read(f);
+
+    //         Mat source = bufferedImageToMat(img);
+    //         Size size = source.size();
+
+    //         System.out.println(size);
+
+    //         long t = System.currentTimeMillis();
+
+    //         Mat ghosted = Ghoster.ghostImage(source, ghostingValX, ghostingValY, 0.5);
+
+    //         long t1 = System.currentTimeMillis();
+    //         Mat blurred = ghosted.clone();
+    //         blurImage(blurred, 31);
+
+    //         Mat centerMask = makeCenterMask(blurred, false);
+    //         Mat centerMaskInvert = makeCenterMask(blurred, true);
+
+    //         Mat ghostCenter = new Mat();
+    //         Core.multiply(ghosted, centerMaskInvert, ghostCenter, 1/255.0);
+
+    //         Mat blurCenter = new Mat();
+    //         Core.multiply(blurred, centerMask, blurCenter, 1/255.0);
+
+    //         Mat r = new Mat();
+    //         Core.addWeighted(ghostCenter, 1.0, blurCenter, 1.0, 0.0, r);
+
+
+    //         System.out.println("time: " + (t1 - t));
+
+    //         Mat dest = r;
+
+    //         BufferedImage result = matToBufferedImage(dest);
+
+    //         File outputfile = new File(dir + "/test1result.jpg");
+    //         ImageIO.write(result, "jpg", outputfile);
+    //     }catch(Exception e){
+    //         e.printStackTrace();
+    //     }
+    // }
+
+
 
     // public static void main2(String[] args){
     //     System.out.println("Test: " + Constants.appName);
