@@ -42,7 +42,7 @@ public class Test {
 
             long t = System.currentTimeMillis();
 
-            Mat joined = stitchImages(sourceLeft, sourceRight);
+            Mat joined = Stitcher.stitchImages(sourceLeft, sourceRight);
 
             long t1 = System.currentTimeMillis();
 

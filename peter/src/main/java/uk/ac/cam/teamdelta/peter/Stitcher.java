@@ -8,7 +8,7 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 
-protected class Stitcher {
+class Stitcher {
 
     private static final int SEARCH_RAD = 20; /* maximum stitch deviation searched */
     private static final int SEARCH_CHUNK_SIZE = 10; /* Size of y chunk to search */
