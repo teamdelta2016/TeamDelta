@@ -4,6 +4,9 @@ import uk.ac.cam.teamdelta.ImageInputSet;
 import uk.ac.cam.teamdelta.ImageOutputSet;
 import uk.ac.cam.teamdelta.ImageProcParams;
 
+import java.awt.image.BufferedImage;
+import java.awt.Graphics;
+
 class ImageProcImpl extends ImageProc {
 
     ImageProcImpl(ImageProcParams params){
