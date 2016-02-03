@@ -1,0 +1,11 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'eclipse'
+
+version = 1.0
+
+mainClassName = "uk.ac.cam.teamdelta.frank.RoutePlanner"
+
+dependencies {
+    compile project(":core")
+}

@@ -6,3 +6,14 @@ Andy/*.jpg
 .gradle
 build
 
+
+*.project
+*.classpath
+*.settings
+
+andy/.gitignore
+frank/.gitignore
+larry/.gitignore
+peter/.gitignore
+robert/.gitignore
+core/.gitignore
