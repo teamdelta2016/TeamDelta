@@ -1,37 +1,45 @@
-import java.io.OutputStream;
-import java.io.InputStream;
-import java.io.FileOutputStream;
-import java.io.BufferedOutputStream;
-import java.net.URL;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.net.MalformedURLException;
 import javax.imageio.ImageIO;
-import java.io.ByteArrayOutputStream;
+import java.lang.InterruptedException;
+import java.io.IOException;
+import java.io.File;
 
-public class ImageFetcher implements KeyInterface {
-	private void sendGet(int width, int height, double latitude, double longitude, 
-						 int fov, int heading, int pitch) throws Exception {
-		String url = "https://maps.googleapis.com/maps/api/streetview?size=" + width + "x" + 
-					 height + "&location=" + latitude + "," + longitude + "&fov=" + fov + "&heading=" + 
-					 heading + "&pitch=" + pitch + "&key=" + API_KEY;		
-		URL newUrl = new URL(url);
-		InputStream in = null;
-		try {
-			in = newUrl.openStream();
-			byte[] buffer = new byte[1024];
-			int bytesRead;
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			while((bytesRead = in.read(buffer)) > 0) {
-				stream.write(buffer, 0, bytesRead);
-			}
-			BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-			ImageIO.write(result, "jpg", stream);
-		} catch (IOException e) {
-			System.err.println("Failed to fetch image.");
-		} finally {
-			if(in != null) {
-				in.close();
+public class ImageFetcher {
+	public ImageInputSet sendGet(int width, int height, double latitude, double longitude, 
+								 int fov, int pitch) throws MalformedURLException {
+		RunnableFetcher[] results = {new RunnableFetcher(width, height, latitude, longitude, fov, 260, pitch),
+								 	 new RunnableFetcher(width, height, latitude, longitude, fov, 320, pitch),
+									 new RunnableFetcher(width, height, latitude, longitude, fov, 40, pitch),
+									 new RunnableFetcher(width, height, latitude, longitude, fov, 100, pitch),
+									 new RunnableFetcher(width, height, latitude, longitude, fov, 180, pitch)};
+		for(RunnableFetcher result : results) {
+			result.start();
+		}
+
+		for(RunnableFetcher result : results) {
+			try {
+				result.join();
+			} catch (InterruptedException e) {
 			}
 		}
+
+		return new ImageInputSet(results[0].getImage(), results[1].getImage(), results[2].getImage(), 
+							   	 results[3].getImage(), results[4].getImage());
+	}
+
+	public static void main(String[] args) throws IOException {
+		ImageFetcher imageFetch = new ImageFetcher();
+		ImageInputSet result = imageFetch.sendGet(400, 400, 40.720032, -73.988354, 90, 10);
+		File leftFile = new File("left.jpg");
+		File leftFrontFile = new File("leftFront.jpg");
+		File rightFrontFile = new File("rightFront.jpg");
+		File rightFile = new File("right.jpg");
+		File backFile = new File("back.jpg");
+		ImageIO.write(result.getImage("left"), "jpg", leftFile);
+		ImageIO.write(result.getImage("frontLeft"), "jpg", leftFrontFile);
+		ImageIO.write(result.getImage("frontRight"), "jpg", rightFrontFile);
+		ImageIO.write(result.getImage("right"), "jpg", rightFile);
+		ImageIO.write(result.getImage("back"), "jpg", backFile);	
 	}
 }
