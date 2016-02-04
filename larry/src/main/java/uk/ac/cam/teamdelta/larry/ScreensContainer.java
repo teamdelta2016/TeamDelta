@@ -14,9 +14,17 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class ScreensContainer extends StackPane {
 
+    /**
+     * Queue of screen names to specify order of screens to be shown in UI flow
+     * Order actually specified by order in which screens are added in Main
+     */
+    private final Queue<String> screenNames = new LinkedList<>();
     /**
      * Map linking names of screens to nodes representing them
      */
@@ -37,6 +45,13 @@ public class ScreensContainer extends StackPane {
     }
 
     /**
+     * Displays the screen which is at the front of the queue
+     */
+    public void nextScreen(){
+        setScreen(screenNames.poll());
+    }
+
+    /**
      * Loads a screen from its FXML and adds it to the StackPane
      * Also adds the node representing the screen and it's associated controller to {@link ScreensContainer#controllers}
      * @param name     the name of the screen to load
@@ -51,6 +66,7 @@ public class ScreensContainer extends StackPane {
             screenController.setScreenParent(this);
             addScreen(name, loadScreen);
             controllers.put(loadScreen, screenController);
+            screenNames.add(name);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -96,6 +112,7 @@ public class ScreensContainer extends StackPane {
                                 new KeyValue(opacity, 1.0)));
                 fadeIn.play();
             }
+            screenNames.add(name);
             return true;
         } else {
             System.err.println("Screen hasn't been loaded yet");
@@ -123,5 +140,9 @@ public class ScreensContainer extends StackPane {
                 return true;
             }
         }
+    }
+
+    public ScreenController getController(Node n) {
+        return controllers.get(n);
     }
 }

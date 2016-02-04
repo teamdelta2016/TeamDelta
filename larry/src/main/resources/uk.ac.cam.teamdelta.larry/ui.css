@@ -32,12 +32,13 @@
 .text-field{
     -fx-padding: 10px 0 15px 8px;
     -fx-font-family: "Museo Slab 500";
-    -fx-font-size: 15px;
+    -fx-font-size: 25px;
     -fx-border-width: 5px;
     -fx-border-color: #cccccc;
     -fx-border-radius: 2px;
     -fx-background-color: #4c8858;
     -fx-text-fill: #cccccc;
+    -fx-accent: #666666;
 }
 
 .text-field.error {

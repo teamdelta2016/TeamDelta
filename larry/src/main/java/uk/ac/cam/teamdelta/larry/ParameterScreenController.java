@@ -4,6 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 import java.net.URL;
@@ -15,6 +17,9 @@ public class ParameterScreenController implements Initializable, ScreenControlle
 
     @FXML
     Slider slider1, slider2, slider3;
+
+    @FXML
+    ImageView view;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -33,7 +38,7 @@ public class ParameterScreenController implements Initializable, ScreenControlle
         LarrySettings.getInstance().setParameters(slider1.getValue() / 100,
                                                   slider2.getValue() / 100,
                                                   slider3.getValue() / 100);
-        container.setScreen(Main.RUNNING_SCREEN);
+        container.nextScreen();
     }
 
 
@@ -47,6 +52,7 @@ public class ParameterScreenController implements Initializable, ScreenControlle
         slider1.setValue(0.0);
         slider2.setValue(0.0);
         slider3.setValue(0.0);
+        view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1out.jpg"));
     }
 
 }

@@ -35,7 +35,6 @@
         </bottom>
         <center>
             <ImageView fx:id="view" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@images/test1out.jpg"/>
             </ImageView>
         </center>
         <top>

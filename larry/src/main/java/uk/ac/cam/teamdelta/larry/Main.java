@@ -104,9 +104,6 @@ public class Main extends Application {
         // set the size
         mainContainer.setPrefSize(primary.getBounds().getWidth(),primary.getBounds().getHeight());
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(START_SCREEN_FXML));
-        Parent loadScreen = loader.load();
-
         // add screens to container
         mainContainer.loadScreen(Main.START_SCREEN, Main.START_SCREEN_FXML);
         mainContainer.loadScreen(Main.LOCATION_SCREEN, Main.LOCATION_SCREEN_FXML);
@@ -114,7 +111,7 @@ public class Main extends Application {
         mainContainer.loadScreen(Main.RUNNING_SCREEN, Main.RUNNING_SCREEN_FXML);
 
         // set the initial screen
-        mainContainer.setScreen(Main.START_SCREEN);
+        mainContainer.nextScreen();
 
         // set up main stage and display it
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream(
@@ -124,7 +121,7 @@ public class Main extends Application {
         root.getChildren().addAll(mainContainer);
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-        primaryStage.setFullScreen(false);
+        primaryStage.setFullScreen(true);
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setFullScreenExitHint("");
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);

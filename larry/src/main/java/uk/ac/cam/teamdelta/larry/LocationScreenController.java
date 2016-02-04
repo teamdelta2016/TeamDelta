@@ -27,7 +27,7 @@ public class LocationScreenController implements Initializable, ScreenController
     public void setupScreen() {
         // remove red border from textField and clear it if needed
         locationText.getStyleClass().remove("error");
-        locationText.setText("");
+        locationText.requestFocus();
         // also remove the error text
         errorText.setText("");
     }
@@ -60,7 +60,7 @@ public class LocationScreenController implements Initializable, ScreenController
                 //LarrySettings.getInstance().
                 //        setLocation(results[0].geometry.location.lat, results[0].geometry.location.lng);
                 // advance to next screen
-                container.setScreen(Main.PARAMETERS_SCREEN);
+                container.nextScreen();
 
             //} else { // Geocoding failure: need to try again
             //    // Fade error text in - useless but cool
