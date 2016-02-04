@@ -4,3 +4,4 @@ Andy/KeyInterface.java
 Andy/*.jpg
 core/*.class
 .DS_Store
+.gitignore~
