@@ -1,0 +1,10 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+version = 1.0
+
+mainClassName = "uk.ac.cam.teamdelta.peter.Test"
+
+dependencies {
+    compile project(":core")
+}
