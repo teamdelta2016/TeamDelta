@@ -4,11 +4,11 @@ public class ImageProcParams {
 
     private double blurValue;
 
-    public ImageProcParams(double blurValue){
+    public ImageProcParams(double blurValue) {
         this.blurValue = blurValue;
     }
 
-    public double getBlurValue(){
+    public double getBlurValue() {
         return blurValue;
     }
 

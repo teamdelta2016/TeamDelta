@@ -12,21 +12,23 @@ import javax.imageio.*;
 
 public class Test {
 
-    static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
+    static {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    }
 
     double ghostingValX = 1.05;
     double ghostingValY = 1.05;
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         new Test();
     }
 
-    Test(){
+    Test() {
         process();
     }
 
-    public void process(){
-        try{
+    public void process() {
+        try {
             String dir = "./misc";
 
             File fL = new File(dir + "/testleft1.jpeg");
@@ -55,15 +57,15 @@ public class Test {
             File outputfile = new File(dir + "/test1joinresult.jpg");
             ImageIO.write(result, "jpg", outputfile);
 
-        }catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
         }
     }
 
 
 
-    public void process1(){
-        try{
+    public void process1() {
+        try {
             String dir = "./misc";
 
             File f = new File(dir + "/streetview1.jpeg");
@@ -105,27 +107,27 @@ public class Test {
 
             File outputfile = new File(dir + "/test1result.jpg");
             ImageIO.write(result, "jpg", outputfile);
-        }catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static Mat makeCenterMask(Mat from, boolean invert){
+    public static Mat makeCenterMask(Mat from, boolean invert) {
         Size size = from.size();
         double maxRadius = Math.sqrt(size.width*size.width/4 + size.height*size.height/4);
         System.out.println(maxRadius);
         Mat centerMask = new Mat((int)size.height, (int)size.width, from.type());
-        for(int x = 0; x < size.height; x++){
-            for(int y = 0; y < size.width; y++){
+        for(int x = 0; x < size.height; x++) {
+            for(int y = 0; y < size.width; y++) {
                 double dX = (x - size.height / 2);
                 double dY = (y - size.width / 2);
                 double radius = Math.sqrt(dX*dX + dY*dY);
                 double value = radius / maxRadius;
-                if(invert){
+                if(invert) {
                     value = 1.0 - value;
                 }
                 double[] pix = centerMask.get(x, y);
-                for(int i=0; i<pix.length; i++){
+                for(int i=0; i<pix.length; i++) {
                     pix[i] = value * 255.0;
                 }
                 centerMask.put(x, y, pix);
@@ -134,17 +136,17 @@ public class Test {
         return centerMask;
     }
 
-    public static void blurImage(Mat source, int radius){
+    public static void blurImage(Mat source, int radius) {
         Imgproc.GaussianBlur(source, source, new Size(radius, radius), radius);
     }
 
-    public static Mat overlayImage(Mat bottom, Mat top, double opacity){
+    public static Mat overlayImage(Mat bottom, Mat top, double opacity) {
         Mat img = new Mat();
         Core.addWeighted(bottom, 1.0 - opacity, top, opacity, 0.0, img);
         return img;
     }
 
-    public static Mat stretchImage(Mat source, double factorX, double factorY){
+    public static Mat stretchImage(Mat source, double factorX, double factorY) {
         Mat img = new Mat();
         Size orig = source.size();
         Size sz = new Size(orig.width * factorX, orig.height * factorY);
@@ -164,7 +166,7 @@ public class Test {
         return mat;
     }
 
-    public static BufferedImage matToBufferedImage(Mat mat) throws IOException{
+    public static BufferedImage matToBufferedImage(Mat mat) throws IOException {
         MatOfByte bytemat = new MatOfByte();
         Highgui.imencode(".jpg", mat, bytemat);
         byte[] bytes = bytemat.toArray();

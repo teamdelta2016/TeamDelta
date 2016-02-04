@@ -8,7 +8,7 @@ public abstract class ImageProc {
 
     private final ImageProcParams params;
 
-    protected ImageProc(ImageProcParams params){
+    protected ImageProc(ImageProcParams params) {
         this.params = params;
     }
 
@@ -21,7 +21,7 @@ public abstract class ImageProc {
      *
      * @return A new instance of an image processor.
      */
-    public static ImageProc getImageProc(ImageProcParams params){
+    public static ImageProc getImageProc(ImageProcParams params) {
         return new ImageProcImpl(params);
     }
 

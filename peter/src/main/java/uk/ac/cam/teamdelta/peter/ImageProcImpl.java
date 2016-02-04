@@ -9,19 +9,19 @@ import java.awt.Graphics;
 
 class ImageProcImpl extends ImageProc {
 
-    ImageProcImpl(ImageProcParams params){
+    ImageProcImpl(ImageProcParams params) {
         super(params);
     }
 
     @Override
-    public ImageOutputSet process(ImageInputSet input){
+    public ImageOutputSet process(ImageInputSet input) {
         return new ImageOutputSet(copyImage(input.frontLeft),
                                   copyImage(input.left),
                                   copyImage(input.right),
                                   copyImage(input.back));
     }
 
-    private static BufferedImage copyImage(BufferedImage source){
+    private static BufferedImage copyImage(BufferedImage source) {
         BufferedImage b = new BufferedImage(source.getWidth(), source.getHeight(), source.getType());
         Graphics g = b.getGraphics();
         g.drawImage(source, 0, 0, null);

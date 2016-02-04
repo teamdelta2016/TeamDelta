@@ -9,9 +9,9 @@ public class RoutePlanner implements RouteFinder {
         JunctionInfo info = new JunctionInfo(new Location((float)0.0,(float)0.0), new TreeSet<Direction>());
         return info;
     }
-    
-	public static void main(String[] args) {
 
-	}
+    public static void main(String[] args) {
+
+    }
 
 }
