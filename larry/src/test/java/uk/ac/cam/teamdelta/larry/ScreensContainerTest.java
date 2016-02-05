@@ -1,8 +1,6 @@
 package uk.ac.cam.teamdelta.larry;
 
-import javafx.application.Application;
 import javafx.embed.swing.JFXPanel;
-import javafx.scene.Node;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +8,7 @@ import org.junit.Test;
 import javax.swing.*;
 import java.util.concurrent.CountDownLatch;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Alex on 03/02/2016.
@@ -34,7 +32,6 @@ public class ScreensContainerTest {
         mainContainer.loadScreen(Main.LOCATION_SCREEN, Main.LOCATION_SCREEN_FXML);
         mainContainer.loadScreen(Main.PARAMETERS_SCREEN, Main.PARAMETERS_SCREEN_FXML);
         mainContainer.loadScreen(Main.RUNNING_SCREEN, Main.RUNNING_SCREEN_FXML);
-        mainContainer.nextScreen();
     }
 
     @After
@@ -56,5 +53,15 @@ public class ScreensContainerTest {
         ScreenController s = mainContainer.getController(mainContainer.getChildren().get(0));
         assertEquals(s.getClass().getSimpleName(),"LocationScreenController");
 
+    }
+
+    @Test
+    public void testPrevScreen() throws Exception {
+        assertEquals(mainContainer.getController(mainContainer.getChildren().get(0)).getClass().getSimpleName(),
+                "StartScreenController");
+        mainContainer.prevScreen();
+        Thread.sleep(2000);
+        ScreenController s = mainContainer.getController(mainContainer.getChildren().get(0));
+        assertEquals(s.getClass().getSimpleName(),"RunningScreenController");
     }
 }

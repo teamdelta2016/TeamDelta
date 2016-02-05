@@ -6,6 +6,7 @@ import uk.ac.cam.teamdelta.Location;
 public class LarrySettings {
 
     private final Location l;
+    private String stringLocation;
     private final ImageParams i;
     private int primaryScreenIndex;
     private static LarrySettings larrySettings;
@@ -47,7 +48,13 @@ public class LarrySettings {
         i.setParams(a, b, c);
     }
 
+    public void setStringLocation(String s){
+        stringLocation = s;
+    }
 
+    public String getStringLocation(){
+        return stringLocation;
+    }
 
 
 }

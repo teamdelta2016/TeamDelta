@@ -13,18 +13,17 @@ import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 public class ScreensContainer extends StackPane {
 
     /**
-     * Queue of screen names to specify order of screens to be shown in UI flow
-     * Order actually specified by order in which screens are added in Main
+     * Queue of screen names to specify order of screens to be shown in UI flow Order actually specified by order in
+     * which screens are added in Main
      */
-    private final Queue<String> screenNames = new LinkedList<>();
+    private final Deque<String> screenNames = new LinkedList<>();
     /**
      * Map linking names of screens to nodes representing them
      */
@@ -37,7 +36,8 @@ public class ScreensContainer extends StackPane {
 
     /**
      * Adds a screen to {@link ScreensContainer#screens}
-     * @param name The descriptive name of the screen to add
+     *
+     * @param name   The descriptive name of the screen to add
      * @param screen The Node representing the screen to add
      */
     private void addScreen(String name, Node screen) {
@@ -47,13 +47,22 @@ public class ScreensContainer extends StackPane {
     /**
      * Displays the screen which is at the front of the queue
      */
-    public void nextScreen(){
-        setScreen(screenNames.poll());
+    public void nextScreen() {
+        screenNames.addLast(screenNames.pollFirst());
+        String name = screenNames.peekFirst();
+        setScreen(name);
+    }
+
+    public void prevScreen() {
+        String name = screenNames.pollLast();
+        screenNames.addFirst(name);
+        setScreen(name);
     }
 
     /**
-     * Loads a screen from its FXML and adds it to the StackPane
-     * Also adds the node representing the screen and it's associated controller to {@link ScreensContainer#controllers}
+     * Loads a screen from its FXML and adds it to the StackPane Also adds the node representing the screen and it's
+     * associated controller to {@link ScreensContainer#controllers}
+     *
      * @param name     the name of the screen to load
      * @param resource the location of the FXML file
      * @return true if no exception is thrown, false otherwise
@@ -66,7 +75,10 @@ public class ScreensContainer extends StackPane {
             screenController.setScreenParent(this);
             addScreen(name, loadScreen);
             controllers.put(loadScreen, screenController);
-            screenNames.add(name);
+            screenNames.addLast(name);
+            if(controllers.size()==1){
+                setScreen(name);
+            }
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,6 +88,7 @@ public class ScreensContainer extends StackPane {
 
     /**
      * Sets the specified screen as the one to display to the user
+     *
      * @param name The descriptive name of the screen to display
      * @return true if succeeds, false if screen hasn't been loaded yet
      */
@@ -83,7 +96,6 @@ public class ScreensContainer extends StackPane {
         final Node namedScreen = screens.get(name);
         if (namedScreen != null) {
             final DoubleProperty opacity = opacityProperty();
-
             if (!getChildren().isEmpty()) {
                 Timeline fade = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(opacity, 1.0)),
                         new KeyFrame(new Duration(500),
@@ -112,7 +124,6 @@ public class ScreensContainer extends StackPane {
                                 new KeyValue(opacity, 1.0)));
                 fadeIn.play();
             }
-            screenNames.add(name);
             return true;
         } else {
             System.err.println("Screen hasn't been loaded yet");
@@ -121,9 +132,9 @@ public class ScreensContainer extends StackPane {
     }
 
     /**
-     * Removes the screen from the StackPane, so that it can't be displayed until loaded again.
-     * Removes the specified screen from {@link ScreensContainer#screens},
-     * and it's associated node from {@link ScreensContainer#controllers}
+     * Removes the screen from the StackPane, so that it can't be displayed until loaded again. Removes the specified
+     * screen from {@link ScreensContainer#screens}, and it's associated node from {@link ScreensContainer#controllers}
+     *
      * @param name The name of the screen to unload
      * @return true if succeeds, false if the screen didn't exist
      */

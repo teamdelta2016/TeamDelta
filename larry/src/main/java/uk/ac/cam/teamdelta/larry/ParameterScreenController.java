@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import uk.ac.cam.teamdelta.ImageParams;
 
 import java.io.IOException;
 import java.net.URL;
@@ -41,6 +42,12 @@ public class ParameterScreenController implements Initializable, ScreenControlle
         container.nextScreen();
     }
 
+    @FXML
+    private void handleBackAction(ActionEvent event) throws IOException {
+        container.prevScreen();
+        container.prevScreen();
+    }
+
 
     @Override
     public void setScreenParent(ScreensContainer screenParent) {
@@ -49,9 +56,12 @@ public class ParameterScreenController implements Initializable, ScreenControlle
 
     @Override
     public void setupScreen() {
-        slider1.setValue(0.0);
-        slider2.setValue(0.0);
-        slider3.setValue(0.0);
+        ImageParams p = LarrySettings.getInstance().getParameters();
+        slider1.setValue(p.getA());
+        slider2.setValue(p.getB());
+        slider3.setValue(p.getC());
+
+
         view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1out.jpg"));
     }
 

@@ -15,5 +15,14 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="core" />
+    <orderEntry type="module-library">
+      <library name="Gradle: opencv-2412">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/opencv-2412.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

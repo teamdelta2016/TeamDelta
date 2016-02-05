@@ -39,7 +39,7 @@ public class RunningScreenController implements ScreenController {
     @Override
     public void setupScreen() {
         // For testing, set the image to a default one
-        view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/car.png"));
+        view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1joinresult.jpg"));
 
         engine = new Engine(LarrySettings.getInstance().getLocation());
         // show some data that was passed through the UI chain
@@ -103,8 +103,8 @@ public class RunningScreenController implements ScreenController {
     private void goToNextFrame() {
         Frame f = engine.nextFrame(LarrySettings.getInstance().getLocation());
         // set images in various places from frame
-        view.setImage(new Image(String.valueOf(getClass().getResource("/uk.ac.cam.teamdelta" +
-                ".larry/images/test1joinresult.jpg"))));
+        view.setImage(new Image(String.valueOf(getClass()
+                .getResource("/uk.ac.cam.teamdelta.larry/images/car.png"))));
     }
 
 

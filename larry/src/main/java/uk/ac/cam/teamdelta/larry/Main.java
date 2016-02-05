@@ -1,9 +1,7 @@
 package uk.ac.cam.teamdelta.larry;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
@@ -34,6 +32,16 @@ public class Main extends Application {
     public static final String LOCATION_SCREEN_FXML = "/uk.ac.cam.teamdelta.larry/location.fxml";
 
     /**
+     * Constant for the name of the location confirm screen
+     */
+    public static final String LOCATION_CONFIRM_SCREEN = "locationConfirm";
+
+    /**
+     * Constant for the path of the location confirm screen FXML file
+     */
+    public static final String LOCATION_CONFIRM_SCREEN_FXML = "/uk.ac.cam.teamdelta.larry/locationConfirm.fxml";
+
+    /**
      * Constant for the name of the parameter choosing screen
      */
     public static final String PARAMETERS_SCREEN = "parameters";
@@ -42,6 +50,16 @@ public class Main extends Application {
      * Constant for the path of the parameter choosing screen FXML file
      */
     public static final String PARAMETERS_SCREEN_FXML = "/uk.ac.cam.teamdelta.larry/params.fxml";
+
+    /**
+     * Constant for the name of the loading screen
+     */
+    public static final String LOADING_SCREEN = "loading";
+
+    /**
+     * Constant for the path of the loading screen FXML file
+     */
+    public static final String LOADING_SCREEN_FXML = "/uk.ac.cam.teamdelta.larry/loading.fxml";
 
     /**
      * Constant for the name of the running game screen
@@ -62,6 +80,8 @@ public class Main extends Application {
      * Constant for the path of the running game screen FXML file for other monitors
      */
     public static final String RUNNING_OTHER_SCREEN_FXML = "/uk.ac.cam.teamdelta.larry/runOther.fxml";
+
+
 
     /**
      * The width in pixels of the game
@@ -107,11 +127,10 @@ public class Main extends Application {
         // add screens to container
         mainContainer.loadScreen(Main.START_SCREEN, Main.START_SCREEN_FXML);
         mainContainer.loadScreen(Main.LOCATION_SCREEN, Main.LOCATION_SCREEN_FXML);
+        mainContainer.loadScreen(Main.LOCATION_CONFIRM_SCREEN,Main.LOCATION_CONFIRM_SCREEN_FXML);
         mainContainer.loadScreen(Main.PARAMETERS_SCREEN, Main.PARAMETERS_SCREEN_FXML);
+        mainContainer.loadScreen(Main.LOADING_SCREEN,Main.LOADING_SCREEN_FXML);
         mainContainer.loadScreen(Main.RUNNING_SCREEN, Main.RUNNING_SCREEN_FXML);
-
-        // set the initial screen
-        mainContainer.nextScreen();
 
         // set up main stage and display it
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream(
@@ -122,10 +141,12 @@ public class Main extends Application {
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);
+
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setFullScreenExitHint("");
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         primaryStage.show();
+        primaryStage.requestFocus();
     }
 
 }

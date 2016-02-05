@@ -16,6 +16,11 @@
     -fx-effect: dropshadow(gaussian,#444444,8,0,-1,1);
 }
 
+.button.big {
+    -fx-font-size: 100 px;
+    -fx-padding: -15px 20px 20px 20px;
+}
+
 .label {
     -fx-font-size: 20pt;
     -fx-font-family: "Nexa Bold";
