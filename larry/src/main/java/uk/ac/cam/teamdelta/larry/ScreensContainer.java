@@ -141,7 +141,7 @@ public class ScreensContainer extends StackPane {
                 Timeline fadeIn = new Timeline(
                         new KeyFrame(Duration.ZERO,
                                 new KeyValue(opacity, 0.0)),
-                        new KeyFrame(new Duration(2500),
+                        new KeyFrame(new Duration(1000),
                                 new KeyValue(opacity, 1.0)));
                 fadeIn.setOnFinished(new EventHandler<ActionEvent>() {
                     @Override

@@ -20,24 +20,47 @@ public class ParameterScreenController implements ScreenController {
     ImageView view;
 
     /**
-     * Event handler for button clicks
-     * Sets Parameters in {@link LarrySettings}
-     * Takes you to {@link Main#RUNNING_SCREEN}
+     * Event handler for button clicks Sets Parameters in {@link LarrySettings} Takes you to {@link
+     * Main#RUNNING_SCREEN}
+     *
      * @param event The event object received
      * @throws IOException
      */
     @FXML
     private void handleNextAction(ActionEvent event) throws IOException {
-        LarrySettings.getInstance().setParameters(slider1.getValue() / 100,
-                                                  slider2.getValue() / 100,
-                                                  slider3.getValue() / 100);
+        LarrySettings.getInstance().setParameters(slider1.getValue(),
+                                                  slider2.getValue(),
+                                                  slider3.getValue());
         container.nextScreen();
     }
 
     @FXML
     private void handleBackAction(ActionEvent event) throws IOException {
+        LarrySettings.getInstance().setParameters(slider1.getValue(),
+                                                  slider2.getValue(),
+                                                  slider3.getValue());
         container.prevScreen();
-        container.prevScreen();
+    }
+
+    @FXML
+    private void handleDefault1(ActionEvent event) throws IOException {
+        slider1.setValue(100.0);
+        slider2.setValue(0);
+        slider3.setValue(10);
+    }
+
+    @FXML
+    private void handleDefault2(ActionEvent event) throws IOException {
+        slider1.setValue(50);
+        slider2.setValue(67);
+        slider3.setValue(80);
+    }
+
+    @FXML
+    private void handleDefault3(ActionEvent event) throws IOException {
+        slider1.setValue(30);
+        slider2.setValue(11);
+        slider3.setValue(0);
     }
 
 
@@ -52,7 +75,6 @@ public class ParameterScreenController implements ScreenController {
         slider1.setValue(p.getA());
         slider2.setValue(p.getB());
         slider3.setValue(p.getC());
-
 
         view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1out.jpg"));
     }

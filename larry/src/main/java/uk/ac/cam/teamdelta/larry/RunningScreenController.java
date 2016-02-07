@@ -74,9 +74,6 @@ public class RunningScreenController implements ScreenController {
         view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1joinresult.jpg"));
 
         engine = new Engine(LarrySettings.getInstance().getLocation());
-        // show some data that was passed through the UI chain
-        button.setText(LarrySettings.getInstance().getParameters().getString());
-        container.getScene().getWindow().requestFocus();
         // code to create second stage on other monitor if it exists
         if (Screen.getScreens().size() > 1) {
 

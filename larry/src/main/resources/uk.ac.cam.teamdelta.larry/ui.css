@@ -7,17 +7,17 @@
 }
 
 .button {
-    -fx-font-size: 45px ;
+    -fx-font-size: 45px;
     -fx-font-family: "Nexa Bold";
     -fx-text-fill: whitesmoke;
     -fx-background-color: #4c8858;
     -fx-background-radius: 10px;
     -fx-padding: 10px 20px 20px 20px;
-    -fx-effect: dropshadow(gaussian,#444444,8,0,-1,1);
+    -fx-effect: dropshadow(gaussian, #444444, 8, 0, -1, 1);
 }
 
 .button.big {
-    -fx-font-size: 100 px;
+    -fx-font-size: 100px;
     -fx-padding: -15px 20px 20px 20px;
 }
 
@@ -27,14 +27,16 @@
     -fx-text-fill: white;
     -fx-opacity: 0.8;
 }
+
 .titleLabel {
     -fx-font-size: 35pt;
     -fx-font-family: "Nexa Bold";
     -fx-text-fill: white;
     -fx-opacity: 0.9;
-    -fx-effect: dropshadow(gaussian,#444444,8,0,-1,1);
+    -fx-effect: dropshadow(gaussian, #444444, 8, 0, -1, 1);
 }
-.text-field{
+
+.text-field {
     -fx-padding: 10px 0 15px 8px;
     -fx-font-family: "Museo Slab 500";
     -fx-font-size: 25px;
@@ -48,6 +50,23 @@
 
 .text-field.error {
     -fx-border-color: #962327;
+}
+
+.slider .track {
+    -fx-background-radius: 10;
+    -fx-padding: 8;
+    -fx-control-inner-background: #a3ba9c;
+}
+
+.slider .thumb {
+    -fx-background-color: null;
+    -fx-background-image: url("images/sliderwheel.png");
+    -fx-padding: 60;
+    -fx-background-size: cover;
+}
+
+.slider .thumb:hover {
+    -fx-effect: dropshadow(gaussian, #444444, 10, 0, -1, 1);
 }
 
 .HBox {

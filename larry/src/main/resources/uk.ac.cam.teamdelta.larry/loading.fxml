@@ -30,7 +30,7 @@
         <children>
           <ImageView fx:id="img" pickOnBounds="true" preserveRatio="true" smooth="true">
             <image>
-              <Image url="@images/Wheel2.png" />
+              <Image url="@images/loadingwheel_low.png" />
             </image>
           </ImageView>
         </children>

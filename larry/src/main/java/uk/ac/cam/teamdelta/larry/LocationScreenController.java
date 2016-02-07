@@ -39,10 +39,9 @@ public class LocationScreenController implements ScreenController {
     private Label errorText;
 
     /**
-     * Event handler for button clicks.
-     * Tries to geocode the text in
-     * {@link this#locationText}, if this succeeds, takes user to {@link Main#PARAMETERS_SCREEN}.
-     * Else, prompts user to try again.
+     * Event handler for button clicks. Tries to geocode the text in {@link this#locationText}, if this succeeds, takes
+     * user to {@link Main#LOCATION_CONFIRM_SCREEN}. Else, prompts user to try again.
+     *
      * @param event The event object received
      * @throws IOException
      */
@@ -59,10 +58,11 @@ public class LocationScreenController implements ScreenController {
                 // add the location to LarrySettings
                 LarrySettings.getInstance().
                         setLocation(results[0].geometry.location.lat, results[0].geometry.location.lng);
-                GeocodingResult[] revResults = GeocodingApi.reverseGeocode(context,new LatLng(results[0].geometry
-                        .location.lat,
-                        results[0].geometry.location.lng)).region("gb").await();
-                if(revResults.length == 0){
+                GeocodingResult[] revResults =
+                        GeocodingApi.reverseGeocode(context,
+                                new LatLng(results[0].geometry.location.lat,
+                                        results[0].geometry.location.lng)).region("gb").await();
+                if (revResults.length == 0) {
                     System.err.println("Geocoding isn't bijective! Reverse query failed while forward passed");
                 }
                 LarrySettings.getInstance().setStringLocation(

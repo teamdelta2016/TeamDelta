@@ -82,6 +82,7 @@ public class Main extends Application {
     public static final String RUNNING_OTHER_SCREEN_FXML = "/uk.ac.cam.teamdelta.larry/runOther.fxml";
 
 
+    public static final long KEY_HOLD_DELAY = 3000;
 
     /**
      * The width in pixels of the game
@@ -93,8 +94,6 @@ public class Main extends Application {
      */
     public static double GAME_HEIGHT = 800;
 
-
-    public static final long KEY_HOLD_DELAY = 4000;
 
     public static void main(String[] args) {
         launch(args);
@@ -112,7 +111,7 @@ public class Main extends Application {
         // find out the index of the primary monitor
         Screen primary = Screen.getPrimary();
         for (int i = 0; i < Screen.getScreens().size(); i++) {
-            if(Screen.getScreens().get(i).equals(primary)){
+            if (Screen.getScreens().get(i).equals(primary)) {
                 LarrySettings.getInstance().setPrimaryScreenIndex(i);
                 break;
             }
@@ -125,14 +124,15 @@ public class Main extends Application {
         ScreensContainer mainContainer = new ScreensContainer();
 
         // set the size
-        mainContainer.setPrefSize(primary.getBounds().getWidth(),primary.getBounds().getHeight());
+        mainContainer.setPrefSize(primary.getBounds().getWidth(), primary.getBounds().getHeight());
 
         // add screens to container
+        // This is how the UI order is specified
         mainContainer.loadScreen(Main.START_SCREEN, Main.START_SCREEN_FXML);
         mainContainer.loadScreen(Main.LOCATION_SCREEN, Main.LOCATION_SCREEN_FXML);
-        mainContainer.loadScreen(Main.LOCATION_CONFIRM_SCREEN,Main.LOCATION_CONFIRM_SCREEN_FXML);
+        mainContainer.loadScreen(Main.LOCATION_CONFIRM_SCREEN, Main.LOCATION_CONFIRM_SCREEN_FXML);
         mainContainer.loadScreen(Main.PARAMETERS_SCREEN, Main.PARAMETERS_SCREEN_FXML);
-        mainContainer.loadScreen(Main.LOADING_SCREEN,Main.LOADING_SCREEN_FXML);
+        mainContainer.loadScreen(Main.LOADING_SCREEN, Main.LOADING_SCREEN_FXML);
         mainContainer.loadScreen(Main.RUNNING_SCREEN, Main.RUNNING_SCREEN_FXML);
 
         // set up main stage and display it
