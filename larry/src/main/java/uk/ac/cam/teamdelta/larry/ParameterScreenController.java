@@ -2,17 +2,14 @@ package uk.ac.cam.teamdelta.larry;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import uk.ac.cam.teamdelta.ImageParams;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
-public class ParameterScreenController implements Initializable, ScreenController {
+public class ParameterScreenController implements ScreenController {
 
     ScreensContainer container;
 
@@ -21,11 +18,6 @@ public class ParameterScreenController implements Initializable, ScreenControlle
 
     @FXML
     ImageView view;
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-    }
 
     /**
      * Event handler for button clicks

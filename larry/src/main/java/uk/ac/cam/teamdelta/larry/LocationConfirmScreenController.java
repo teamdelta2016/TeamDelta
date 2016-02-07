@@ -2,20 +2,13 @@ package uk.ac.cam.teamdelta.larry;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
-public class LocationConfirmScreenController implements Initializable, ScreenController {
+public class LocationConfirmScreenController implements ScreenController {
 
     ScreensContainer container;
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-    }
 
     @Override
     public void setScreenParent(ScreensContainer screenParent) {

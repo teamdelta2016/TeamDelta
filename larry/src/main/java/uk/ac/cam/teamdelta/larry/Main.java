@@ -86,12 +86,12 @@ public class Main extends Application {
     /**
      * The width in pixels of the game
      */
-    public static final double GAME_WIDTH = 1000;
+    public static double GAME_WIDTH = 1000;
 
     /**
      * The height in pixels of the game
      */
-    public static final double GAME_HEIGHT = 800;
+    public static double GAME_HEIGHT = 800;
 
 
     public static final long KEY_HOLD_DELAY = 4000;
@@ -118,6 +118,9 @@ public class Main extends Application {
             }
         }
 
+        GAME_HEIGHT = primary.getVisualBounds().getHeight();
+        GAME_WIDTH = primary.getVisualBounds().getWidth();
+
         // create screen container
         ScreensContainer mainContainer = new ScreensContainer();
 
@@ -142,7 +145,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);
 
-        primaryStage.initStyle(StageStyle.UNDECORATED);
+        primaryStage.initStyle(StageStyle.DECORATED);
         primaryStage.setFullScreenExitHint("");
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         primaryStage.show();

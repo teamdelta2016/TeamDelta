@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static uk.ac.cam.teamdelta.Logger.debug;
+
 public class RunningScreenController implements ScreenController {
 
     private ScreensContainer container;
@@ -29,6 +31,35 @@ public class RunningScreenController implements ScreenController {
     private Stage otherStage;
 
     private Engine engine;
+
+    private boolean lookingForward = true;
+
+    private final EventHandler<KeyEvent> nextFrameHandler = new EventHandler<KeyEvent>() {
+        @Override
+        public void handle(KeyEvent event) {
+            if (event.getCode().equals(KeyCode.UP)) {
+                goToNextFrame();
+                final EventHandler<KeyEvent> ev = this;
+                container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, ev);
+                new Timer(true).schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, ev);
+                    }
+                }, Main.KEY_HOLD_DELAY);
+            }
+        }
+    };
+
+    final EventHandler<KeyEvent> switchViewHandler = new EventHandler<KeyEvent>() {
+        @Override
+        public void handle(KeyEvent event) {
+            if (event.getCode().equals(KeyCode.SPACE)) {
+                switchView();
+            }
+        }
+    };
+
 
     @FXML
     Button button;
@@ -38,6 +69,7 @@ public class RunningScreenController implements ScreenController {
 
     @Override
     public void setupScreen() {
+        // TODO: Remove this
         // For testing, set the image to a default one
         view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1joinresult.jpg"));
 
@@ -66,28 +98,15 @@ public class RunningScreenController implements ScreenController {
                 // shift focus back to main window
                 final Stage primaryStage = (Stage) container.getScene().getWindow();
                 primaryStage.requestFocus();
+                // only allow key events every KEY_HOLD_DELAY ms
+
+                container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
+                container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, switchViewHandler);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        // only allow key events every KEY_HOLD_DELAY ms
-        final EventHandler<KeyEvent> keyHandler = new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode().equals(KeyCode.UP)) {
-                    goToNextFrame();
-                    final EventHandler<KeyEvent> ev = this;
-                    container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, ev);
-                    new Timer(true).schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, ev);
-                        }
-                    }, Main.KEY_HOLD_DELAY);
-                }
-            }
-        };
-        container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyHandler);
+
     }
 
     @FXML
@@ -98,15 +117,28 @@ public class RunningScreenController implements ScreenController {
         }
         engine.stop();
         container.nextScreen();
+
     }
 
     private void goToNextFrame() {
         Frame f = engine.nextFrame(LarrySettings.getInstance().getLocation());
         // set images in various places from frame
-        view.setImage(new Image(String.valueOf(getClass()
-                .getResource("/uk.ac.cam.teamdelta.larry/images/car.png"))));
+        if (lookingForward) {
+            debug("Requested next frame");
+        }
     }
 
+    private void switchView() {
+        lookingForward = !lookingForward;
+        if (lookingForward) {
+            view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1joinresult.jpg"));
+            debug("Now looking forwards");
+        } else {
+            view.setImage(new Image(String.valueOf(getClass()
+                    .getResource("/uk.ac.cam.teamdelta.larry/images/car.png"))));
+            debug("Now looking backwards");
+        }
+    }
 
     @Override
     public void setScreenParent(ScreensContainer screenParent) {

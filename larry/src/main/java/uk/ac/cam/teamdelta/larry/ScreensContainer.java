@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+import uk.ac.cam.teamdelta.Logger;
 
 import java.io.IOException;
 import java.util.Deque;
@@ -18,6 +19,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class ScreensContainer extends StackPane {
+
+    private boolean loading = false;
 
     /**
      * Queue of screen names to specify order of screens to be shown in UI flow Order actually specified by order in
@@ -48,15 +51,25 @@ public class ScreensContainer extends StackPane {
      * Displays the screen which is at the front of the queue
      */
     public void nextScreen() {
-        screenNames.addLast(screenNames.pollFirst());
-        String name = screenNames.peekFirst();
-        setScreen(name);
+        if (!loading) {
+            loading = true;
+            screenNames.addLast(screenNames.pollFirst());
+            String name = screenNames.peekFirst();
+            setScreen(name);
+        } else {
+            Logger.debug("Screen was still loading");
+        }
     }
 
     public void prevScreen() {
-        String name = screenNames.pollLast();
-        screenNames.addFirst(name);
-        setScreen(name);
+        if (!loading) {
+            loading = true;
+            String name = screenNames.pollLast();
+            screenNames.addFirst(name);
+            setScreen(name);
+        } else {
+            Logger.debug("Screen was still loading");
+        }
     }
 
     /**
@@ -76,7 +89,7 @@ public class ScreensContainer extends StackPane {
             addScreen(name, loadScreen);
             controllers.put(loadScreen, screenController);
             screenNames.addLast(name);
-            if(controllers.size()==1){
+            if (controllers.size() == 1) {
                 setScreen(name);
             }
             return true;
@@ -93,6 +106,7 @@ public class ScreensContainer extends StackPane {
      * @return true if succeeds, false if screen hasn't been loaded yet
      */
     public boolean setScreen(final String name) {
+        loading = true;
         final Node namedScreen = screens.get(name);
         if (namedScreen != null) {
             final DoubleProperty opacity = opacityProperty();
@@ -113,15 +127,28 @@ public class ScreensContainer extends StackPane {
                                         fadeIn.play();
                                     }
                                 }, new KeyValue(opacity, 0.0)));
+                fade.setOnFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        loading = false;
+                    }
+                });
                 fade.play();
             } else {
                 setOpacity(0.0);
                 getChildren().add(namedScreen);
+                controllers.get(namedScreen).setupScreen();
                 Timeline fadeIn = new Timeline(
                         new KeyFrame(Duration.ZERO,
                                 new KeyValue(opacity, 0.0)),
                         new KeyFrame(new Duration(2500),
                                 new KeyValue(opacity, 1.0)));
+                fadeIn.setOnFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        loading = false;
+                    }
+                });
                 fadeIn.play();
             }
             return true;
