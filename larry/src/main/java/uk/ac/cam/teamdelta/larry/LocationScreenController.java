@@ -10,8 +10,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.util.Duration;
+import uk.ac.cam.teamdelta.Logger;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class LocationScreenController implements ScreenController {
 
@@ -31,7 +34,21 @@ public class LocationScreenController implements ScreenController {
         errorText.setText("");
     }
 
-    private static final String API_KEY = "AIzaSyBYeEDUeckhXm_j8gpymwisXALFuzOShXk";
+    private static String API_KEY;
+
+    // apikey.txt shouldn't be included in git
+    //TODO: find a better place for all the api keys we have
+    static {
+        try {
+            //API_KEY = new BufferedReader(new FileReader("/uk.ac.cam.teamdelta.larry/apikey.txt")).readLine();
+            API_KEY = new String(Files.readAllBytes(Paths.get(
+                    "./src/main/resources/uk.ac.cam.teamdelta.larry/apikey.txt")));
+        } catch (IOException e) {
+            e.printStackTrace();
+            API_KEY = "";
+        }
+        Logger.debug("Parsed API_KEY as " + API_KEY);
+    }
 
     @FXML
     private TextField locationText;

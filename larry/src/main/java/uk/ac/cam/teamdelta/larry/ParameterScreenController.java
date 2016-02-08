@@ -34,28 +34,47 @@ public class ParameterScreenController implements ScreenController {
         container.nextScreen();
     }
 
+    /**
+     * Handles the press of the back button
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void handleBackAction(ActionEvent event) throws IOException {
+        // save the state of the sliders
         LarrySettings.getInstance().setParameters(slider1.getValue(),
                                                   slider2.getValue(),
                                                   slider3.getValue());
         container.prevScreen();
     }
 
+    /**
+     * Handles the press of Default1 button
+     * @param event the event object
+     * @throws IOException
+     */
     @FXML
     private void handleDefault1(ActionEvent event) throws IOException {
         slider1.setValue(100.0);
         slider2.setValue(0);
         slider3.setValue(10);
     }
-
+    /**
+     * Handles the press of Default2 button
+     * @param event the event object
+     * @throws IOException
+     */
     @FXML
     private void handleDefault2(ActionEvent event) throws IOException {
         slider1.setValue(50);
         slider2.setValue(67);
         slider3.setValue(80);
     }
-
+    /**
+     * Handles the press of Default3 button
+     * @param event the event object
+     * @throws IOException
+     */
     @FXML
     private void handleDefault3(ActionEvent event) throws IOException {
         slider1.setValue(30);
@@ -71,6 +90,7 @@ public class ParameterScreenController implements ScreenController {
 
     @Override
     public void setupScreen() {
+        // retrieve previous settings
         ImageParams p = LarrySettings.getInstance().getParameters();
         slider1.setValue(p.getA());
         slider2.setValue(p.getB());

@@ -6,6 +6,13 @@ import javafx.scene.control.Label;
 
 import java.io.IOException;
 
+/**
+ * The controller for the LocationConfirm screen.
+ * The user has just entered a location, and this screen shows them
+ * the doubly looked up version (geocoded and reverse geocoded) so they can see
+ * if their query returned the correct result.
+ * If not, they can go back and try again.
+ */
 public class LocationConfirmScreenController implements ScreenController {
 
     ScreensContainer container;

@@ -24,7 +24,7 @@ public class ScreensContainer extends StackPane {
 
     /**
      * Queue of screen names to specify order of screens to be shown in UI flow Order actually specified by order in
-     * which screens are added in Main
+     * which screens are added in Main. Currently displayed screen will be at the head.
      */
     private final Deque<String> screenNames = new LinkedList<>();
     /**
@@ -51,6 +51,7 @@ public class ScreensContainer extends StackPane {
      * Displays the screen which is at the front of the queue
      */
     public void nextScreen() {
+        // If already loading another screen, ignore this event
         if (!loading) {
             loading = true;
             screenNames.addLast(screenNames.pollFirst());
@@ -61,7 +62,11 @@ public class ScreensContainer extends StackPane {
         }
     }
 
+    /**
+     * Displays the screen at the back of the queue
+     */
     public void prevScreen() {
+        // If already loading another screen, ignore this event
         if (!loading) {
             loading = true;
             String name = screenNames.pollLast();

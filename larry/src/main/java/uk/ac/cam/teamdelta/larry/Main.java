@@ -145,7 +145,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);
 
-        primaryStage.initStyle(StageStyle.DECORATED);
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setFullScreenExitHint("");
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         primaryStage.show();
