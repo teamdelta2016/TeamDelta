@@ -6,7 +6,7 @@ import uk.ac.cam.teamdelta.ImageProcParams;
 
 public abstract class ImageProc {
 
-    private final ImageProcParams params;
+    protected final ImageProcParams params;
 
     protected ImageProc(ImageProcParams params){
         this.params = params;

@@ -34,6 +34,11 @@ class Peripheral {
         return result;
     }
 
+    Mat overlayColor(Mat bottom, Scalar color, double opacity){
+        Mat top = new Mat(bottom.rows(), bottom.cols(), bottom.type(), color);
+        return overlayPeripheral(bottom, top);
+    }
+
     private static Mat makeCenterMask(int rows, int cols, int type, boolean invert){
         double maxRadius = Math.sqrt(rows*rows/4 + cols*cols/4);
         Mat centerMask = new Mat(rows, cols, type);

@@ -25,7 +25,10 @@ public class Test {
 
     Test(){
         // process();
-        ImageProc ip = ImageProc.getImageProc(null);
+
+        ImageProcParams p = new ImageProcParams(5, 1.15, 0.4, 0.7);
+
+        ImageProc ip = ImageProc.getImageProc(p);
 
         try{
 

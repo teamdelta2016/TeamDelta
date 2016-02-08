@@ -42,23 +42,34 @@ class ImageProcImpl extends ImageProc {
         Mat fL = Utils.bufferedImageToMat(fLI);
         Mat fR = Utils.bufferedImageToMat(fRI);
 
-        Mat frontSource = Stitcher.stitchImages(fL, fR);
+        // Stitch
+        Mat i = Stitcher.stitchImages(fL, fR);
 
-        Night.nightTime(frontSource, 1);
+        if(params.nightTimeFactor > 0){
+            Night.nightTime(i, params.nightTimeFactor);
+        }
 
-        Mat frontSized = Utils.resizeImage(frontSource, Utils.FRONT_ROWS, Utils.FRONT_COLS);
+        if(params.blurValue > 0){
+            Utils.blurImage(i, params.blurValue);
+        }
 
-        Mat ghosted = Ghoster.ghostImage(frontSized, 1.05, 1.05, 0.5);
+        i = Utils.resizeImage(i, Utils.FRONT_ROWS, Utils.FRONT_COLS);
+
+        Mat ghosted = Ghoster.ghostImage(i, params.ghostFactor, params.ghostFactor, 0.5);
 
         Mat blurred = ghosted.clone();
-        Utils.blurImage(blurred, 31);
+        Utils.blurImage(blurred, params.blurValue * 3);
 
-        Mat blurredCenter = peripheralFront.overlayPeripheral(ghosted, blurred);
+        i = peripheralFront.overlayPeripheral(ghosted, blurred);
 
-        Mat result = blurredCenter;
+        if(params.darkEdgesFactor > 0){
+            i = peripheralFront.overlayColor(i,
+                                             new Scalar(10, 10, 10),
+                                             params.darkEdgesFactor);
+        }
 
         try{
-            return Utils.matToBufferedImage(result);
+            return Utils.matToBufferedImage(i);
         }catch(IOException e){
             e.printStackTrace();
             return null;
