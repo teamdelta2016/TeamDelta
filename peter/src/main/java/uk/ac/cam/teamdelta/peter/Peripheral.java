@@ -34,8 +34,9 @@ class Peripheral {
         return result;
     }
 
-    Mat overlayColor(Mat bottom, Scalar color, double opacity){
-        Mat top = new Mat(bottom.rows(), bottom.cols(), bottom.type(), color);
+    Mat multiplyColor(Mat bottom, Scalar color){
+        Mat top = bottom.clone();
+        Core.multiply(top, color, top);
         return overlayPeripheral(bottom, top);
     }
 

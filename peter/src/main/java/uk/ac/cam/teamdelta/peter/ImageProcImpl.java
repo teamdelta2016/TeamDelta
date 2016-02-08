@@ -30,12 +30,35 @@ class ImageProcImpl extends ImageProc {
 
     public ImageOutputSet process(ImageInputSet input){
         BufferedImage front = processFront(input.frontLeft, input.frontRight);
-        // BufferedImage left = processSide(input.left, true);
+        BufferedImage left = processSide(input.left, true);
         // BufferedImage right = processSide(input.right, false);
         // BufferedImage back = processBack(input.back);
 
 
-        return new ImageOutputSet(front, null, null, null);
+        return new ImageOutputSet(front, left, null, null);
+    }
+
+    private BufferedImage processSide(BufferedImage iI, boolean isLeftSide){
+        Mat i = Utils.bufferedImageToMat(iI);
+
+
+        if(params.nightTimeFactor > 0){
+            Night.nightTime(i, params.nightTimeFactor);
+        }
+
+        if(params.blurValue > 0){
+            Utils.blurImage(i, params.blurValue * 2);
+        }
+
+        double x = (1 - params.darkEdgesFactor) * 1.5;
+        Core.multiply(i, new Scalar(x, x, x), i);
+
+        try{
+            return Utils.matToBufferedImage(i);
+        }catch(IOException e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private BufferedImage processFront(BufferedImage fLI, BufferedImage fRI){
@@ -63,9 +86,9 @@ class ImageProcImpl extends ImageProc {
         i = peripheralFront.overlayPeripheral(ghosted, blurred);
 
         if(params.darkEdgesFactor > 0){
-            i = peripheralFront.overlayColor(i,
-                                             new Scalar(10, 10, 10),
-                                             params.darkEdgesFactor);
+            double x = 1 - params.darkEdgesFactor;
+            i = peripheralFront.multiplyColor(i,
+                                              new Scalar(x, x, x));
         }
 
         try{
