@@ -20,8 +20,6 @@ import java.util.LinkedList;
 
 public class ScreensContainer extends StackPane {
 
-    private boolean loading = false;
-
     /**
      * Queue of screen names to specify order of screens to be shown in UI flow Order actually specified by order in
      * which screens are added in Main. Currently displayed screen will be at the head.
@@ -31,11 +29,11 @@ public class ScreensContainer extends StackPane {
      * Map linking names of screens to nodes representing them
      */
     private final HashMap<String, Node> screens = new HashMap<>();
-
     /**
      * Map linking nodes representing screens to their respective controllers
      */
     private final HashMap<Node, ScreenController> controllers = new HashMap<>();
+    private boolean loading = false;
 
     /**
      * Adds a screen to {@link ScreensContainer#screens}

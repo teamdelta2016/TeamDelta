@@ -29,21 +29,21 @@ import static uk.ac.cam.teamdelta.Logger.debug;
 
 public class RunningScreenController implements ScreenController {
 
+    @FXML
+    Button button;
+    @FXML
+    ImageView view;
+    @FXML
+    Label locationText;
     private ScreensContainer container;
-
     private Map<Integer, OtherRunningScreenController> otherControllers = new HashMap<>(Screen.getScreens().size());
-
     private Stage otherStage;
-
     private Engine engine;
-
     private Frame currentFrame;
-
     /**
      * Boolean to keep track of whether to show front or rear windscreen view
      */
     private boolean lookingForward = true;
-
     /**
      * Event handler for detected the UP arrow key. Use of timer only allows event firing every {@link
      * Main#KEY_HOLD_DELAY}
@@ -64,7 +64,6 @@ public class RunningScreenController implements ScreenController {
             }
         }
     };
-
     /**
      * Event handler for switching views using the spacebar, and looking left and right
      */
@@ -80,16 +79,6 @@ public class RunningScreenController implements ScreenController {
             }
         }
     };
-
-
-    @FXML
-    Button button;
-
-    @FXML
-    ImageView view;
-
-    @FXML
-    Label locationText;
 
     @Override
     public void setupScreen() {

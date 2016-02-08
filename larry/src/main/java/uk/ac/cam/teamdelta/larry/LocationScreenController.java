@@ -18,22 +18,6 @@ import java.nio.file.Paths;
 
 public class LocationScreenController implements ScreenController {
 
-    ScreensContainer container;
-
-    @Override
-    public void setScreenParent(ScreensContainer screenParent) {
-        container = screenParent;
-    }
-
-    @Override
-    public void setupScreen() {
-        // remove red border from textField and clear it if needed
-        locationText.getStyleClass().remove("error");
-        locationText.requestFocus();
-        // also remove the error text
-        errorText.setText("");
-    }
-
     private static String API_KEY;
 
     // apikey.txt shouldn't be included in git
@@ -50,10 +34,25 @@ public class LocationScreenController implements ScreenController {
         Logger.debug("Parsed API_KEY as " + API_KEY);
     }
 
+    ScreensContainer container;
     @FXML
     private TextField locationText;
     @FXML
     private Label errorText;
+
+    @Override
+    public void setScreenParent(ScreensContainer screenParent) {
+        container = screenParent;
+    }
+
+    @Override
+    public void setupScreen() {
+        // remove red border from textField and clear it if needed
+        locationText.getStyleClass().remove("error");
+        locationText.requestFocus();
+        // also remove the error text
+        errorText.setText("");
+    }
 
     /**
      * Event handler for button clicks. Tries to geocode the text in {@link this#locationText}, if this succeeds, takes

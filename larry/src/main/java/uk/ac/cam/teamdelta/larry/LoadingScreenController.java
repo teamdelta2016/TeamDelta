@@ -25,10 +25,10 @@ public class LoadingScreenController implements ScreenController {
     @Override
     public void setupScreen() {
         // set size of rotating wheel image
-        img.setFitHeight(Main.GAME_HEIGHT/2);
-        img.setFitWidth(Main.GAME_WIDTH/2);
+        img.setFitHeight(Main.GAME_HEIGHT / 2);
+        img.setFitWidth(Main.GAME_WIDTH / 2);
         // spin image round for a few seconds
-        final RotateTransition rt = new RotateTransition(Duration.millis(5000),img);
+        final RotateTransition rt = new RotateTransition(Duration.millis(5000), img);
         // wait x seconds before continuing to next screen
         //TODO: don't wait arbitrary time, get notified?
         Task<Void> sleeper = new Task<Void>() {

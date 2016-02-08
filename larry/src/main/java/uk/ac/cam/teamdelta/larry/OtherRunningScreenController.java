@@ -7,12 +7,10 @@ import javafx.scene.image.ImageView;
 
 public class OtherRunningScreenController implements ScreenController {
 
-    private ScreensContainer container;
-
-    private int screenIndex;
-
     @FXML
     ImageView imageView;
+    private ScreensContainer container;
+    private int screenIndex;
 
     @Override
     public void setScreenParent(ScreensContainer screensContainer) {
@@ -21,14 +19,14 @@ public class OtherRunningScreenController implements ScreenController {
 
     @Override
     public void setupScreen() {
-        imageView.setFitWidth(Screen.getScreens().get(screenIndex).getWidth()/1.4);
+        imageView.setFitWidth(Screen.getScreens().get(screenIndex).getWidth() / 1.4);
     }
 
-    public void setScreenIndex(int i){
+    public void setScreenIndex(int i) {
         screenIndex = i;
     }
 
-    public void setImage(Image i){
+    public void setImage(Image i) {
         imageView.setImage(i);
     }
 }

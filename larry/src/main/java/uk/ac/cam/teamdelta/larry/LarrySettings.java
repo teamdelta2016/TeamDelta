@@ -4,19 +4,18 @@ import uk.ac.cam.teamdelta.ImageParams;
 import uk.ac.cam.teamdelta.Location;
 
 /**
- * A singleton class holding the state of the user's choices as they
- * go through the UI
+ * A singleton class holding the state of the user's choices as they go through the UI
  */
 public class LarrySettings {
 
-    private final Location l;
-    private String stringLocation;
-    private final ImageParams i;
-    private int primaryScreenIndex;
     /**
      * Singleton instance of this class
      */
     private static LarrySettings larrySettings;
+    private final Location l;
+    private final ImageParams i;
+    private String stringLocation;
+    private int primaryScreenIndex;
 
     private LarrySettings() {
         l = new Location();
@@ -25,6 +24,7 @@ public class LarrySettings {
 
     /**
      * Singleton method for getting an instance of this class
+     *
      * @return
      */
     public static LarrySettings getInstance() {
@@ -34,13 +34,13 @@ public class LarrySettings {
         return larrySettings;
     }
 
-    //TODO: is this really needed?
-    public void setPrimaryScreenIndex(int index){
-        primaryScreenIndex = index;
+    public int getPrimaryScreenIndex() {
+        return primaryScreenIndex;
     }
 
-    public int getPrimaryScreenIndex(){
-        return primaryScreenIndex;
+    //TODO: is this really needed?
+    public void setPrimaryScreenIndex(int index) {
+        primaryScreenIndex = index;
     }
 
     public Location getLocation() {
@@ -60,12 +60,12 @@ public class LarrySettings {
         i.setParams(a, b, c);
     }
 
-    public void setStringLocation(String s){
-        stringLocation = s;
+    public String getStringLocation() {
+        return stringLocation;
     }
 
-    public String getStringLocation(){
-        return stringLocation;
+    public void setStringLocation(String s) {
+        stringLocation = s;
     }
 
 
