@@ -44,6 +44,8 @@ class ImageProcImpl extends ImageProc {
 
         Mat frontSource = Stitcher.stitchImages(fL, fR);
 
+        Night.nightTime(frontSource, 1);
+
         Mat frontSized = Utils.resizeImage(frontSource, Utils.FRONT_ROWS, Utils.FRONT_COLS);
 
         Mat ghosted = Ghoster.ghostImage(frontSized, 1.05, 1.05, 0.5);
