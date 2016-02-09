@@ -3,6 +3,7 @@ package uk.ac.cam.teamdelta.larry;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -10,8 +11,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.PerspectiveTransform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
@@ -34,6 +37,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static uk.ac.cam.teamdelta.Logger.debug;
+import static uk.ac.cam.teamdelta.Logger.error;
 
 public class RunningScreenController implements ScreenController {
 
@@ -41,14 +45,17 @@ public class RunningScreenController implements ScreenController {
     @FXML
     Button button;
     @FXML
-    ImageView view;
+    ImageView frontView, leftView, rightView;
     @FXML
     Label locationText;
     private ScreensContainer container;
     private Map<Integer, OtherRunningScreenController> otherControllers = new HashMap<>(Screen.getScreens().size());
     private Stage otherStage;
     private ImageOutputSet images;
-    private JunctionInfo junctions;
+    private WritableImage front;
+    private WritableImage back;
+    private WritableImage left;
+    private WritableImage right;
     /**
      * Boolean to keep track of whether to show front or rear windscreen view
      */
@@ -70,7 +77,16 @@ public class RunningScreenController implements ScreenController {
     public void showScreen() {
         // code to create second stage on other monitor if it exists
         if (Screen.getScreens().size() > 1) {
-            makeOtherScreen(1);
+            //makeOtherScreen(1);
+        } else {
+            double width = 1280;
+            double height = 740;
+            frontView.setEffect(new PerspectiveTransform(0, 0, width, 0,
+                    width - 200, height, 200, height));
+            leftView.setEffect(new PerspectiveTransform(-300,0,300,0,
+                    500,height,-300,1280));
+            rightView.setEffect(new PerspectiveTransform(340,0,900,0,
+                    940,1280,140,height));
         }
         container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
         container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, switchViewHandler);
@@ -113,9 +129,9 @@ public class RunningScreenController implements ScreenController {
 
         // TODO: Remove this
         // For testing, set the image to a default one
-        view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1joinresult.jpg"));
-        // layout hack
-        view.setFitHeight(Main.GAME_HEIGHT / 1.4);
+        frontView.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1joinresult.jpg"));
+        leftView.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/left1.jpg"));
+        rightView.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/right1.jpg"));
     }
 
     /**
@@ -132,7 +148,6 @@ public class RunningScreenController implements ScreenController {
         }
         larrySettings.getEngine().stop();
         container.nextScreen();
-
         container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
         container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, switchViewHandler);
     }
@@ -154,9 +169,9 @@ public class RunningScreenController implements ScreenController {
     }
 
     private void processFrame(Frame frame) {
-        junctions = frame.getJunctions();
+        JunctionInfo junctions = frame.getJunctions();
         images = frame.getImages();
-        if (junctions != null) {
+        if (junctions != null && images != null) {
             // update direction arrows
             for (Direction d : junctions.getRoadAngles()) {
                 debug("Junction at " + d.getDegrees());
@@ -164,6 +179,12 @@ public class RunningScreenController implements ScreenController {
             // update location text
             LarrySettings.getInstance().setLocation(junctions.getNextLocation().getLatitude(),
                     junctions.getNextLocation().getLongitude());
+            // set the new image on screen, and store in 'front'
+            frontView.setImage(SwingFXUtils.toFXImage(images.front, front));
+            leftView.setImage(SwingFXUtils.toFXImage(images.left, left));
+            rightView.setImage(SwingFXUtils.toFXImage(images.right, right));
+        } else {
+            error("Frame had null content");
         }
 
     }
@@ -173,18 +194,26 @@ public class RunningScreenController implements ScreenController {
      */
     private void switchView() {
         lookingForward = !lookingForward;
-        if (lookingForward) {
-            view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1joinresult.jpg"));
-            if (otherControllers.size() > 1) {
-                otherControllers.get(1).setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1out.jpg"));
+        if (images != null) {
+            if (lookingForward) {
+                frontView.setImage(front);
+                if (otherControllers.size() > 1) {
+                    otherControllers.get(1).setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1out.jpg"));
+                }
+                debug("Now looking forwards");
+            } else {
+                if (back == null) {
+                    // if back doesn't exist, convert it on the fly
+                    back = SwingFXUtils.toFXImage(images.back, null);
+                }
+                frontView.setImage(back);
+                if (otherControllers.size() > 1) {
+                    otherControllers.get(1).setImage(new Image("/uk.ac.cam.teamdelta.larry/images/car.png"));
+                }
+                debug("Now looking backwards");
             }
-            debug("Now looking forwards");
         } else {
-            view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/car.png"));
-            if (otherControllers.size() > 1) {
-                otherControllers.get(1).setImage(new Image("/uk.ac.cam.teamdelta.larry/images/car.png"));
-            }
-            debug("Now looking backwards");
+            error("Image set was null");
         }
     }
 
@@ -215,7 +244,8 @@ public class RunningScreenController implements ScreenController {
             otherControllers.put(index, controller);
             Scene scene = new Scene(pane);
             otherStage.setScene(scene);
-            otherStage.initStyle(StageStyle.TRANSPARENT);
+            //otherStage.initStyle(StageStyle.TRANSPARENT);
+            otherStage.initStyle(StageStyle.DECORATED);
             otherStage.setX(otherScreen.getVisualBounds().getMinX());
             otherStage.setY(otherScreen.getVisualBounds().getMinY());
             otherStage.setWidth(otherScreen.getVisualBounds().getWidth());

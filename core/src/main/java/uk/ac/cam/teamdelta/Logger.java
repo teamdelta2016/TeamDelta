@@ -9,4 +9,8 @@ public class Logger {
             System.out.println("DEBUG: " + s);
         }
     }
+
+    public static void error(String s) {
+        System.err.println("ERROR: " + s);
+    }
 }
