@@ -1,9 +1,12 @@
+package uk.ac.cam.teamdelta.andy;
+
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import javax.imageio.ImageIO;
 import java.lang.InterruptedException;
 import java.io.IOException;
 import java.io.File;
+import uk.ac.cam.teamdelta.*;
 
 public class ImageFetcher {
 	public ImageInputSet sendGet(int width, int height, double latitude, double longitude, 
@@ -36,10 +39,10 @@ public class ImageFetcher {
 		File rightFrontFile = new File("rightFront.jpg");
 		File rightFile = new File("right.jpg");
 		File backFile = new File("back.jpg");
-		ImageIO.write(result.getImage("left"), "jpg", leftFile);
-		ImageIO.write(result.getImage("frontLeft"), "jpg", leftFrontFile);
-		ImageIO.write(result.getImage("frontRight"), "jpg", rightFrontFile);
-		ImageIO.write(result.getImage("right"), "jpg", rightFile);
-		ImageIO.write(result.getImage("back"), "jpg", backFile);	
+		ImageIO.write(result.getLeft(), "jpg", leftFile);
+		ImageIO.write(result.getFrontLeft(), "jpg", leftFrontFile);
+		ImageIO.write(result.getFrontRight(), "jpg", rightFrontFile);
+		ImageIO.write(result.getRight(), "jpg", rightFile);
+		ImageIO.write(result.getBack(), "jpg", backFile);	
 	}
 }
