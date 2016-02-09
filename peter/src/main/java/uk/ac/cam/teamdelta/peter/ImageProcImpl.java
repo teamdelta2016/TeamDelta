@@ -40,6 +40,10 @@ class ImageProcImpl extends ImageProc {
     }
 
     private BufferedImage processSide(BufferedImage iI, boolean isLeftSide){
+        if(iI == null){
+            return null;
+        }
+
         Mat i = Utils.bufferedImageToMat(iI);
 
 
@@ -51,7 +55,7 @@ class ImageProcImpl extends ImageProc {
             Utils.blurImage(i, params.blurValue * 2);
         }
 
-        double x = (1 - params.darkEdgesFactor) * 1.5;
+        double x = (1 - params.darkEdgesFactor) * 2;
         Core.multiply(i, new Scalar(x, x, x), i);
 
         try{
@@ -63,6 +67,10 @@ class ImageProcImpl extends ImageProc {
     }
 
     private BufferedImage processFront(BufferedImage fLI, BufferedImage fRI){
+        if(fLI == null || fRI == null){
+            return null;
+        }
+
         Mat fL = Utils.bufferedImageToMat(fLI);
         Mat fR = Utils.bufferedImageToMat(fRI);
 
