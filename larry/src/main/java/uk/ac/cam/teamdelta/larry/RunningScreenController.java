@@ -124,7 +124,7 @@ public class RunningScreenController implements ScreenController {
      * Called when UP arrow is pressed, requests the next frame from the {@link Engine}
      */
     private void goToNextFrame() {
-        currentFrame = engine.nextFrame(LarrySettings.getInstance().getLocation());
+        currentFrame = engine.nextFrame(null);
         // set images in various places from frame
         if (lookingForward) {
             debug("Requested next frame");
