@@ -26,7 +26,7 @@ public class Test {
     Test(){
         // process();
 
-        ImageProcParams p = new ImageProcParams(6, 1.15, 0, 0.7);
+        ImageProcParams p = new ImageProcParams(6, 1.15, 0.6, 0.7);
 
         ImageProc ip = ImageProc.getImageProc(p);
 
@@ -41,7 +41,7 @@ public class Test {
 
             ImageInputSet set = new ImageInputSet(imgL, imgR, imgL, imgR, null);
 
-            ImageOutputSet out = ip.process(set);
+            ImageOutputSet out = ip.process(set, false);
 
             try{
                 File outputfile = new File(dir + "/test2front.jpg");

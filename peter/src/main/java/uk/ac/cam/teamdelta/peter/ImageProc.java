@@ -39,6 +39,6 @@ public abstract class ImageProc {
      *
      * @return The resulting four images
      */
-    public abstract ImageOutputSet process(ImageInputSet input);
+    public abstract ImageOutputSet process(ImageInputSet input, boolean isJunction);
 
 }

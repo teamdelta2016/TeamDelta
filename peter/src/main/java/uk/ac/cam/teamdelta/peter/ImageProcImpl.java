@@ -28,7 +28,8 @@ class ImageProcImpl extends ImageProc {
         peripheralFront = new Peripheral(Utils.FRONT_ROWS, Utils.FRONT_COLS, Utils.MAT_TYPE);
     }
 
-    public ImageOutputSet process(ImageInputSet input){
+    @Override
+    public ImageOutputSet process(ImageInputSet input, boolean isJunction){
         BufferedImage front = processFront(input.frontLeft, input.frontRight);
         BufferedImage left = processSide(input.left, true);
         // BufferedImage right = processSide(input.right, false);
