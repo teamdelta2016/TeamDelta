@@ -23,5 +23,14 @@
     <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="module" module-name="robert" />
+    <orderEntry type="module-library">
+      <library name="Gradle: C__Users_bob_Documents_Cambridge_IB_Project_TeamDelta_larry_null_rt_lib_jfxrt_jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/null/rt/lib/jfxrt.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
