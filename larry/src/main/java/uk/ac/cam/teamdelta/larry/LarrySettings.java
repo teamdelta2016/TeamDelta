@@ -1,7 +1,10 @@
 package uk.ac.cam.teamdelta.larry;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import uk.ac.cam.teamdelta.ImageProcParams;
 import uk.ac.cam.teamdelta.Location;
+import uk.ac.cam.teamdelta.robert.Engine;
 
 /**
  * A singleton class holding the state of the user's choices as they go through the UI
@@ -13,13 +16,15 @@ public class LarrySettings {
      */
     private static LarrySettings larrySettings;
     private final Location l;
-    private final ImageProcParams i;
-    private String stringLocation;
+    private ImageProcParams i;
+    private String locationAddress;
+    private SimpleStringProperty stringLocation = new SimpleStringProperty();
     private int primaryScreenIndex;
+    private Engine engine;
 
     private LarrySettings() {
         l = new Location();
-        i = null;
+        i = new ImageProcParams(0.0,0.0,0.0,0.0,false);
     }
 
     /**
@@ -50,6 +55,7 @@ public class LarrySettings {
     public void setLocation(double lat, double lng) {
         l.setLatitude(lat);
         l.setLongitude(lng);
+        stringLocation.setValue("Current location:\n" + lat + ", " + lng);
     }
 
     public ImageProcParams getParameters() {
@@ -60,12 +66,24 @@ public class LarrySettings {
         i = new ImageProcParams(a, b, c, d, headlights);
     }
 
-    public String getStringLocation() {
+    public String getLocationAddress() {
+        return locationAddress;
+    }
+
+    public void setLocationAddress(String s) {
+        locationAddress = s;
+    }
+
+    public StringProperty getStringLocation(){
         return stringLocation;
     }
 
-    public void setStringLocation(String s) {
-        stringLocation = s;
+    public Engine getEngine(){
+        return engine;
+    }
+
+    public void setEngine(Engine e){
+        engine = e;
     }
 
 

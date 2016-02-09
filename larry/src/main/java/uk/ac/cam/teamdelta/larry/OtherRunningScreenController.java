@@ -18,8 +18,13 @@ public class OtherRunningScreenController implements ScreenController {
     }
 
     @Override
-    public void setupScreen() {
+    public void showScreen() {
         imageView.setFitWidth(Screen.getScreens().get(screenIndex).getWidth() / 1.4);
+    }
+
+    @Override
+    public void setupScreen() {
+
     }
 
     public void setScreenIndex(int i) {

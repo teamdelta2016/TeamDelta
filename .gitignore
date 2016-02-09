@@ -5,11 +5,14 @@ build
 .gitignore~
 
 core/*.class
-.DS_Store
-.gradle
-build
 /larry/src/main/resources/uk.ac.cam.teamdelta.larry/apikey.txt
 /.idea
+
+/frank/frank.iml
+/core/core.iml
+/robert/robert.iml
+/larry/larry.iml
+/peter/peter.iml
 
 *.project
 *.classpath

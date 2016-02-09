@@ -13,5 +13,10 @@ public interface ScreenController {
      * Called when {@link ScreensContainer#setScreen(String)} is called. Runs any actions that need to be done just
      * before the screen is displayed to the user.
      */
+    void showScreen();
+
+    /**
+     * Called when the screen is added to the display. Essentially a constructor
+     */
     void setupScreen();
 }

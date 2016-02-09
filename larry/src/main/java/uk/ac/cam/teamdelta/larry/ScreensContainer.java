@@ -90,6 +90,7 @@ public class ScreensContainer extends StackPane {
             ScreenController screenController = loader.getController();
             screenController.setScreenParent(this);
             addScreen(name, loadScreen);
+            screenController.setupScreen();
             controllers.put(loadScreen, screenController);
             screenNames.addLast(name);
             if (controllers.size() == 1) {
@@ -121,7 +122,7 @@ public class ScreensContainer extends StackPane {
                                     public void handle(ActionEvent event) {
                                         getChildren().remove(0);
                                         getChildren().add(0, namedScreen);
-                                        controllers.get(namedScreen).setupScreen();
+                                        controllers.get(namedScreen).showScreen();
                                         Timeline fadeIn = new Timeline(
                                                 new KeyFrame(Duration.ZERO,
                                                         new KeyValue(opacity, 0.0)),
@@ -140,7 +141,7 @@ public class ScreensContainer extends StackPane {
             } else {
                 setOpacity(0.0);
                 getChildren().add(namedScreen);
-                controllers.get(namedScreen).setupScreen();
+                controllers.get(namedScreen).showScreen();
                 Timeline fadeIn = new Timeline(
                         new KeyFrame(Duration.ZERO,
                                 new KeyValue(opacity, 0.0)),

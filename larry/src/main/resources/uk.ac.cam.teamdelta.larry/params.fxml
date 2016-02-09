@@ -1,29 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import java.net.URL?>
-<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.effect.*?>
 <?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
-
-<GridPane alignment="CENTER" cache="true" hgap="10.0" mouseTransparent="false" style="&#10;" styleClass="gridPane" vgap="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="uk.ac.cam.teamdelta.larry.ParameterScreenController">
+<?import java.net.URL?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" cache="true" hgap="10.0" mouseTransparent="false" style="&#10;" styleClass="gridPane" vgap="10.0" xmlns="http://javafx.com/javafx/2.2" fx:controller="uk.ac.cam.teamdelta.larry.ParameterScreenController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
   </columnConstraints>
@@ -94,8 +85,8 @@
               </font>
             </Label>
             <Slider fx:id="slider3" minorTickCount="0" orientation="HORIZONTAL" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-            <Label font="$x3" prefHeight="24.000011444091797" text="param4" textAlignment="LEFT" textFill="WHITE" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <Slider id="slider3" fx:id="slider4" minorTickCount="0" orientation="HORIZONTAL" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Label font="$x3" prefHeight="24.000011444091797" text="param4" textAlignment="LEFT" textFill="WHITE" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+            <Slider id="slider3" fx:id="slider4" minorTickCount="0" orientation="HORIZONTAL" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="0" GridPane.rowIndex="7" />
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

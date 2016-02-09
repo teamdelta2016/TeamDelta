@@ -32,8 +32,13 @@ public class StartScreenController implements ScreenController {
     }
 
     @Override
-    public void setupScreen() {
+    public void showScreen() {
         beginBtn.setDefaultButton(true);
+    }
+
+    @Override
+    public void setupScreen() {
+
     }
 
 }
