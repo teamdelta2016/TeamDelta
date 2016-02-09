@@ -1,6 +1,6 @@
 package uk.ac.cam.teamdelta.larry;
 
-import uk.ac.cam.teamdelta.ImageParams;
+import uk.ac.cam.teamdelta.ImageProcParams;
 import uk.ac.cam.teamdelta.Location;
 
 /**
@@ -13,13 +13,13 @@ public class LarrySettings {
      */
     private static LarrySettings larrySettings;
     private final Location l;
-    private final ImageParams i;
+    private final ImageProcParams i;
     private String stringLocation;
     private int primaryScreenIndex;
 
     private LarrySettings() {
         l = new Location();
-        i = new ImageParams();
+        i = null;
     }
 
     /**
@@ -52,12 +52,12 @@ public class LarrySettings {
         l.setLongitude(lng);
     }
 
-    public ImageParams getParameters() {
+    public ImageProcParams getParameters() {
         return i;
     }
 
-    public void setParameters(double a, double b, double c) {
-        i.setParams(a, b, c);
+    public void setParameters(double a, double b, double c, double d, boolean headlights) {
+        i = new ImageProcParams(a, b, c, d, headlights);
     }
 
     public String getStringLocation() {
