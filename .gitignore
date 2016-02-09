@@ -8,3 +8,14 @@ core/*.class
 build
 /larry/src/main/resources/uk.ac.cam.teamdelta.larry/apikey.txt
 /.idea
+
+*.project
+*.classpath
+*.settings
+
+andy/.gitignore
+frank/.gitignore
+larry/.gitignore
+peter/.gitignore
+robert/.gitignore
+core/.gitignore

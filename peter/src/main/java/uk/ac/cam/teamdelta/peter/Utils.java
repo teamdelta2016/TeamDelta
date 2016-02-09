@@ -15,7 +15,8 @@ class Utils {
 
     static final int MAT_TYPE = 16;
 
-    static void blurImage(Mat source, int radius){
+    static void blurImage(Mat source, int amount){
+        int radius = amount * 2 + 1;
         Imgproc.GaussianBlur(source, source, new Size(radius, radius), radius);
     }
 

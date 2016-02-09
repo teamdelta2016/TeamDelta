@@ -30,33 +30,69 @@ class ImageProcImpl extends ImageProc {
 
     public ImageOutputSet process(ImageInputSet input){
         BufferedImage front = processFront(input.frontLeft, input.frontRight);
-        // BufferedImage left = processSide(input.left, true);
+        BufferedImage left = processSide(input.left, true);
         // BufferedImage right = processSide(input.right, false);
         // BufferedImage back = processBack(input.back);
 
 
-        return new ImageOutputSet(front, null, null, null);
+        return new ImageOutputSet(front, left, null, null);
+    }
+
+    private BufferedImage processSide(BufferedImage iI, boolean isLeftSide){
+        Mat i = Utils.bufferedImageToMat(iI);
+
+
+        if(params.nightTimeFactor > 0){
+            Night.nightTime(i, params.nightTimeFactor);
+        }
+
+        if(params.blurValue > 0){
+            Utils.blurImage(i, params.blurValue * 2);
+        }
+
+        double x = (1 - params.darkEdgesFactor) * 1.5;
+        Core.multiply(i, new Scalar(x, x, x), i);
+
+        try{
+            return Utils.matToBufferedImage(i);
+        }catch(IOException e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private BufferedImage processFront(BufferedImage fLI, BufferedImage fRI){
         Mat fL = Utils.bufferedImageToMat(fLI);
         Mat fR = Utils.bufferedImageToMat(fRI);
 
-        Mat frontSource = Stitcher.stitchImages(fL, fR);
+        // Stitch
+        Mat i = Stitcher.stitchImages(fL, fR);
 
-        Mat frontSized = Utils.resizeImage(frontSource, Utils.FRONT_ROWS, Utils.FRONT_COLS);
+        if(params.nightTimeFactor > 0){
+            Night.nightTime(i, params.nightTimeFactor);
+        }
 
-        Mat ghosted = Ghoster.ghostImage(frontSized, 1.05, 1.05, 0.5);
+        if(params.blurValue > 0){
+            Utils.blurImage(i, params.blurValue);
+        }
+
+        i = Utils.resizeImage(i, Utils.FRONT_ROWS, Utils.FRONT_COLS);
+
+        Mat ghosted = Ghoster.ghostImage(i, params.ghostFactor, params.ghostFactor, 0.5);
 
         Mat blurred = ghosted.clone();
-        Utils.blurImage(blurred, 31);
+        Utils.blurImage(blurred, params.blurValue * 3);
 
-        Mat blurredCenter = peripheralFront.overlayPeripheral(ghosted, blurred);
+        i = peripheralFront.overlayPeripheral(ghosted, blurred);
 
-        Mat result = blurredCenter;
+        if(params.darkEdgesFactor > 0){
+            double x = 1 - params.darkEdgesFactor;
+            i = peripheralFront.multiplyColor(i,
+                                              new Scalar(x, x, x));
+        }
 
         try{
-            return Utils.matToBufferedImage(result);
+            return Utils.matToBufferedImage(i);
         }catch(IOException e){
             e.printStackTrace();
             return null;
@@ -70,7 +106,7 @@ class ImageProcImpl extends ImageProc {
                                   copyImage(input.back));
     }
 
-    private static BufferedImage copyImage(BufferedImage source){
+    private static BufferedImage copyImage(BufferedImage source) {
         BufferedImage b = new BufferedImage(source.getWidth(), source.getHeight(), source.getType());
         Graphics g = b.getGraphics();
         g.drawImage(source, 0, 0, null);

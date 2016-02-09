@@ -1,9 +1,10 @@
 package uk.ac.cam.teamdelta.robert;
 
+import uk.ac.cam.teamdelta.UserInput;
+
 import uk.ac.cam.teamdelta.Direction;
 import uk.ac.cam.teamdelta.Location;
 import uk.ac.cam.teamdelta.Logger;
-import uk.ac.cam.teamdelta.UserInput;
 
 public class Engine
 {

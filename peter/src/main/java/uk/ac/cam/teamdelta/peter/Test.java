@@ -14,18 +14,23 @@ import uk.ac.cam.teamdelta.*;
 
 public class Test {
 
-    static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME); }
+    static {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    }
 
     double ghostingValX = 1.05;
     double ghostingValY = 1.05;
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         new Test();
     }
 
     Test(){
         // process();
-        ImageProc ip = ImageProc.getImageProc(null);
+
+        ImageProcParams p = new ImageProcParams(6, 1.15, 0, 0.7);
+
+        ImageProc ip = ImageProc.getImageProc(p);
 
         try{
 
@@ -36,13 +41,15 @@ public class Test {
             File fR = new File(dir + "/testright2.jpeg");
             BufferedImage imgR = ImageIO.read(fR);
 
-            ImageInputSet set = new ImageInputSet(imgL, imgR, null, null, null);
+            ImageInputSet set = new ImageInputSet(imgL, imgR, imgL, imgR, null);
 
             ImageOutputSet out = ip.process(set);
 
             try{
-                File outputfile = new File(dir + "/test1joinresult.jpg");
+                File outputfile = new File(dir + "/test2front.jpg");
                 ImageIO.write(out.front, "jpg", outputfile);
+                outputfile = new File(dir + "/test2side.jpg");
+                ImageIO.write(out.left, "jpg", outputfile);
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -67,13 +74,26 @@ public class Test {
 
     //         Mat sourceRight = bufferedImageToMat(imgR);
 
+<<<<<<< HEAD
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+=======
     //         long t = System.currentTimeMillis();
+>>>>>>> peter
 
     //         Mat joined = Stitcher.stitchImages(sourceLeft, sourceRight);
 
     //         long t1 = System.currentTimeMillis();
 
+<<<<<<< HEAD
+    public void process1() {
+        try {
+            String dir = "./misc";
+=======
     //         System.out.println((t1 - t));
+>>>>>>> peter
 
     //         Mat dest = joined;
 
@@ -115,6 +135,61 @@ public class Test {
     //         Mat ghostCenter = new Mat();
     //         Core.multiply(ghosted, centerMaskInvert, ghostCenter, 1/255.0);
 
+<<<<<<< HEAD
+            File outputfile = new File(dir + "/test1result.jpg");
+            ImageIO.write(result, "jpg", outputfile);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Mat makeCenterMask(Mat from, boolean invert) {
+        Size size = from.size();
+        double maxRadius = Math.sqrt(size.width*size.width/4 + size.height*size.height/4);
+        System.out.println(maxRadius);
+        Mat centerMask = new Mat((int)size.height, (int)size.width, from.type());
+        for(int x = 0; x < size.height; x++) {
+            for(int y = 0; y < size.width; y++) {
+                double dX = (x - size.height / 2);
+                double dY = (y - size.width / 2);
+                double radius = Math.sqrt(dX*dX + dY*dY);
+                double value = radius / maxRadius;
+                if(invert) {
+                    value = 1.0 - value;
+                }
+                double[] pix = centerMask.get(x, y);
+                for(int i=0; i<pix.length; i++) {
+                    pix[i] = value * 255.0;
+                }
+                centerMask.put(x, y, pix);
+            }
+        }
+        return centerMask;
+    }
+
+    public static void blurImage(Mat source, int radius) {
+        Imgproc.GaussianBlur(source, source, new Size(radius, radius), radius);
+    }
+
+    public static Mat overlayImage(Mat bottom, Mat top, double opacity) {
+        Mat img = new Mat();
+        Core.addWeighted(bottom, 1.0 - opacity, top, opacity, 0.0, img);
+        return img;
+    }
+
+    public static Mat stretchImage(Mat source, double factorX, double factorY) {
+        Mat img = new Mat();
+        Size orig = source.size();
+        Size sz = new Size(orig.width * factorX, orig.height * factorY);
+        Imgproc.resize(source, img, sz);
+        Rect roi = new Rect((int)(orig.width * (factorX-1.0) / 2.0),
+                            (int)(orig.height * (factorY-1.0)/2.0),
+                            (int)orig.width,
+                            (int)orig.height);
+
+        return new Mat(img, roi);
+    }
+=======
     //         Mat blurCenter = new Mat();
     //         Core.multiply(blurred, centerMask, blurCenter, 1/255.0);
 
@@ -134,8 +209,20 @@ public class Test {
     //         e.printStackTrace();
     //     }
     // }
+>>>>>>> peter
 
 
+<<<<<<< HEAD
+    public static BufferedImage matToBufferedImage(Mat mat) throws IOException {
+        MatOfByte bytemat = new MatOfByte();
+        Highgui.imencode(".jpg", mat, bytemat);
+        byte[] bytes = bytemat.toArray();
+        InputStream in = new ByteArrayInputStream(bytes);
+        BufferedImage img = ImageIO.read(in);
+        return img;
+    }
+=======
+>>>>>>> peter
 
     // public static void main2(String[] args){
     //     System.out.println("Test: " + Constants.appName);

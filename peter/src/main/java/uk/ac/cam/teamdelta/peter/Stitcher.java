@@ -14,7 +14,7 @@ class Stitcher {
     private static final int SEARCH_CHUNK_SIZE = 10; /* Size of y chunk to search */
     private static final int SEARCH_SKIP_SIZE = 10; /* Size of y chunk to skip */
 
-    protected static Mat stitchImages(Mat sourceLeft, Mat sourceRight){
+    protected static Mat stitchImages(Mat sourceLeft, Mat sourceRight) {
         int yOffset = findYOffset(sourceLeft, sourceRight);
 
 
@@ -37,11 +37,11 @@ class Stitcher {
         return joined;
     }
 
-    private static int findYOffset(Mat left, Mat right){
+    private static int findYOffset(Mat left, Mat right) {
         int minY = 0;
         double minYVal = -1;
 
-        for(int i = 0; i < SEARCH_RAD * 2; i++){
+        for(int i = 0; i < SEARCH_RAD * 2; i++) {
             int yO = i % 2 == 0 ? i / 2 : -i / 2;
 
             int xL = ((int)left.cols()) - 1;
@@ -49,12 +49,12 @@ class Stitcher {
 
             double sum = 0;
             int currChunk = 0;
-            for(int y = SEARCH_RAD; y < left.rows() - SEARCH_RAD; y++){
-                if(currChunk >= SEARCH_CHUNK_SIZE){
+            for(int y = SEARCH_RAD; y < left.rows() - SEARCH_RAD; y++) {
+                if(currChunk >= SEARCH_CHUNK_SIZE) {
                     currChunk = 0;
                     y += SEARCH_SKIP_SIZE - 1;
                     continue;
-                }else{
+                } else {
                     currChunk++;
                 }
 
@@ -64,7 +64,7 @@ class Stitcher {
                 sum += dCol * dCol;
             }
 
-            if(minYVal < 0 || sum < minYVal){
+            if(minYVal < 0 || sum < minYVal) {
                 minYVal = sum;
                 minY = yO;
             }
