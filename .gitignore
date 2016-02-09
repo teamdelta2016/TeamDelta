@@ -3,6 +3,14 @@
 build
 
 .gitignore~
+
+core/*.class
+.DS_Store
+.gradle
+build
+/larry/src/main/resources/uk.ac.cam.teamdelta.larry/apikey.txt
+/.idea
+
 *.project
 *.classpath
 *.settings
