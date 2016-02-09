@@ -28,7 +28,7 @@ public class Test {
     Test(){
         // process();
 
-        ImageProcParams p = new ImageProcParams(6, 1.15, 0, 0.7);
+        ImageProcParams p = new ImageProcParams(30, 30, 30, 70, true);
 
         ImageProc ip = ImageProc.getImageProc(p);
 
@@ -43,13 +43,18 @@ public class Test {
 
             ImageInputSet set = new ImageInputSet(imgL, imgR, imgL, imgR, null);
 
-            ImageOutputSet out = ip.process(set);
+            ImageOutputSet out = ip.process(set, false);
+
+
+            BufferedImage iOut = ImageProc.processTest(imgL, imgR, p);
 
             try{
                 File outputfile = new File(dir + "/test2front.jpg");
                 ImageIO.write(out.front, "jpg", outputfile);
                 outputfile = new File(dir + "/test2side.jpg");
                 ImageIO.write(out.left, "jpg", outputfile);
+                outputfile = new File(dir + "/test3f.jpg");
+                ImageIO.write(iOut, "jpg", outputfile);
             }catch(Exception e){
                 e.printStackTrace();
             }
