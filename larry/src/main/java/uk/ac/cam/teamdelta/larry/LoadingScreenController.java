@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import uk.ac.cam.teamdelta.robert.Engine;
 
 import static uk.ac.cam.teamdelta.Logger.debug;
 
@@ -23,7 +24,7 @@ public class LoadingScreenController implements ScreenController {
     }
 
     @Override
-    public void setupScreen() {
+    public void showScreen() {
         // set size of rotating wheel image
         img.setFitHeight(Main.GAME_HEIGHT / 2);
         img.setFitWidth(Main.GAME_WIDTH / 2);
@@ -34,6 +35,8 @@ public class LoadingScreenController implements ScreenController {
         Task<Void> sleeper = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
+                //TODO: Constructor may change
+                LarrySettings.getInstance().setEngine(new Engine(LarrySettings.getInstance().getLocation()));
                 debug("Started sleeping for loading");
                 Thread.sleep(5000);
                 return null;
@@ -51,6 +54,11 @@ public class LoadingScreenController implements ScreenController {
         rt.setCycleCount(10);
         rt.setByAngle(720);
         rt.play();
+
+    }
+
+    @Override
+    public void setupScreen() {
 
     }
 

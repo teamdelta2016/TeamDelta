@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import uk.ac.cam.teamdelta.ImageParams;
 import uk.ac.cam.teamdelta.ImageProcParams;
 
 import java.io.IOException;
@@ -104,7 +103,7 @@ public class ParameterScreenController implements ScreenController {
     }
 
     @Override
-    public void setupScreen() {
+    public void showScreen() {
         // retrieve previous settings
         ImageProcParams p = LarrySettings.getInstance().getParameters();
         slider1.setValue(p.blurValue);
@@ -113,6 +112,11 @@ public class ParameterScreenController implements ScreenController {
         slider4.setValue(p.darkEdgesFactor);
 
         view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1out.jpg"));
+    }
+
+    @Override
+    public void setupScreen() {
+
     }
 
 }

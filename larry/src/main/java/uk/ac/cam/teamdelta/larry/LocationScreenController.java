@@ -17,9 +17,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class LocationScreenController implements ScreenController {
+
     private static String API_KEY;
+
     // apikey.txt shouldn't be included in git
-    //TODO: find a better place for all the api keys we have
     static {
         try {
             //API_KEY = new BufferedReader(new FileReader("/uk.ac.cam.teamdelta.larry/apikey.txt")).readLine();
@@ -44,12 +45,17 @@ public class LocationScreenController implements ScreenController {
     }
 
     @Override
-    public void setupScreen() {
+    public void showScreen() {
         // remove red border from textField and clear it if needed
         locationText.getStyleClass().remove("error");
         locationText.requestFocus();
         // also remove the error text
         errorText.setText("");
+    }
+
+    @Override
+    public void setupScreen() {
+
     }
 
     /**
@@ -71,16 +77,16 @@ public class LocationScreenController implements ScreenController {
             if (results != null && results.length > 0) { // Geocoding success
                 // add the location to LarrySettings
                 LarrySettings.getInstance().
-                setLocation(results[0].geometry.location.lat, results[0].geometry.location.lng);
+                        setLocation(results[0].geometry.location.lat, results[0].geometry.location.lng);
                 GeocodingResult[] revResults =
-                    GeocodingApi.reverseGeocode(context,
-                                                new LatLng(results[0].geometry.location.lat,
-                                                        results[0].geometry.location.lng)).region("gb").await();
+                        GeocodingApi.reverseGeocode(context,
+                                new LatLng(results[0].geometry.location.lat,
+                                        results[0].geometry.location.lng)).region("gb").await();
                 if (revResults.length == 0) {
                     System.err.println("Geocoding isn't bijective! Reverse query failed while forward passed");
                 }
-                LarrySettings.getInstance().setStringLocation(
-                    revResults[0].formattedAddress);
+                LarrySettings.getInstance().setLocationAddress(
+                        revResults[0].formattedAddress);
                 // advance to next screen
                 container.nextScreen();
             } else { // Geocoding failure: need to try again
