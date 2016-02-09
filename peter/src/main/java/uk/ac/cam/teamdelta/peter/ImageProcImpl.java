@@ -30,8 +30,8 @@ class ImageProcImpl extends ImageProc {
 
     @Override
     public ImageOutputSet process(ImageInputSet input, boolean isJunction){
-        BufferedImage front = processFront(input.frontLeft, input.frontRight);
-        BufferedImage left = processSide(input.left, true);
+        BufferedImage front = processFront(input.getFrontLeft(), input.getFrontRight());
+        BufferedImage left = processSide(input.getLeft(), true);
         // BufferedImage right = processSide(input.right, false);
         // BufferedImage back = processBack(input.back);
 
@@ -106,21 +106,6 @@ class ImageProcImpl extends ImageProc {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public ImageOutputSet processStub(ImageInputSet input){
-        return new ImageOutputSet(copyImage(input.frontLeft),
-                                  copyImage(input.left),
-                                  copyImage(input.right),
-                                  copyImage(input.back));
-    }
-
-    private static BufferedImage copyImage(BufferedImage source) {
-        BufferedImage b = new BufferedImage(source.getWidth(), source.getHeight(), source.getType());
-        Graphics g = b.getGraphics();
-        g.drawImage(source, 0, 0, null);
-        g.dispose();
-        return b;
     }
 
 }

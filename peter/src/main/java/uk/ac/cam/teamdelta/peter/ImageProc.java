@@ -57,7 +57,7 @@ public abstract class ImageProc {
     public static BufferedImage processTest(BufferedImage left,
                                             BufferedImage right,
                                             ImageProcParams params){
-        ImageInputSet is = new ImageInputSet(left, right, null, null, null);
+        ImageInputSet is = new ImageInputSet(null, left, right, null, null);
         ImageProc ip = ImageProc.getImageProc(params);
         ImageOutputSet os = ip.process(is, false);
         return os.front;
