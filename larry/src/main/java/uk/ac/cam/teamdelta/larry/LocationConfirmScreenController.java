@@ -12,8 +12,6 @@ import java.io.IOException;
  * If not, they can go back and try again.
  */
 public class LocationConfirmScreenController implements ScreenController {
-
-    private static final String API_KEY = "AIzaSyBYeEDUeckhXm_j8gpymwisXALFuzOShXk";
     ScreensContainer container;
     @FXML
     private Label retrievedLocation;

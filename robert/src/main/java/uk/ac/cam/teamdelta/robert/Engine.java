@@ -1,33 +1,50 @@
 package uk.ac.cam.teamdelta.robert;
+import java.util.Collections;
+import java.net.MalformedURLException;
+import uk.ac.cam.teamdelta.*;
+import uk.ac.cam.teamdelta.andy.*;
+import uk.ac.cam.teamdelta.peter.*;
 
-import uk.ac.cam.teamdelta.UserInput;
+public class Engine {
+    private Location m_location;
+    private Direction m_direction;
+    private ImageFetcher m_fetcher;
+    private ImageProc m_proc;
 
-import uk.ac.cam.teamdelta.Direction;
-import uk.ac.cam.teamdelta.Location;
-import uk.ac.cam.teamdelta.Logger;
-
-public class Engine
-{
-	private Location m_location;
-	private Direction m_direction;
-
-	public Engine(Location location_query)
-	{
-		//dispatch the location query to subsystems to find out where we are
-	}
-
-	//update state to the next appropriate location
-	//return frame at the new location
-	//not actually abstract
-	public Frame nextFrame(UserInput l){
-		return new Frame(null,null);
-	}
-
-    public void stop(){
-        Logger.debug("Stopping Engine");
+    public Engine(Location location_query, ImageProcParams params) {
+        Logger.debug("starting engine");
+        //FIXME: snap to nearest location
+        m_location = location_query;
+        m_direction = new Direction(0);
+        m_fetcher = new ImageFetcher();
+        m_proc = ImageProc.getImageProc(params);
     }
 
-	public Location getLocation() {return m_location;}
+    //update state to the next appropriate location
+    //return frame at the new location
+    public Frame nextFrame(UserInput l) {
+        try {
+            JunctionInfo ji = new JunctionInfo(m_location, Collections.emptySet());
+            Logger.debug("fetching images");
+            ImageInputSet input = m_fetcher.sendGet(640, 480, m_location.getLatitude(), m_location.getLongitude(), 30, 0);
+            Logger.debug("processing images");
+            ImageOutputSet processed = m_proc.process(input, false);
+            Logger.debug("frame ready");
+            return new Frame(processed, ji);
+        } catch(MalformedURLException e) {
+            return new Frame(null, null);
+        }
+    }
 
-	public Direction getDirection() {return m_direction;}
+    public void stop() {
+        Logger.debug("stopping engine");
+    }
+
+    public Location getLocation() {
+        return m_location;
+    }
+
+    public Direction getDirection() {
+        return m_direction;
+    }
 }

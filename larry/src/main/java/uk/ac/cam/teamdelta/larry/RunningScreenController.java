@@ -26,6 +26,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static uk.ac.cam.teamdelta.Logger.debug;
+import uk.ac.cam.teamdelta.*;
 
 public class RunningScreenController implements ScreenController {
 
@@ -82,17 +83,15 @@ public class RunningScreenController implements ScreenController {
 
     @Override
     public void setupScreen() {
-        // TODO: Remove this
-        // For testing, set the image to a default one
-        view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1joinresult.jpg"));
-
         // layout hack
         view.setFitHeight(Main.GAME_HEIGHT / 1.4);
-        //TODO: Constructor may change
-        engine = new Engine(LarrySettings.getInstance().getLocation());
+        ImageProcParams params = new ImageProcParams(0, 0, 0, 0, false);
+        engine = new Engine(LarrySettings.getInstance().getLocation(), params);
         locationText.setText("Current Location:\n" + LarrySettings.getInstance().getLocation().getLatitude() + ", " +
-                LarrySettings.getInstance().getLocation().getLongitude());
+                             LarrySettings.getInstance().getLocation().getLongitude());
 
+        currentFrame =  engine.nextFrame(new ContinueInput(true));
+        view.setImage(ConvertImage.convert(currentFrame.getImages().front));
         // code to create second stage on other monitor if it exists
         if (Screen.getScreens().size() > 1) {
             makeOtherScreen(1);
@@ -124,7 +123,7 @@ public class RunningScreenController implements ScreenController {
      * Called when UP arrow is pressed, requests the next frame from the {@link Engine}
      */
     private void goToNextFrame() {
-        currentFrame = engine.nextFrame(null);
+        currentFrame = engine.nextFrame(new ContinueInput(true));
         // set images in various places from frame
         if (lookingForward) {
             debug("Requested next frame");
@@ -137,13 +136,13 @@ public class RunningScreenController implements ScreenController {
     private void switchView() {
         lookingForward = !lookingForward;
         if (lookingForward) {
-            view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1joinresult.jpg"));
+            view.setImage(ConvertImage.convert(currentFrame.getImages().front));
             if (otherControllers.size() > 1) {
                 otherControllers.get(1).setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1out.jpg"));
             }
             debug("Now looking forwards");
         } else {
-            view.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/car.png"));
+            view.setImage(ConvertImage.convert(currentFrame.getImages().back));
             if (otherControllers.size() > 1) {
                 otherControllers.get(1).setImage(new Image("/uk.ac.cam.teamdelta.larry/images/car.png"));
             }

@@ -3,13 +3,17 @@ package uk.ac.cam.teamdelta.peter;
 import uk.ac.cam.teamdelta.ImageInputSet;
 import uk.ac.cam.teamdelta.ImageOutputSet;
 import uk.ac.cam.teamdelta.ImageProcParams;
+import org.opencv.core.*;
 import java.awt.image.BufferedImage;
 
 public abstract class ImageProc {
 
+    static {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    }
     protected final ImageProcParamsInternal params;
 
-    protected ImageProc(ImageProcParams params){
+    protected ImageProc(ImageProcParams params) {
         this.params = new ImageProcParamsInternal(params);
     }
 
@@ -56,7 +60,7 @@ public abstract class ImageProc {
      */
     public static BufferedImage processTest(BufferedImage left,
                                             BufferedImage right,
-                                            ImageProcParams params){
+                                            ImageProcParams params) {
         ImageInputSet is = new ImageInputSet(null, left, right, null, null);
         ImageProc ip = ImageProc.getImageProc(params);
         ImageOutputSet os = ip.process(is, false);
