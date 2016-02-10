@@ -2,12 +2,17 @@ package uk.ac.cam.teamdelta;
 
 public class Location
 {
-	public Location(float latitude, float longitude)
+	public Location(double latitude, double longitude)
 	{
 		m_latitude = latitude;
 		m_longitude = longitude;
 	}
-	public float getLatitude() {return m_latitude;}
-	public float getLongitude() {return m_longitude;}
-	private float m_latitude, m_longitude;
+	public double getLatitude() {return m_latitude;}
+	public double getLongitude() {return m_longitude;}
+	public void reset(double latitude, double longitude)
+	{
+        m_latitude = latitude;
+        m_longitude = longitude;
+    }
+	private double m_latitude, m_longitude;
 }

@@ -2,10 +2,10 @@ package uk.ac.cam.teamdelta;
 
 public class Direction
 {
-	public Direction(float degrees)
+	public Direction(double degrees)
 	{
 		m_degrees = degrees;
 	}
-	public float getDegrees() {return m_degrees;}
-	private float m_degrees;
+	public double getDegrees() {return m_degrees;}
+	private double m_degrees;
 }

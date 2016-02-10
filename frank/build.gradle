@@ -9,3 +9,9 @@ mainClassName = "uk.ac.cam.teamdelta.frank.RoutePlanner"
 dependencies {
     compile project(":core")
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'uk.ac.cam.teamdelta.frank.RoutePlanner'
+    }
+}
