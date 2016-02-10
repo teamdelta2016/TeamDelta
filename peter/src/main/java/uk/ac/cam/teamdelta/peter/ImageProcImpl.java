@@ -21,11 +21,13 @@ import javax.imageio.*;
 class ImageProcImpl extends ImageProc {
 
     private Peripheral peripheralFront;
+    private Glarer glarer;
 
     ImageProcImpl(ImageProcParams params){
         super(params);
 
         peripheralFront = new Peripheral(Utils.FRONT_ROWS, Utils.FRONT_COLS, Utils.MAT_TYPE);
+        glarer = new Glarer();
     }
 
     @Override
@@ -98,6 +100,10 @@ class ImageProcImpl extends ImageProc {
             double x = 1 - params.darkEdgesFactor;
             i = peripheralFront.multiplyColor(i,
                                               new Scalar(x, x, x));
+        }
+
+        if(params.showHeadlights){
+            glarer.addCar(i);
         }
 
         try{

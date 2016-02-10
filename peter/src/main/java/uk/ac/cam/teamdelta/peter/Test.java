@@ -28,7 +28,7 @@ public class Test {
     Test(){
         // process();
 
-        ImageProcParams p = new ImageProcParams(30, 30, 30, 70, true);
+        ImageProcParams p = new ImageProcParams(0, 30, 70, 70, true);
 
         ImageProc ip = ImageProc.getImageProc(p);
 
@@ -50,7 +50,7 @@ public class Test {
 
             try{
                 File outputfile = new File(dir + "/test2front.jpg");
-                ImageIO.write(out.left, "jpg", outputfile);
+                ImageIO.write(out.front, "jpg", outputfile);
                 outputfile = new File(dir + "/test2side.jpg");
                 ImageIO.write(out.back, "jpg", outputfile);
                 outputfile = new File(dir + "/test3f.jpg");
