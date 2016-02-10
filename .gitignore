@@ -1,16 +1,22 @@
-Andy/*.class
-Andy/ImageGrabberOld.java
-Andy/KeyInterface.java
-Andy/*.jpg
 .DS_Store
 .gradle
 build
 
+.gitignore~
+
+core/*.class
+.DS_Store
+.gradle
+build
+/larry/src/main/resources/uk.ac.cam.teamdelta.larry/apikey.txt
+/.idea
 
 *.project
 *.classpath
 *.settings
 
+andy/*.jpg
+andy/src/main/java/uk/ac/cam/teamdelta/andy/KeyInterface.java
 andy/.gitignore
 frank/.gitignore
 larry/.gitignore
