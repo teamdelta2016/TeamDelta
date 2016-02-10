@@ -5,4 +5,5 @@ import uk.ac.cam.teamdelta.*;
 public interface RouteFinder {
     public JunctionInfo getNextPosition(
         Location current_position, Direction current_direction);
+    public JunctionInfo getInitialPosition(Location initial_position);
 }
