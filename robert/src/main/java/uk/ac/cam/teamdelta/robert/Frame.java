@@ -11,6 +11,9 @@ public class Frame {
     public ImageOutputSet getImages() {
         return m_set;
     }
+    public JunctionInfo getJunctions(){
+        return m_junctions;
+    }
     private final ImageOutputSet m_set;
     private final JunctionInfo m_junctions;
 }

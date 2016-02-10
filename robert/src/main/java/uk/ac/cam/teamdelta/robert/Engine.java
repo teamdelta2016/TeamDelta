@@ -22,9 +22,9 @@ public class Engine {
 
     //update state to the next appropriate location
     //return frame at the new location
-    public Frame nextFrame(UserInput l) {
+    public Frame nextFrame(Direction d) {
         try {
-            JunctionInfo ji = new JunctionInfo(m_location, Collections.emptySet());
+            JunctionInfo ji = new JunctionInfo(m_location, Collections.<Direction>emptySet());
             Logger.debug("fetching images");
             ImageInputSet input = m_fetcher.sendGet(640, 480, m_location.getLatitude(), m_location.getLongitude(), 30, 0);
             Logger.debug("processing images");

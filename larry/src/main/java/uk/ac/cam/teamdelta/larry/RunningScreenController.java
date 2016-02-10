@@ -25,8 +25,6 @@ import javafx.stage.StageStyle;
 import uk.ac.cam.teamdelta.Direction;
 import uk.ac.cam.teamdelta.ImageOutputSet;
 import uk.ac.cam.teamdelta.JunctionInfo;
-import uk.ac.cam.teamdelta.MovementInput;
-import uk.ac.cam.teamdelta.UserInput;
 import uk.ac.cam.teamdelta.robert.Engine;
 import uk.ac.cam.teamdelta.robert.Frame;
 
@@ -158,7 +156,7 @@ public class RunningScreenController implements ScreenController {
     private void goToNextFrame() {
         nextFrameService.reset();
         //TODO: pass useful information
-        nextFrameService.setInput(new MovementInput(true));
+        nextFrameService.setInput(null);
         nextFrameService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
@@ -173,7 +171,7 @@ public class RunningScreenController implements ScreenController {
         images = frame.getImages();
         if (junctions != null && images != null) {
             // update direction arrows
-            for (Direction d : junctions.getRoadAngles()) {
+            for (Direction d : junctions.getRoadDirections()) {
                 debug("Junction at " + d.getDegrees());
             }
             // update location text
@@ -269,13 +267,13 @@ public class RunningScreenController implements ScreenController {
 
     private static class NextFrameService extends Service<Frame> {
 
-        private UserInput input;
+        private Direction input;
 
-        public final UserInput getInput() {
+        public final Direction getInput() {
             return input;
         }
 
-        public final void setInput(UserInput i) {
+        public final void setInput(Direction i) {
             input = i;
         }
 
@@ -285,7 +283,7 @@ public class RunningScreenController implements ScreenController {
                 @Override
                 protected Frame call() throws Exception {
                     debug("Background image fetch task started");
-                    return larrySettings.getEngine().nextFrame(getInput());
+                    return larrySettings.getEngine().nextFrame(null);
                 }
             };
         }

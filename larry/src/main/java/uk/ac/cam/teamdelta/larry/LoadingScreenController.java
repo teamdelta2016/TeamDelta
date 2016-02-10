@@ -36,7 +36,8 @@ public class LoadingScreenController implements ScreenController {
             @Override
             protected Void call() throws Exception {
                 //TODO: Constructor may change
-                LarrySettings.getInstance().setEngine(new Engine(LarrySettings.getInstance().getLocation()));
+                LarrySettings.getInstance().setEngine(new Engine(LarrySettings.getInstance().getLocation(),
+                        LarrySettings.getInstance().getParameters()));
                 debug("Started sleeping for loading");
                 Thread.sleep(1000);
                 return null;

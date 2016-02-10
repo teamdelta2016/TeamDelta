@@ -17,5 +17,5 @@ test {
 
 // The following makes "gradle run" work
 run {
-    jvmArgs = ['-Djava.library.path=/usr/local/share/OpenCV/java']
+    jvmArgs = ['-Djava.library.path="C:\\Users\\bob\\OpenCV\\opencv\\build\\java\\x64"']
 }

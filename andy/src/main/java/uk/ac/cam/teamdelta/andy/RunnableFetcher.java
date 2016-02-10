@@ -10,14 +10,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 
-public class RunnableFetcher extends Thread implements KeyInterface {
+public class RunnableFetcher extends Thread {
 	private BufferedImage result; 
 	private URL fetchLocation;
 	public RunnableFetcher(int width, int height, double latitude, double longitude, 
 						 int fov, int heading, int pitch) throws MalformedURLException {
 		String url = "https://maps.googleapis.com/maps/api/streetview?size=" + width + "x" + 
 					 height + "&location=" + latitude + "," + longitude + "&fov=" + fov + "&heading=" + 
-					 heading + "&pitch=" + pitch + "&key=" + API_KEY;	
+					 heading + "&pitch=" + pitch + "&key=" + "AIzaSyBYeEDUeckhXm_j8gpymwisXALFuzOShXk";
 		fetchLocation = new URL(url);
 		result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
