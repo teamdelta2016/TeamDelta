@@ -32,11 +32,11 @@ class ImageProcImpl extends ImageProc {
     public ImageOutputSet process(ImageInputSet input, boolean isJunction){
         BufferedImage front = processFront(input.getFrontLeft(), input.getFrontRight());
         BufferedImage left = processSide(input.getLeft(), true);
-        // BufferedImage right = processSide(input.right, false);
-        // BufferedImage back = processBack(input.back);
+        BufferedImage right = processSide(input.getRight(), false);
+        BufferedImage back = processSide(input.getBack(), true);
 
 
-        return new ImageOutputSet(front, left, null, null);
+        return new ImageOutputSet(front, left, right, back);
     }
 
     private BufferedImage processSide(BufferedImage iI, boolean isLeftSide){

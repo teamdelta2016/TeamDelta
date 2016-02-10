@@ -41,7 +41,7 @@ public class Test {
             File fR = new File(dir + "/testright2.jpeg");
             BufferedImage imgR = ImageIO.read(fR);
 
-            ImageInputSet set = new ImageInputSet(imgL, imgL, imgR, imgR, null);
+            ImageInputSet set = new ImageInputSet(imgL, imgL, imgR, imgR, imgL);
 
             ImageOutputSet out = ip.process(set, false);
 
@@ -50,9 +50,9 @@ public class Test {
 
             try{
                 File outputfile = new File(dir + "/test2front.jpg");
-                ImageIO.write(out.front, "jpg", outputfile);
-                outputfile = new File(dir + "/test2side.jpg");
                 ImageIO.write(out.left, "jpg", outputfile);
+                outputfile = new File(dir + "/test2side.jpg");
+                ImageIO.write(out.back, "jpg", outputfile);
                 outputfile = new File(dir + "/test3f.jpg");
                 ImageIO.write(iOut, "jpg", outputfile);
             }catch(Exception e){
