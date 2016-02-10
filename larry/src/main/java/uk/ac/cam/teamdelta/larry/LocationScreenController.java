@@ -17,16 +17,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class LocationScreenController implements ScreenController {
-
     private static String API_KEY;
-
     // apikey.txt shouldn't be included in git
     //TODO: find a better place for all the api keys we have
     static {
         try {
             //API_KEY = new BufferedReader(new FileReader("/uk.ac.cam.teamdelta.larry/apikey.txt")).readLine();
             API_KEY = new String(Files.readAllBytes(Paths.get(
-                    "./src/main/resources/uk.ac.cam.teamdelta.larry/apikey.txt")));
+                    "./src/main/resources/uk.ac.cam.teamdelta.larry/apikey.txt"))).trim();
         } catch (IOException e) {
             e.printStackTrace();
             API_KEY = "";
@@ -73,16 +71,16 @@ public class LocationScreenController implements ScreenController {
             if (results != null && results.length > 0) { // Geocoding success
                 // add the location to LarrySettings
                 LarrySettings.getInstance().
-                        setLocation(results[0].geometry.location.lat, results[0].geometry.location.lng);
+                setLocation(results[0].geometry.location.lat, results[0].geometry.location.lng);
                 GeocodingResult[] revResults =
-                        GeocodingApi.reverseGeocode(context,
-                                new LatLng(results[0].geometry.location.lat,
-                                        results[0].geometry.location.lng)).region("gb").await();
+                    GeocodingApi.reverseGeocode(context,
+                                                new LatLng(results[0].geometry.location.lat,
+                                                        results[0].geometry.location.lng)).region("gb").await();
                 if (revResults.length == 0) {
                     System.err.println("Geocoding isn't bijective! Reverse query failed while forward passed");
                 }
                 LarrySettings.getInstance().setStringLocation(
-                        revResults[0].formattedAddress);
+                    revResults[0].formattedAddress);
                 // advance to next screen
                 container.nextScreen();
             } else { // Geocoding failure: need to try again
