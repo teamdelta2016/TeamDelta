@@ -1,9 +1,9 @@
 apply plugin: 'java'
-apply plugin: 'application'
+//apply plugin: 'application'
 
 version = 1.0
 
-mainClassName = "uk.ac.cam.teamdelta.peter.Test"
+//mainClassName = "uk.ac.cam.teamdelta.peter.Test"
 
 dependencies {
     compile project(":core")
@@ -15,7 +15,7 @@ test {
     jvmArgs = ['-Djava.library.path=./src/main/resources/META-INF/opencv-2.4.9/windows_bin/x64']
 }
 
-// The following makes "gradle run" work
-run {
-    jvmArgs = ['-Djava.library.path="C:\\Users\\bob\\OpenCV\\opencv\\build\\java\\x64"']
-}
+//// The following makes "gradle run" work
+//run {
+//    jvmArgs = ['-Djava.library.path="C:\\Users\\bob\\OpenCV\\opencv\\build\\java\\x64"']
+//}

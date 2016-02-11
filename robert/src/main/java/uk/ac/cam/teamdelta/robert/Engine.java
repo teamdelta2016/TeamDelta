@@ -13,7 +13,6 @@ import uk.ac.cam.teamdelta.frank.RoutePlanner;
 import uk.ac.cam.teamdelta.peter.ImageProc;
 
 import java.net.MalformedURLException;
-import java.util.Collections;
 
 public class Engine {
 
@@ -22,6 +21,7 @@ public class Engine {
     private ImageFetcher m_fetcher;
     private ImageProc m_proc;
     private RouteFinder m_routeFinder;
+    private Frame m_frame;
 
     public Engine(Location location_query, ImageProcParams params) {
         Logger.debug("starting engine");
@@ -31,13 +31,20 @@ public class Engine {
         m_fetcher = new ImageFetcher();
         m_proc = ImageProc.getImageProc(params);
         m_routeFinder = new RoutePlanner();
+        m_frame = new Frame(null,null);
+    }
+
+    public void firstFrame(){
+        nextFrame(new Direction(0));
     }
 
     //update state to the next appropriate location
     //return frame at the new location
     public Frame nextFrame(Direction d) {
         try {
+            Long time = System.currentTimeMillis();
             JunctionInfo ji = m_routeFinder.getNextPosition(m_location,m_direction);
+            Logger.debug("Time to routeplan " + Long.toString(System.currentTimeMillis() - time));
             Logger.debug(ji.getNextLocation().getLatitude() + ", " + ji.getNextLocation().getLongitude());
             m_location = ji.getNextLocation();
             Logger.debug("fetching images");
@@ -45,8 +52,10 @@ public class Engine {
                     m_location.getLongitude(), 60, (int)m_direction.getDegrees() , 0);
             Logger.debug("processing images");
             ImageOutputSet processed = m_proc.process(input, false);
+            Logger.debug("After processing " + Long.toString(System.currentTimeMillis() - time));
             Logger.debug("frame ready");
-            return new Frame(processed, ji);
+            m_frame = new Frame(processed, ji);
+            return m_frame;
         } catch (MalformedURLException e) {
             Logger.error("Got malformed URL");
             return new Frame(null, null);
@@ -63,5 +72,9 @@ public class Engine {
 
     public Direction getDirection() {
         return m_direction;
+    }
+
+    public Frame getCurrentFrame(){
+        return m_frame;
     }
 }

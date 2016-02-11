@@ -80,8 +80,12 @@
     /*-fx-background-insets: 10px;*/
 }
 
+.rearImg {
+    -fx-effect: dropshadow(gaussian,#000000 , 20, 0.2, 1, 2);
+}
+
 .gridPane.run {
-    -fx-background-color: #464646;
+    -fx-background-color: #111111;
 }
 
 * {
