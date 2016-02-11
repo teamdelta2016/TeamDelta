@@ -23,7 +23,6 @@ public class LocationScreenController implements ScreenController {
     // apikey.txt shouldn't be included in git
     static {
         try {
-            //API_KEY = new BufferedReader(new FileReader("/uk.ac.cam.teamdelta.larry/apikey.txt")).readLine();
             API_KEY = new String(Files.readAllBytes(Paths.get(
                     "./src/main/resources/uk.ac.cam.teamdelta.larry/apikey.txt"))).trim();
         } catch (IOException e) {
