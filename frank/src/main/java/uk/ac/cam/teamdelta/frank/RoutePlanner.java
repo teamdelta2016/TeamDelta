@@ -97,7 +97,7 @@ public class RoutePlanner implements RouteFinder {
         } catch(Exception e) {
             System.out.println("Data miner returned with an error: ");
             e.printStackTrace();
-            return info;
+            return new JunctionInfo(current_position,new TreeSet<Direction>());
         }
         
         double minDist = 123456789;

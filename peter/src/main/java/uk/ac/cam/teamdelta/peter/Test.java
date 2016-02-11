@@ -1,16 +1,13 @@
 package uk.ac.cam.teamdelta.peter;
 
-import uk.ac.cam.teamdelta.Constants;
+import org.opencv.core.Core;
+import uk.ac.cam.teamdelta.ImageInputSet;
+import uk.ac.cam.teamdelta.ImageOutputSet;
+import uk.ac.cam.teamdelta.ImageProcParams;
 
-import org.opencv.core.*;
-import org.opencv.highgui.*;
-import org.opencv.imgproc.*;
-import java.awt.image.*;
-
-import java.io.*;
-import javax.imageio.*;
-
-import uk.ac.cam.teamdelta.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class Test {
 
