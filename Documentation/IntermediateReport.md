@@ -1,8 +1,8 @@
 #Intermediate Report
 
 ####Most of the implementation groundwork is now complete - much of the remaining work will involve optimisations to reduce latency, refinements to logic, handling of corner cases and improving the user experience (as well as testing).
-####The driving engine, user interface, route planner and image fetcher now function together to create a stripped-down version of the application that allows the viewer to choose a location and will display one set of images. 
-####The user cannot yet "drive" through the simulation, and the image processor is not yet integrated with the rest of the project.
+####The driving engine, user interface, route planner, image processor and image fetcher now function together to create a stripped-down version of the application that allows the viewer to choose a location, change processing parameters and will display one set of images. 
+####The user cannot yet "drive" through the simulation.
 
 ##Anthoney - Image Fetcher
 
@@ -18,7 +18,7 @@
 
 - He then started to create seperate methods for each image processing feature, and then moved these methods to static methods in helper classes, just to lay out the code more cleanly. He also made a Peripheral class that needed an instance as it stored circular masks in memory over the course of the image processors lifetime.
 
-- Currently, functionality exists for image stitching, peripheral blur, double vision, night mode and headlamp glare.
+- Currently, functionality exists for image stitching, blur, peripheral darkness, double vision, night mode and headlamp glare.
 
 - Testing the image processor just involved running manual tests with various street view images. The whole module isn't very object oriented due to the nature of the OpenCV library. Becuase of this, black box, white box and unit testing will be difficult.
 
