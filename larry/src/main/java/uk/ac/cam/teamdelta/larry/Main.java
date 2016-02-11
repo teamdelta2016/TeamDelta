@@ -82,7 +82,7 @@ public class Main extends Application {
     public static final String RUNNING_OTHER_SCREEN_FXML = "/uk.ac.cam.teamdelta.larry/runOther.fxml";
 
 
-    public static final long KEY_HOLD_DELAY = 3000;
+    public static final long KEY_HOLD_DELAY = 2000;
 
     /**
      * The width in pixels of the game

@@ -43,7 +43,7 @@ public class RunningScreenController implements ScreenController {
     @FXML
     Button button;
     @FXML
-    ImageView frontView, leftView, rightView;
+    ImageView frontView, leftView, rightView, backView;
     @FXML
     Label locationText;
     private ScreensContainer container;
@@ -71,9 +71,11 @@ public class RunningScreenController implements ScreenController {
 
     private NextFrameService nextFrameService = new NextFrameService();
 
+    private Direction facingDirection;
+
     @Override
     public void showScreen() {
-        goToNextFrame();
+        processFrame(larrySettings.getEngine().getCurrentFrame());
         // code to create second stage on other monitor if it exists
         //if (Screen.getScreens().size() > 1) {
         //    //makeOtherScreen(1);
@@ -81,9 +83,9 @@ public class RunningScreenController implements ScreenController {
         double width = 1280;
         double height = 640;
         leftView.setEffect(new PerspectiveTransform(-300, 0, 300, 0,
-                300, height, -300, 1280));
+                300, height, -300, 960));
         rightView.setEffect(new PerspectiveTransform(340, 0, 900, 0,
-                940, 1280, 340, height));
+                940, 960, 340, height));
         //}
         container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
         container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, switchViewHandler);
@@ -97,7 +99,10 @@ public class RunningScreenController implements ScreenController {
         nextFrameHandler = new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (event.getCode().equals(KeyCode.UP)) {
+                if (event.getCode().equals(KeyCode.UP) || event.getCode().equals(KeyCode.DOWN)) {
+                    if(event.getCode().equals(KeyCode.DOWN)){
+                        facingDirection = new Direction((facingDirection.getDegrees() + 180)%360);
+                    }
                     goToNextFrame();
                     final EventHandler<KeyEvent> ev = this;
                     container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, ev);
@@ -123,12 +128,6 @@ public class RunningScreenController implements ScreenController {
                 }
             }
         };
-
-        // TODO: Remove this
-        // For testing, set the image to a default one
-        //frontView.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1joinresult.jpg"));
-        //leftView.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/left1.jpg"));
-        //rightView.setImage(new Image("/uk.ac.cam.teamdelta.larry/images/right1.jpg"));
     }
 
     /**
@@ -196,7 +195,7 @@ public class RunningScreenController implements ScreenController {
         lookingForward = !lookingForward;
         if (images != null) {
             if (lookingForward) {
-                frontView.setImage(front);
+                backView.setVisible(false);
                 if (otherControllers.size() > 1) {
                     otherControllers.get(1).setImage(new Image("/uk.ac.cam.teamdelta.larry/images/test1out.jpg"));
                 }
@@ -204,7 +203,8 @@ public class RunningScreenController implements ScreenController {
             } else {
                 // convert back on the fly
                 back = SwingFXUtils.toFXImage(images.back, null);
-                frontView.setImage(back);
+                backView.setImage(back);
+                backView.setVisible(true);
                 if (otherControllers.size() > 1) {
                     otherControllers.get(1).setImage(new Image("/uk.ac.cam.teamdelta.larry/images/car.png"));
                 }

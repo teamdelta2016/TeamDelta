@@ -7,7 +7,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
-import uk.ac.cam.teamdelta.Direction;
 import uk.ac.cam.teamdelta.robert.Engine;
 
 import static uk.ac.cam.teamdelta.Logger.debug;
@@ -30,18 +29,19 @@ public class LoadingScreenController implements ScreenController {
         img.setFitHeight(Main.GAME_HEIGHT / 2);
         img.setFitWidth(Main.GAME_WIDTH / 2);
         // spin image round for a few seconds
-        final RotateTransition rt = new RotateTransition(Duration.millis(1000), img);
+        final RotateTransition rt = new RotateTransition(Duration.millis(10000), img);
         // wait x seconds before continuing to next screen
         //TODO: don't wait arbitrary time, get notified?
         Task<Void> sleeper = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 //TODO: Constructor may change
+                debug("Constructing the Engine");
                 Engine engine = new Engine(LarrySettings.getInstance().getLocation(),
                         LarrySettings.getInstance().getParameters());
                 LarrySettings.getInstance().setEngine(engine);
-                debug("Started sleeping for loading");
-                Thread.sleep(1000);
+                engine.firstFrame();
+                debug("Engine has the first frame");
                 return null;
             }
         };
