@@ -2,7 +2,7 @@
 
 ####Most of the implementation groundwork is now complete - much of the remaining work will involve optimisations to reduce latency, refinements to logic, handling of corner cases and improving the user experience (as well as testing).
 ####The driving engine, user interface, route planner and image fetcher now function together to create a stripped-down version of the application that allows the viewer to choose a location and will display one set of images. 
-####They cannot yet "drive" through the simulation, and the image processor is not yet integrated with the rest of the project.
+####The user cannot yet "drive" through the simulation, and the image processor is not yet integrated with the rest of the project.
 
 ##Anthoney - Image Fetcher
 
