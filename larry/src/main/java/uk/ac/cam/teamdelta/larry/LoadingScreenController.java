@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import uk.ac.cam.teamdelta.Direction;
 import uk.ac.cam.teamdelta.robert.Engine;
 
 import static uk.ac.cam.teamdelta.Logger.debug;
@@ -36,8 +37,9 @@ public class LoadingScreenController implements ScreenController {
             @Override
             protected Void call() throws Exception {
                 //TODO: Constructor may change
-                LarrySettings.getInstance().setEngine(new Engine(LarrySettings.getInstance().getLocation(),
-                        LarrySettings.getInstance().getParameters()));
+                Engine engine = new Engine(LarrySettings.getInstance().getLocation(),
+                        LarrySettings.getInstance().getParameters());
+                LarrySettings.getInstance().setEngine(engine);
                 debug("Started sleeping for loading");
                 Thread.sleep(1000);
                 return null;

@@ -10,12 +10,12 @@ import uk.ac.cam.teamdelta.*;
 
 public class ImageFetcher {
 	public ImageInputSet sendGet(int width, int height, double latitude, double longitude, 
-								 int fov, int pitch) throws MalformedURLException {
-		RunnableFetcher[] results = {new RunnableFetcher(width, height, latitude, longitude, fov, 260, pitch),
-								 	 new RunnableFetcher(width, height, latitude, longitude, fov, 320, pitch),
-									 new RunnableFetcher(width, height, latitude, longitude, fov, 40, pitch),
-									 new RunnableFetcher(width, height, latitude, longitude, fov, 100, pitch),
-									 new RunnableFetcher(width, height, latitude, longitude, fov, 180, pitch)};
+								 int fov, int heading, int pitch) throws MalformedURLException {
+		RunnableFetcher[] results = {new RunnableFetcher(width, height, latitude, longitude, fov, heading - 30, pitch),
+								 	 new RunnableFetcher(width, height, latitude, longitude, fov, heading + 30, pitch),
+									 new RunnableFetcher(width, height, latitude, longitude, fov, heading - 90, pitch),
+									 new RunnableFetcher(width, height, latitude, longitude, fov, heading + 90, pitch),
+									 new RunnableFetcher(width, height, latitude, longitude, fov, heading + 180,pitch)};
 		for(RunnableFetcher result : results) {
 			result.start();
 		}
@@ -32,17 +32,17 @@ public class ImageFetcher {
 	}
 
 	public static void main(String[] args) throws IOException {
-		ImageFetcher imageFetch = new ImageFetcher();
-		ImageInputSet result = imageFetch.sendGet(400, 400, 40.720032, -73.988354, 90, 10);
-		File leftFile = new File("left.jpg");
-		File leftFrontFile = new File("leftFront.jpg");
-		File rightFrontFile = new File("rightFront.jpg");
-		File rightFile = new File("right.jpg");
-		File backFile = new File("back.jpg");
-		ImageIO.write(result.getLeft(), "jpg", leftFile);
-		ImageIO.write(result.getFrontLeft(), "jpg", leftFrontFile);
-		ImageIO.write(result.getFrontRight(), "jpg", rightFrontFile);
-		ImageIO.write(result.getRight(), "jpg", rightFile);
-		ImageIO.write(result.getBack(), "jpg", backFile);	
+		//ImageFetcher imageFetch = new ImageFetcher();
+		//ImageInputSet result = imageFetch.sendGet(400, 400, 40.720032, -73.988354, 90, 10);
+		//File leftFile = new File("left.jpg");
+		//File leftFrontFile = new File("leftFront.jpg");
+		//File rightFrontFile = new File("rightFront.jpg");
+		//File rightFile = new File("right.jpg");
+		//File backFile = new File("back.jpg");
+		//ImageIO.write(result.getLeft(), "jpg", leftFile);
+		//ImageIO.write(result.getFrontLeft(), "jpg", leftFrontFile);
+		//ImageIO.write(result.getFrontRight(), "jpg", rightFrontFile);
+		//ImageIO.write(result.getRight(), "jpg", rightFile);
+		//ImageIO.write(result.getBack(), "jpg", backFile);
 	}
 }

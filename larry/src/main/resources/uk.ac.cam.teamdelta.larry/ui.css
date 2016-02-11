@@ -80,6 +80,10 @@
     /*-fx-background-insets: 10px;*/
 }
 
+.gridPane.run {
+    -fx-background-color: #464646;
+}
+
 * {
     /*-fx-focus-color: transparent;*/
 }
