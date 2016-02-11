@@ -79,7 +79,7 @@ public class RunningScreenController implements ScreenController {
         //    //makeOtherScreen(1);
         //} else {
         double width = 1280;
-        double height = 740;
+        double height = 640;
         leftView.setEffect(new PerspectiveTransform(-300, 0, 300, 0,
                 300, height, -300, 1280));
         rightView.setEffect(new PerspectiveTransform(340, 0, 900, 0,
