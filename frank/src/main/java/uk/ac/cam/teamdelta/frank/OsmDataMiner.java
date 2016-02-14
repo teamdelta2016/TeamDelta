@@ -1,19 +1,12 @@
 package uk.ac.cam.teamdelta.frank;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -29,6 +22,9 @@ import org.xml.sax.SAXException;
 
 import uk.ac.cam.teamdelta.*;
 
+//Note: this data miner took inspiration (and some parts of code) from http://wiki.openstreetmap.org/wiki/Java_Access_Example example,
+//which was released under public domain
+
 public class OsmDataMiner {
     private static final String OVERPASS_API = "http://www.overpass-api.de/api/interpreter";
     
@@ -36,43 +32,6 @@ public class OsmDataMiner {
         DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
         return docBuilder.parse(location);
-    }
-    
-    @SuppressWarnings("nls")
-    public static ArrayList<OsmNode> getNodes(Document xmlDocument) {
-        ArrayList<OsmNode> osmNodes = new ArrayList<OsmNode>();
-
-        Node osmRoot = xmlDocument.getFirstChild();
-        NodeList osmXMLNodes = osmRoot.getChildNodes();
-        for (int i = 1; i < osmXMLNodes.getLength(); i++) {
-            Node item = osmXMLNodes.item(i);
-            if (item.getNodeName().equals("node")) {
-                NamedNodeMap attributes = item.getAttributes();
-                NodeList tagXMLNodes = item.getChildNodes();
-                Map<String, String> tags = new HashMap<String, String>();
-                for (int j = 1; j < tagXMLNodes.getLength(); j++) {
-                    Node tagItem = tagXMLNodes.item(j);
-                    NamedNodeMap tagAttributes = tagItem.getAttributes();
-                    if (tagAttributes != null) {
-                        tags.put(tagAttributes.getNamedItem("k").getNodeValue(), tagAttributes.getNamedItem("v")
-                                .getNodeValue());
-                    }
-                }
-                Node namedItemID = attributes.getNamedItem("id");
-                Node namedItemLat = attributes.getNamedItem("lat");
-                Node namedItemLon = attributes.getNamedItem("lon");
-                Node namedItemVersion = attributes.getNamedItem("version");
-
-                String id = namedItemID.getNodeValue();
-                String latitude = namedItemLat.getNodeValue();
-                String longitude = namedItemLon.getNodeValue();
-                ArrayList<Integer> ways = new ArrayList<Integer>();
-
-                osmNodes.add(new OsmNode(id, Double.parseDouble(latitude), Double.parseDouble(longitude), tags, ways));
-            }
-
-        }
-        return osmNodes;
     }
     
     public static ArrayList<OsmWay> getNodesAndRoads(Document xmlDocument) {
@@ -157,7 +116,7 @@ public class OsmDataMiner {
         double lon = location.getLongitude();
         
         //Should find all ways that are contained in or cross the given radius, and are tagged with "highway" - so they
-        //should mostly be roads (+ some extra nodes that I am not sure how to get rid of)
+        //should mostly be roads
         System.out.println("called with: " + "(node(around:" + radius +","+ lat +"," + lon + ");way[\"highway\"](around:"
                 +radius +","+ lat + "," + lon + ");node(w)->.x;);out;");
         return OsmDataMiner.getNodesAndRoads(getNodesViaOverpass(
@@ -210,7 +169,7 @@ public class OsmDataMiner {
     
     public static class OsmWay {
         private String id;
-        private final Map<String, String> tags;
+        private Map<String, String> tags;
         
         private final ArrayList<OsmNode> nodesAlongWay; 
         OsmWay(String id) {
@@ -225,23 +184,33 @@ public class OsmDataMiner {
         public String getId() {return id;}
         public OsmNode getNode(int pos) {return nodesAlongWay.get(pos);}
         public int nodeCount() {return nodesAlongWay.size();}
+        public Map<String,String> getTags() {return tags;}
+    }
+    
+    private void prettyPrint(OsmWay osmWay) {
+        System.out.println("Way " + osmWay.getId() + ":");
+        
+        Map<String, String> tags = osmWay.getTags();
+        for (Map.Entry<String, String> entry : tags.entrySet()) {
+            System.out.println("  Tag: " + entry.getKey() + ": " + entry.getValue());
+        }
+        
+        for (int i=0; i<osmWay.nodeCount(); i++) {
+            System.out.println("  Node: " + osmWay.getNode(i).getLat() + ", " + osmWay.getNode(i).getLon());
+            if (osmWay.getNode(i).getWayCount() > 1) {
+                System.out.print("    Member of:");
+                for (int j=0; j<osmWay.getNode(i).getWayCount(); j++) {
+                    System.out.print(" " + osmWay.getNode(i).getWay(j));
+                }
+                System.out.println();
+            }
+        }
     }
     
     public ArrayList<OsmWay> getRoadData(Location location) throws IOException, SAXException, ParserConfigurationException { 
         ArrayList<OsmWay> osmWays = getNodesAndRoadsInRadius(location, 20);
-        //To printout downloaded data:
         /*for (OsmWay osmWay : osmWays) {
-            System.out.println("Way " + osmWay.getId() + ":");
-            for (int i=0; i<osmWay.nodeCount(); i++) {
-                System.out.println(osmWay.getNode(i).getLat() + ", " + osmWay.getNode(i).getLon());
-                if (osmWay.getNode(i).getWayCount() > 1) {
-                    System.out.print("Member of:");
-                    for (int j=0; j<osmWay.getNode(i).getWayCount(); j++) {
-                        System.out.print(" " + osmWay.getNode(i).getWay(j));
-                    }
-                    System.out.println();
-                }
-            }
+            prettyPrint(osmWay);
         }*/
         return osmWays;
     }
