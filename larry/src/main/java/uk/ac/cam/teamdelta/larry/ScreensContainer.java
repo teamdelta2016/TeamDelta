@@ -20,6 +20,8 @@ import java.util.LinkedList;
 
 public class ScreensContainer extends StackPane {
 
+    private final Deque<String> outOfOrderQueue = new LinkedList<>();
+
     /**
      * Queue of screen names to specify order of screens to be shown in UI flow Order actually specified by order in
      * which screens are added in Main. Currently displayed screen will be at the head.
@@ -41,19 +43,33 @@ public class ScreensContainer extends StackPane {
      * @param name   The descriptive name of the screen to add
      * @param screen The Node representing the screen to add
      */
-    private void addScreen(String name, Node screen) {
+    public void addScreen(String name, Node screen) {
         screens.put(name, screen);
+    }
+
+    public void putOutOfOrderScreen(String name) {
+        outOfOrderQueue.add(name);
     }
 
     /**
      * Displays the screen which is at the front of the queue
      */
     public void nextScreen() {
+        String name;
         // If already loading another screen, ignore this event
         if (!loading) {
             loading = true;
-            screenNames.addLast(screenNames.pollFirst());
-            String name = screenNames.peekFirst();
+            if (outOfOrderQueue.size() > 0) {
+                name = outOfOrderQueue.pollFirst();
+                if (name.equals(Main.LOADING_SCREEN)) {
+                    outOfOrderQueue.clear();
+                } else {
+                    outOfOrderQueue.addLast(name);
+                }
+            } else {
+                screenNames.addLast(screenNames.pollFirst());
+                name = screenNames.peekFirst();
+            }
             setScreen(name);
         } else {
             Logger.debug("Screen was still loading");
@@ -64,11 +80,17 @@ public class ScreensContainer extends StackPane {
      * Displays the screen at the back of the queue
      */
     public void prevScreen() {
+        String name;
         // If already loading another screen, ignore this event
         if (!loading) {
             loading = true;
-            String name = screenNames.pollLast();
-            screenNames.addFirst(name);
+            if (outOfOrderQueue.size() > 0) {
+                name = outOfOrderQueue.pollLast();
+                outOfOrderQueue.addFirst(name);
+            } else {
+                name = screenNames.pollLast();
+                screenNames.addFirst(name);
+            }
             setScreen(name);
         } else {
             Logger.debug("Screen was still loading");

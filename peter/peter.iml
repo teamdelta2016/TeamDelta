@@ -25,9 +25,9 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Gradle: opencv-310">
+      <library name="Gradle: opencv-2411">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/opencv-310.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/opencv-2411.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
