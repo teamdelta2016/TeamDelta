@@ -18,7 +18,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Screen;
 import uk.ac.cam.teamdelta.Direction;
 import uk.ac.cam.teamdelta.ImageOutputSet;
 import uk.ac.cam.teamdelta.JunctionInfo;
@@ -38,7 +37,7 @@ public class RunningScreenController implements ScreenController {
     @FXML
     Button button;
     @FXML
-    ImageView frontView, leftView, rightView;
+    ImageView frontView, leftView, rightView, backView;
     @FXML
     Label locationText;
     @FXML
@@ -68,22 +67,20 @@ public class RunningScreenController implements ScreenController {
 
     private NextFrameService nextFrameService = new NextFrameService();
 
+    private Direction facingDirection;
+
     @Override
     public void showScreen() {
+
         menuIsShowing = false;
-        // code to create second stage on other monitor if it exists
-        if (Screen.getScreens().size() > 1) {
-            //makeOtherScreen(1);
-        } else {
-            double width = 1280;
-            double height = 740;
-            frontView.setEffect(new PerspectiveTransform(0, 0, width, 0,
-                    width - 200, height, 200, height));
-            leftView.setEffect(new PerspectiveTransform(-300, 0, 300, 0,
-                    500, height, -300, 1280));
-            rightView.setEffect(new PerspectiveTransform(340, 0, 900, 0,
-                    940, 1280, 140, height));
-        }
+
+        processFrame(larrySettings.getEngine().getCurrentFrame());
+        double width = 1280;
+        double height = 640;
+        leftView.setEffect(new PerspectiveTransform(-300, 0, 300, 0,
+                300, height, -300, 960));
+        rightView.setEffect(new PerspectiveTransform(340, 0, 900, 0,
+                940, 960, 340, height));
         container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
         container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, switchViewHandler);
 
@@ -132,7 +129,10 @@ public class RunningScreenController implements ScreenController {
         nextFrameHandler = new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (event.getCode().equals(KeyCode.UP)) {
+                if (event.getCode().equals(KeyCode.UP) || event.getCode().equals(KeyCode.DOWN)) {
+                    if(event.getCode().equals(KeyCode.DOWN)){
+                        facingDirection = new Direction((facingDirection.getDegrees() + 180)%360);
+                    }
                     goToNextFrame();
                     final EventHandler<KeyEvent> ev = this;
                     container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, ev);
@@ -226,6 +226,7 @@ public class RunningScreenController implements ScreenController {
     }
 
     private void processFrame(Frame frame) {
+        debug("Processing frame");
         JunctionInfo junctions = frame.getJunctions();
         images = frame.getImages();
         if (junctions != null && images != null) {
@@ -237,6 +238,8 @@ public class RunningScreenController implements ScreenController {
             LarrySettings.getInstance().setLocation(junctions.getNextLocation().getLatitude(),
                     junctions.getNextLocation().getLongitude());
             // set the new image on screen, and store in 'front'
+            debug("Setting front left and back images");
+            front = SwingFXUtils.toFXImage(images.front, null);
             frontView.setImage(SwingFXUtils.toFXImage(images.front, front));
             leftView.setImage(SwingFXUtils.toFXImage(images.left, left));
             rightView.setImage(SwingFXUtils.toFXImage(images.right, right));
@@ -254,13 +257,13 @@ public class RunningScreenController implements ScreenController {
         if (images != null) {
             if (lookingForward) {
                 frontView.setImage(front);
+                backView.setVisible(false);
                 debug("Now looking forwards");
             } else {
-                if (back == null) {
-                    // if back doesn't exist, convert it on the fly
-                    back = SwingFXUtils.toFXImage(images.back, null);
-                }
-                frontView.setImage(back);
+                // convert back on the fly
+                back = SwingFXUtils.toFXImage(images.back, null);
+                backView.setImage(back);
+                backView.setVisible(true);
                 debug("Now looking backwards");
             }
         } else {

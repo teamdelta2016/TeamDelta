@@ -81,7 +81,7 @@ public class Main extends Application {
      */
     public static final String MENU_FXML = "/uk.ac.cam.teamdelta.larry/menu.fxml";
 
-    public static final long KEY_HOLD_DELAY = 3000;
+    public static final long KEY_HOLD_DELAY = 2000;
 
     /**
      * The width in pixels of the game

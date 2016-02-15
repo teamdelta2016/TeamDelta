@@ -6,15 +6,15 @@ public class ImageInputSet {
     private final BufferedImage left, frontLeft, frontRight, right, back;
 
     public ImageInputSet(
-        BufferedImage left_,
         BufferedImage frontLeft_,
         BufferedImage frontRight_,
+        BufferedImage left_,
         BufferedImage right_,
         BufferedImage back_
     ) {
-        left = left_;
         frontLeft = frontLeft_;
         frontRight = frontRight_;
+        left = left_;
         right = right_;
         back = back_;
     }

@@ -6,4 +6,5 @@ dependencies {
     compile project(":core")
     compile project(":andy")
     compile project(":peter")
+    compile project(":frank")
 }

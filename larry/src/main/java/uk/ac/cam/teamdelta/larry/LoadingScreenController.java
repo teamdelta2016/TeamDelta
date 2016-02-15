@@ -29,17 +29,19 @@ public class LoadingScreenController implements ScreenController {
         img.setFitHeight(Main.GAME_HEIGHT / 2);
         img.setFitWidth(Main.GAME_WIDTH / 2);
         // spin image round for a few seconds
-        final RotateTransition rt = new RotateTransition(Duration.millis(1000), img);
+        final RotateTransition rt = new RotateTransition(Duration.millis(10000), img);
         // wait x seconds before continuing to next screen
         //TODO: don't wait arbitrary time, get notified?
         Task<Void> sleeper = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 //TODO: Constructor may change
-                LarrySettings.getInstance().setEngine(new Engine(LarrySettings.getInstance().getLocation(),
-                        LarrySettings.getInstance().getParameters()));
-                debug("Started sleeping for loading");
-                Thread.sleep(1000);
+                debug("Constructing the Engine");
+                Engine engine = new Engine(LarrySettings.getInstance().getLocation(),
+                        LarrySettings.getInstance().getParameters());
+                LarrySettings.getInstance().setEngine(engine);
+                engine.firstFrame();
+                debug("Engine has the first frame");
                 return null;
             }
         };

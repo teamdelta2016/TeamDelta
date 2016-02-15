@@ -1,9 +1,9 @@
 apply plugin: 'java'
-apply plugin: 'application'
+//apply plugin: 'application'
 
 version = 1.0
 
-mainClassName = "uk.ac.cam.teamdelta.andy.ImageFetcher"
+//mainClassName = "uk.ac.cam.teamdelta.andy.ImageFetcher"
 
 dependencies {
     compile project(":core")

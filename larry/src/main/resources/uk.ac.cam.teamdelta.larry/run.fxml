@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import java.net.URL?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" focusTraversable="true" hgap="10.0" styleClass="gridPane" vgap="10.0" xmlns="http://javafx.com/javafx/2.2" fx:controller="uk.ac.cam.teamdelta.larry.RunningScreenController">
+<GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" focusTraversable="true" hgap="10.0" styleClass="gridPane, run" vgap="10.0" xmlns="http://javafx.com/javafx/2.2" fx:controller="uk.ac.cam.teamdelta.larry.RunningScreenController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
   </columnConstraints>
@@ -24,12 +24,16 @@
           <ImageView fx:id="leftView" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_LEFT" />
           <ImageView fx:id="frontView" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER" />
           <Button id="beginBtn" fx:id="button" defaultButton="false" ellipsisString="" focusTraversable="false" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showMenu" prefHeight="-1.0" prefWidth="-1.0" text="menu" underline="false" wrapText="false" StackPane.alignment="BOTTOM_RIGHT">
+          <ImageView id="" fx:id="backView" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" styleClass="rearImg" visible="false" StackPane.alignment="TOP_CENTER" />
             <stylesheets>
               <URL value="@ui.css" />
             </stylesheets>
           </Button>
           <Label fx:id="locationText" text="" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER" />
         </children>
+        <BorderPane.margin>
+          <Insets top="50.0" />
+        </BorderPane.margin>
       </StackPane>
     </center>
     <top>
