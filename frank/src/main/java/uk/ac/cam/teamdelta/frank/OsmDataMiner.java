@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 import uk.ac.cam.teamdelta.*;
 
 public class OsmDataMiner {
-    private static final String OVERPASS_API = "http://www.overpass-api.de/api/interpreter";
+    private static final String OVERPASS_API = "http://api.openstreetmap.fr/oapi/interpreter";
     
     public static Document getXMLFile(String location) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();

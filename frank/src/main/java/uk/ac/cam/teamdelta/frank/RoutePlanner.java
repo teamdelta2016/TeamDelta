@@ -123,7 +123,9 @@ public class RoutePlanner implements RouteFinder {
         OsmDataMiner miner = new OsmDataMiner();
         ArrayList<OsmWay> osmWays = new ArrayList<OsmWay>();
         try {
+            long time = System.currentTimeMillis();
             osmWays = miner.getRoadData(current_position);
+            System.out.println("Network time: " + (System.currentTimeMillis() - time));
         } catch (Exception e) {
             System.out.println("Data miner returned with an error: ");
             e.printStackTrace();
