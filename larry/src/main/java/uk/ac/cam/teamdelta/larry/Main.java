@@ -72,17 +72,16 @@ public class Main extends Application {
     public static final String RUNNING_SCREEN_FXML = "/uk.ac.cam.teamdelta.larry/run.fxml";
 
     /**
-     * Constant for the name of the running game screen for other monitors
+     * Constant for the name of the running game screen
      */
-    public static final String RUNNING_OTHER_SCREEN = "runningOther";
+    public static final String MENU = "menu";
 
     /**
-     * Constant for the path of the running game screen FXML file for other monitors
+     * Constant for the path of the running game screen FXML file
      */
-    public static final String RUNNING_OTHER_SCREEN_FXML = "/uk.ac.cam.teamdelta.larry/runOther.fxml";
+    public static final String MENU_FXML = "/uk.ac.cam.teamdelta.larry/menu.fxml";
 
-
-    public static final long KEY_HOLD_DELAY = 3000;
+    public static final long KEY_HOLD_DELAY = 2000;
 
     /**
      * The width in pixels of the game

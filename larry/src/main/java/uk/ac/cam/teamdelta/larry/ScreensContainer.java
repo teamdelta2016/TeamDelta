@@ -20,6 +20,8 @@ import java.util.LinkedList;
 
 public class ScreensContainer extends StackPane {
 
+    private final Deque<String> outOfOrderQueue = new LinkedList<>();
+
     /**
      * Queue of screen names to specify order of screens to be shown in UI flow Order actually specified by order in
      * which screens are added in Main. Currently displayed screen will be at the head.
@@ -41,19 +43,37 @@ public class ScreensContainer extends StackPane {
      * @param name   The descriptive name of the screen to add
      * @param screen The Node representing the screen to add
      */
-    private void addScreen(String name, Node screen) {
+    public void addScreen(String name, Node screen) {
         screens.put(name, screen);
+    }
+
+    public void putOutOfOrderScreen(String name) {
+        outOfOrderQueue.add(name);
+    }
+
+    public void showOutOfOrder(){
+        String name = outOfOrderQueue.peek();
+        setScreen(name);
     }
 
     /**
      * Displays the screen which is at the front of the queue
      */
     public void nextScreen() {
+        String name;
         // If already loading another screen, ignore this event
         if (!loading) {
             loading = true;
-            screenNames.addLast(screenNames.pollFirst());
-            String name = screenNames.peekFirst();
+            if (outOfOrderQueue.size() > 0) {
+                outOfOrderQueue.addLast(outOfOrderQueue.pollFirst());
+                name = outOfOrderQueue.peekFirst();
+                if (name.equals(Main.RUNNING_SCREEN)) {
+                    outOfOrderQueue.clear();
+                }
+            } else {
+                screenNames.addLast(screenNames.pollFirst());
+                name = screenNames.peekFirst();
+            }
             setScreen(name);
         } else {
             Logger.debug("Screen was still loading");
@@ -64,11 +84,20 @@ public class ScreensContainer extends StackPane {
      * Displays the screen at the back of the queue
      */
     public void prevScreen() {
+        String name;
         // If already loading another screen, ignore this event
         if (!loading) {
             loading = true;
-            String name = screenNames.pollLast();
-            screenNames.addFirst(name);
+            if (outOfOrderQueue.size() > 0) {
+                name = outOfOrderQueue.pollLast();
+                outOfOrderQueue.addFirst(name);
+                if(name.equals(Main.RUNNING_SCREEN)){
+                    outOfOrderQueue.clear();
+                }
+            } else {
+                name = screenNames.pollLast();
+                screenNames.addFirst(name);
+            }
             setScreen(name);
         } else {
             Logger.debug("Screen was still loading");
@@ -90,6 +119,7 @@ public class ScreensContainer extends StackPane {
             ScreenController screenController = loader.getController();
             screenController.setScreenParent(this);
             addScreen(name, loadScreen);
+            screenController.setupScreen();
             controllers.put(loadScreen, screenController);
             screenNames.addLast(name);
             if (controllers.size() == 1) {
@@ -121,7 +151,7 @@ public class ScreensContainer extends StackPane {
                                     public void handle(ActionEvent event) {
                                         getChildren().remove(0);
                                         getChildren().add(0, namedScreen);
-                                        controllers.get(namedScreen).setupScreen();
+                                        controllers.get(namedScreen).showScreen();
                                         Timeline fadeIn = new Timeline(
                                                 new KeyFrame(Duration.ZERO,
                                                         new KeyValue(opacity, 0.0)),
@@ -140,7 +170,7 @@ public class ScreensContainer extends StackPane {
             } else {
                 setOpacity(0.0);
                 getChildren().add(namedScreen);
-                controllers.get(namedScreen).setupScreen();
+                controllers.get(namedScreen).showScreen();
                 Timeline fadeIn = new Timeline(
                         new KeyFrame(Duration.ZERO,
                                 new KeyValue(opacity, 0.0)),

@@ -22,8 +22,13 @@ public class LocationConfirmScreenController implements ScreenController {
     }
 
     @Override
+    public void showScreen() {
+        retrievedLocation.setText(LarrySettings.getInstance().getLocationAddress());
+    }
+
+    @Override
     public void setupScreen() {
-        retrievedLocation.setText(LarrySettings.getInstance().getStringLocation());
+
     }
 
     @FXML

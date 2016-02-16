@@ -4,6 +4,7 @@ import java.util.Set;
 
 public class JunctionInfo {
 	private Location m_next_location;
+    private Direction m_primary_direction;
 	private Set<Direction> m_road_angles;
 	
 	public Location getNextLocation(){return m_next_location;};
@@ -12,5 +13,10 @@ public class JunctionInfo {
     public JunctionInfo(Location next_location, Set<Direction> road_angles) {
         m_next_location = next_location;
         m_road_angles = road_angles;
+    }
+
+    public JunctionInfo(Location next_location, Direction forwardDirection){
+        m_next_location = next_location;
+        m_primary_direction = forwardDirection;
     }
 }
