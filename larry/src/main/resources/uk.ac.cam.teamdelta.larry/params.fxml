@@ -71,21 +71,21 @@
         </columnConstraints>
         <GridPane gridLinesVisible="false" GridPane.columnIndex="0" GridPane.rowIndex="0">
           <children>
-            <Label prefHeight="24.000011444091797" text="param1" textAlignment="LEFT" textFill="WHITE" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label prefHeight="24.000011444091797" text="blur" textAlignment="LEFT" textFill="WHITE" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="0">
               <font>
                 <Font size="15.0" fx:id="x2" />
               </font>
             </Label>
             <Slider fx:id="slider1" minorTickCount="0" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <Label font="$x2" prefHeight="24.000011444091797" text="param2" textAlignment="LEFT" textFill="WHITE" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <Label font="$x2" prefHeight="24.000011444091797" text="ghosting" textAlignment="LEFT" textFill="WHITE" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="2" />
             <Slider fx:id="slider2" minorTickCount="0" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-            <Label prefHeight="24.000011444091797" text="param3" textAlignment="LEFT" textFill="WHITE" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="4">
+            <Label prefHeight="24.000011444091797" text="night" textAlignment="LEFT" textFill="WHITE" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="4">
               <font>
                 <Font name="ONRAMP" size="25.0" fx:id="x3" />
               </font>
             </Label>
             <Slider fx:id="slider3" minorTickCount="0" orientation="HORIZONTAL" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-            <Label font="$x3" prefHeight="24.000011444091797" text="param4" textAlignment="LEFT" textFill="WHITE" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+            <Label font="$x3" prefHeight="24.000011444091797" text="peripheral loss" textAlignment="LEFT" textFill="WHITE" wrapText="false" GridPane.columnIndex="0" GridPane.rowIndex="6" />
             <Slider id="slider3" fx:id="slider4" minorTickCount="0" orientation="HORIZONTAL" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="0" GridPane.rowIndex="7" />
           </children>
           <columnConstraints>

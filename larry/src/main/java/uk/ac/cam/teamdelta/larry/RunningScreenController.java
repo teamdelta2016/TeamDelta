@@ -26,8 +26,6 @@ import uk.ac.cam.teamdelta.robert.Engine;
 import uk.ac.cam.teamdelta.robert.Frame;
 
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static uk.ac.cam.teamdelta.Logger.debug;
 import static uk.ac.cam.teamdelta.Logger.error;
@@ -114,7 +112,6 @@ public class RunningScreenController implements ScreenController {
         });
 
 
-
     }
 
     @Override
@@ -133,18 +130,12 @@ public class RunningScreenController implements ScreenController {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode().equals(KeyCode.UP) || event.getCode().equals(KeyCode.DOWN)) {
-                    if(event.getCode().equals(KeyCode.DOWN)){
-                        facingDirection = new Direction((facingDirection.getDegrees() + 180)%360);
+                    if (event.getCode().equals(KeyCode.DOWN)) {
+                        facingDirection = new Direction((facingDirection.getDegrees() + 180) % 360);
                     }
                     goToNextFrame();
                     final EventHandler<KeyEvent> ev = this;
                     container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, ev);
-                    new Timer(true).schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, ev);
-                        }
-                    }, Main.KEY_HOLD_DELAY);
                 }
             }
         };
@@ -231,6 +222,7 @@ public class RunningScreenController implements ScreenController {
     }
 
     private void processFrame(Frame frame) {
+        container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
         debug("Processing frame");
         JunctionInfo junctions = frame.getJunctions();
         images = frame.getImages();
@@ -248,6 +240,10 @@ public class RunningScreenController implements ScreenController {
             frontView.setImage(SwingFXUtils.toFXImage(images.front, front));
             leftView.setImage(SwingFXUtils.toFXImage(images.left, left));
             rightView.setImage(SwingFXUtils.toFXImage(images.right, right));
+            back = null;
+            if (!lookingForward) {
+                backView.setImage(SwingFXUtils.toFXImage(images.back, back));
+            }
         } else {
             error("Frame had null content");
         }
@@ -266,7 +262,9 @@ public class RunningScreenController implements ScreenController {
                 debug("Now looking forwards");
             } else {
                 // convert back on the fly
-                back = SwingFXUtils.toFXImage(images.back, null);
+                if (back == null) {
+                    back = SwingFXUtils.toFXImage(images.back, null);
+                }
                 backView.setImage(back);
                 backView.setVisible(true);
                 debug("Now looking backwards");
@@ -276,7 +274,7 @@ public class RunningScreenController implements ScreenController {
         }
     }
 
-    private void cleanup(){
+    private void cleanup() {
         larrySettings.getEngine().stop();
         container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
         container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, switchViewHandler);
