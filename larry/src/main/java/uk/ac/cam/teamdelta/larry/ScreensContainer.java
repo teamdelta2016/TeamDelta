@@ -51,6 +51,11 @@ public class ScreensContainer extends StackPane {
         outOfOrderQueue.add(name);
     }
 
+    public void showOutOfOrder(){
+        String name = outOfOrderQueue.peek();
+        setScreen(name);
+    }
+
     /**
      * Displays the screen which is at the front of the queue
      */
@@ -60,11 +65,10 @@ public class ScreensContainer extends StackPane {
         if (!loading) {
             loading = true;
             if (outOfOrderQueue.size() > 0) {
-                name = outOfOrderQueue.pollFirst();
-                if (name.equals(Main.LOADING_SCREEN)) {
+                outOfOrderQueue.addLast(outOfOrderQueue.pollFirst());
+                name = outOfOrderQueue.peekFirst();
+                if (name.equals(Main.RUNNING_SCREEN)) {
                     outOfOrderQueue.clear();
-                } else {
-                    outOfOrderQueue.addLast(name);
                 }
             } else {
                 screenNames.addLast(screenNames.pollFirst());
@@ -87,6 +91,9 @@ public class ScreensContainer extends StackPane {
             if (outOfOrderQueue.size() > 0) {
                 name = outOfOrderQueue.pollLast();
                 outOfOrderQueue.addFirst(name);
+                if(name.equals(Main.RUNNING_SCREEN)){
+                    outOfOrderQueue.clear();
+                }
             } else {
                 name = screenNames.pollLast();
                 screenNames.addFirst(name);

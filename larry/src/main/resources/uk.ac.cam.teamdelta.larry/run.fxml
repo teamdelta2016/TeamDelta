@@ -23,9 +23,9 @@
           <ImageView fx:id="rightView" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_RIGHT" />
           <ImageView fx:id="leftView" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_LEFT" />
           <ImageView fx:id="frontView" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER" />
-          <Button id="beginBtn" fx:id="button" defaultButton="false" ellipsisString="" focusTraversable="false" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showMenu" prefHeight="-1.0" prefWidth="-1.0" text="menu" underline="false" wrapText="false" StackPane.alignment="BOTTOM_RIGHT">
           <ImageView id="" fx:id="backView" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" styleClass="rearImg" visible="false" StackPane.alignment="TOP_CENTER" />
-            <stylesheets>
+          <Button id="" fx:id="button" defaultButton="false" ellipsisString="" focusTraversable="false" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showMenu" prefHeight="-1.0" prefWidth="-1.0" text="menu" underline="false" wrapText="false" StackPane.alignment="BOTTOM_RIGHT">
+          <stylesheets>
               <URL value="@ui.css" />
             </stylesheets>
           </Button>

@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -34,6 +35,8 @@ import static uk.ac.cam.teamdelta.Logger.error;
 public class RunningScreenController implements ScreenController {
 
     private static LarrySettings larrySettings = LarrySettings.getInstance();
+    private static GridPane menuPopup;
+    private static boolean menuIsShowing = false;
     @FXML
     Button button;
     @FXML
@@ -48,8 +51,6 @@ public class RunningScreenController implements ScreenController {
     private WritableImage back;
     private WritableImage left;
     private WritableImage right;
-    private GridPane menuPopup;
-    private boolean menuIsShowing = false;
     /**
      * Boolean to keep track of whether to show front or rear windscreen view
      */
@@ -112,6 +113,8 @@ public class RunningScreenController implements ScreenController {
             }
         });
 
+
+
     }
 
     @Override
@@ -158,26 +161,25 @@ public class RunningScreenController implements ScreenController {
                 }
             }
         };
+
         stackPane.getChildren().add(menuPopup);
     }
 
     private void changeParameters() {
-        larrySettings.getEngine().stop();
-        container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
-        container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, switchViewHandler);
+        cleanup();
         container.putOutOfOrderScreen(Main.PARAMETERS_SCREEN);
         container.putOutOfOrderScreen(Main.LOADING_SCREEN);
         container.putOutOfOrderScreen(Main.RUNNING_SCREEN);
+        container.showOutOfOrder();
     }
 
     private void changeLocation() {
-        larrySettings.getEngine().stop();
-        container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
-        container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, switchViewHandler);
+        cleanup();
         container.putOutOfOrderScreen(Main.LOCATION_SCREEN);
         container.putOutOfOrderScreen(Main.LOCATION_CONFIRM_SCREEN);
         container.putOutOfOrderScreen(Main.LOADING_SCREEN);
         container.putOutOfOrderScreen(Main.RUNNING_SCREEN);
+        container.showOutOfOrder();
     }
 
 
@@ -187,11 +189,8 @@ public class RunningScreenController implements ScreenController {
      * @throws IOException
      */
     private void quitGame() {
-        // cleanup
-        larrySettings.getEngine().stop();
+        cleanup();
         container.nextScreen();
-        container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
-        container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, switchViewHandler);
     }
 
     @FXML
@@ -207,6 +206,12 @@ public class RunningScreenController implements ScreenController {
         } else {
             error("Couldn't add menu to stack pane");
         }
+    }
+
+    @FXML
+    private void hideMenu(MouseEvent event) throws IOException {
+        menuPopup.setVisible(false);
+        menuIsShowing = false;
     }
 
     /**
@@ -269,6 +274,13 @@ public class RunningScreenController implements ScreenController {
         } else {
             error("Image set was null");
         }
+    }
+
+    private void cleanup(){
+        larrySettings.getEngine().stop();
+        container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
+        container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, switchViewHandler);
+        menuPopup.setVisible(false);
     }
 
     private void lookLeft() {

@@ -18,10 +18,6 @@ public class Test {
     double ghostingValX = 1.05;
     double ghostingValY = 1.05;
 
-    public static void main(String[] args) {
-        new Test();
-    }
-
     Test(){
         // process();
 
@@ -59,6 +55,10 @@ public class Test {
             e.printStackTrace();
         }
 
+    }
+
+    public static void main(String[] args) {
+        new Test();
     }
 
 //     // public void process(){
