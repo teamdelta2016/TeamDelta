@@ -1,9 +1,10 @@
 package uk.ac.cam.teamdelta.peter;
 
+import org.opencv.core.Core;
 import uk.ac.cam.teamdelta.ImageInputSet;
 import uk.ac.cam.teamdelta.ImageOutputSet;
 import uk.ac.cam.teamdelta.ImageProcParams;
-import org.opencv.core.*;
+
 import java.awt.image.BufferedImage;
 
 public abstract class ImageProc {
@@ -31,6 +32,25 @@ public abstract class ImageProc {
     }
 
     /**
+     * Processes two images, front left and front right. It stitches
+     * these and returns a windscreen image based on the given parameters.
+     *
+     * @param left windscreen left image
+     * @param right windscreen right image
+     * @param params the parameters used to process the image
+     *
+     * @return the windscreen image
+     */
+    public static BufferedImage processTest(BufferedImage left,
+                                            BufferedImage right,
+                                            ImageProcParams params) {
+        ImageInputSet is = new ImageInputSet(left, right, null, null, null);
+        ImageProc ip = ImageProc.getImageProc(params);
+        ImageOutputSet os = ip.process(is, false);
+        return os.front;
+    }
+
+    /**
      * Processes the set of five images in the input set.
      *
      * This method blocks and returns the result. Treat as a possibly
@@ -47,23 +67,4 @@ public abstract class ImageProc {
      * @return The resulting four images
      */
     public abstract ImageOutputSet process(ImageInputSet input, boolean isJunction);
-
-    /**
-     * Processes two images, front left and front right. It stitches
-     * these and returns a windscreen image based on the given parameters.
-     *
-     * @param left windscreen left image
-     * @param right windscreen right image
-     * @param params the parameters used to process the image
-     *
-     * @return the windscreen image
-     */
-    public static BufferedImage processTest(BufferedImage left,
-                                            BufferedImage right,
-                                            ImageProcParams params) {
-        ImageInputSet is = new ImageInputSet(null, left, right, null, null);
-        ImageProc ip = ImageProc.getImageProc(params);
-        ImageOutputSet os = ip.process(is, false);
-        return os.front;
-    }
 }
