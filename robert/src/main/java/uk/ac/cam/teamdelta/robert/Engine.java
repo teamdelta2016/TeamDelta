@@ -12,6 +12,7 @@ import uk.ac.cam.teamdelta.andy.ImageFetcher;
 import uk.ac.cam.teamdelta.frank.RouteFinder;
 import uk.ac.cam.teamdelta.frank.RoutePlanner;
 import uk.ac.cam.teamdelta.peter.ImageProc;
+
 import java.net.MalformedURLException;
 
 public class Engine {
@@ -45,6 +46,7 @@ public class Engine {
     //return frame at the new location
     public Frame nextFrame(Direction d) {
         try {
+            m_direction = d;
             Logger.debug("planning route...");
             JunctionInfo info = m_route_finder.getNextPosition(m_location,m_direction);
             m_location = info.getNextLocation();

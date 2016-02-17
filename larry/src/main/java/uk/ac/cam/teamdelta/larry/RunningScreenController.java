@@ -211,7 +211,7 @@ public class RunningScreenController implements ScreenController {
     private void goToNextFrame() {
         nextFrameService.reset();
         //TODO: pass useful information
-        nextFrameService.setInput(null);
+        nextFrameService.setInput(facingDirection);
         nextFrameService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
@@ -231,6 +231,7 @@ public class RunningScreenController implements ScreenController {
             for (Direction d : junctions.getRoadDirections()) {
                 debug("Junction at " + d.getDegrees());
             }
+            facingDirection = junctions.getRoadDirections().iterator().next();
             // update location text
             LarrySettings.getInstance().setLocation(junctions.getNextLocation().getLatitude(),
                     junctions.getNextLocation().getLongitude());
@@ -312,7 +313,7 @@ public class RunningScreenController implements ScreenController {
                 @Override
                 protected Frame call() throws Exception {
                     debug("Background image fetch task started");
-                    return larrySettings.getEngine().nextFrame(null);
+                    return larrySettings.getEngine().nextFrame(input);
                 }
             };
         }
