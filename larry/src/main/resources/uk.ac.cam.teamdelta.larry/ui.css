@@ -52,6 +52,11 @@
     -fx-border-color: #962327;
 }
 
+.fact-text {
+    -fx-fill: white;
+    -fx-font-size: 16pt;
+}
+
 .slider .track {
     -fx-background-radius: 10;
     -fx-padding: 8;

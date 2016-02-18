@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.PerspectiveTransform;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -19,13 +20,19 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.transform.Rotate;
 import uk.ac.cam.teamdelta.Direction;
 import uk.ac.cam.teamdelta.ImageOutputSet;
 import uk.ac.cam.teamdelta.JunctionInfo;
+import uk.ac.cam.teamdelta.Logger;
 import uk.ac.cam.teamdelta.robert.Engine;
 import uk.ac.cam.teamdelta.robert.Frame;
 
 import java.io.IOException;
+import java.util.Set;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static uk.ac.cam.teamdelta.Logger.debug;
 import static uk.ac.cam.teamdelta.Logger.error;
@@ -49,6 +56,11 @@ public class RunningScreenController implements ScreenController {
     private WritableImage back;
     private WritableImage left;
     private WritableImage right;
+
+    private StackPane navOverlay;
+    private Map<Direction,ImageView> navMap;
+    private Image hArrow = new Image("/uk.ac.cam.teamdelta.larry/images/highlightarrow.png");
+    private Image arrow = new Image("/uk.ac.cam.teamdelta.larry/images/arrow.png");
     /**
      * Boolean to keep track of whether to show front or rear windscreen view
      */
@@ -67,11 +79,13 @@ public class RunningScreenController implements ScreenController {
     private NextFrameService nextFrameService = new NextFrameService();
 
     private Direction facingDirection;
+    private Direction intendDirection;
 
     @Override
     public void showScreen() {
 
         menuIsShowing = false;
+
 
         processFrame(larrySettings.getEngine().getCurrentFrame());
         double width = 1280;
@@ -136,6 +150,23 @@ public class RunningScreenController implements ScreenController {
                     goToNextFrame();
                     final EventHandler<KeyEvent> ev = this;
                     container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, ev);
+                } else if (event.getCode().equals(KeyCode.RIGHT) || event.getCode().equals(KeyCode.LEFT))
+                {
+                    Direction nextDir;
+                    if (event.getCode().equals(KeyCode.RIGHT)) {
+                        //cycle right in navMap
+                        nextDir = getNextLargest(intendDirection);
+
+
+                    } else {
+                        //cycle left in navMap
+                        nextDir = getNextSmallest(intendDirection);
+                    }
+                    //do highlighting
+                    highlightArrow(nextDir);
+                    unhighlightArrow(intendDirection);
+                    intendDirection = nextDir;
+                    Logger.debug("Intend direction: " + intendDirection);
                 }
             }
         };
@@ -145,11 +176,11 @@ public class RunningScreenController implements ScreenController {
             public void handle(KeyEvent event) {
                 if (event.getCode().equals(KeyCode.SPACE)) {
                     switchView();
-                } else if (event.getCode().equals(KeyCode.RIGHT)) {
+                } /*else if (event.getCode().equals(KeyCode.RIGHT)) {
                     lookRight();
                 } else if (event.getCode().equals(KeyCode.LEFT)) {
                     lookLeft();
-                }
+                }*//////feature no longer needed?
             }
         };
 
@@ -226,11 +257,29 @@ public class RunningScreenController implements ScreenController {
         debug("Processing frame");
         JunctionInfo junctions = frame.getJunctions();
         images = frame.getImages();
+        //TODO: remove backwards junction - if/when it is implemented
         if (junctions != null && images != null) {
             // update direction arrows
             for (Direction d : junctions.getRoadDirections()) {
                 debug("Junction at " + d.getDegrees());
             }
+            //intendDirection = junctions.getPrimaryDirection(); //TODO: IMPLEMENT
+            for (Iterator<Direction> it = junctions.getRoadDirections().iterator(); it.hasNext();) {
+                facingDirection = it.next();
+                break;
+            }
+            intendDirection = facingDirection;
+            Logger.debug("Intend Direction: " + intendDirection.getDegrees());
+            //TODO: GET RID OF THIS MESS
+
+            navMap = new TreeMap<Direction,ImageView>();
+            stackPane.getChildren().remove(navOverlay);
+
+            navOverlay = arrowOverlay(junctions);
+            stackPane.getChildren().add(navOverlay);
+
+            highlightArrow(intendDirection);
+
             // update location text
             LarrySettings.getInstance().setLocation(junctions.getNextLocation().getLatitude(),
                     junctions.getNextLocation().getLongitude());
@@ -244,6 +293,7 @@ public class RunningScreenController implements ScreenController {
             if (!lookingForward) {
                 backView.setImage(SwingFXUtils.toFXImage(images.back, back));
             }
+
         } else {
             error("Frame had null content");
         }
@@ -279,6 +329,67 @@ public class RunningScreenController implements ScreenController {
         container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
         container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, switchViewHandler);
         menuPopup.setVisible(false);
+    }
+
+    private StackPane arrowOverlay(JunctionInfo junctions) {
+        StackPane p = new StackPane();
+        for (Direction d : junctions.getRoadDirections())
+        {
+            ImageView arrowView = new ImageView();
+            arrowView.setImage(arrow);
+            //soo if we are facing 10 degrees and the junction is at 5, we want it at -5. 5 - 10
+            //We just want fancy values for the arrows
+            double rotateVal = d.getDegrees() - facingDirection.getDegrees();
+            arrowView.getTransforms().add(new Rotate(rotateVal, 75, 150));
+            navMap.put(d, arrowView);
+            p.getChildren().add(arrowView);
+
+        }
+        return p;
+    }
+
+    private void highlightArrow(Direction d)
+    {
+        ImageView iv = navMap.get(d);
+        iv.setImage(hArrow);
+    }
+
+    private void unhighlightArrow(Direction d)
+    {
+        ImageView iv = navMap.get(d);
+        iv.setImage(arrow);
+    }
+
+    private Direction getNextLargest(Direction curPoint) {
+        Set set = navMap.entrySet();
+        Iterator<Direction> it = set.iterator();
+        while(it.hasNext())
+        {
+            Map.Entry me = (Map.Entry)it.next();
+            if (((Direction)me.getKey()).compareTo(curPoint) == 0) { break;}
+        }
+        if (it.hasNext()) { return (Direction)((Map.Entry)it.next()).getKey(); }
+        //otherwise this is the largest in the treeset
+        Iterator<Direction> newit = set.iterator();
+        return (Direction)((Map.Entry)newit.next()).getKey();
+    }
+
+    private Direction getNextSmallest(Direction curPoint) {
+        Set set = navMap.entrySet();
+        Iterator<Direction> it = set.iterator();
+        Map.Entry prev = null;
+        Map.Entry curr = null;
+        while(it.hasNext())
+        {
+            prev = curr;
+            curr = (Map.Entry)it.next();
+            if (((Direction)curr.getKey()).compareTo(curPoint) == 0) { break;}
+        }
+        if (prev != null) { return (Direction)prev.getKey(); }
+        //otherwise this is the smallest in the treeSet
+        while(it.hasNext()) { curr = (Map.Entry)it.next();}
+        return (Direction)curr.getKey();
+        //return largest in treeSet
     }
 
     private void lookLeft() {

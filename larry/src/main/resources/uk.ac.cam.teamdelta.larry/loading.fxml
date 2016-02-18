@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -9,7 +10,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
 <?import java.net.URL?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" hgap="10.0" styleClass="gridPane" vgap="10.0" xmlns="http://javafx.com/javafx/2.2" fx:controller="uk.ac.cam.teamdelta.larry.LoadingScreenController">
   <columnConstraints>
@@ -45,5 +45,20 @@
         </Label>
       </HBox>
     </top>
+    <bottom>
+      <HBox alignment="TOP_CENTER" prefHeight="80.0" prefWidth="200.0" styleClass="HBox">
+        <children>
+          <Label alignment="CENTER" ellipsisString="" prefHeight="80.0" prefWidth="350.0" styleClass="label" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <graphic>
+              <Text fx:id="fact" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="fact-text" text="Did you know that old people crash their cars a lot?" textAlignment="CENTER" wrappingWidth="1500.0">
+                <font>
+                  <Font name="ONRAMP" />
+                </font>
+              </Text>
+            </graphic>
+          </Label>
+        </children>
+      </HBox>
+    </bottom>
   </BorderPane>
 </GridPane>

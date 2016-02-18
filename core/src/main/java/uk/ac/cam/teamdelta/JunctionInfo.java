@@ -9,6 +9,7 @@ public class JunctionInfo {
 	
 	public Location getNextLocation(){return m_next_location;};
 	public Set<Direction> getRoadDirections(){return m_road_angles;};
+    public Direction getPrimaryDirection() {return m_primary_direction;}
 
     public JunctionInfo(Location next_location, Set<Direction> road_angles) {
         m_next_location = next_location;
