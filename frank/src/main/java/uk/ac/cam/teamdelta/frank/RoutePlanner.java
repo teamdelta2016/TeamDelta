@@ -10,7 +10,7 @@ import uk.ac.cam.teamdelta.frank.OsmDataMiner.OsmWay;
 
 public class RoutePlanner implements RouteFinder {
     private static int earthRadius = 6378100; //meters
-    private double singleMoveDist = 20;
+    private double singleMoveDist = 40;
     
     //Distance in meters between loc1 and loc2
     private static double dist(Location loc1, Location loc2) {
@@ -125,9 +125,7 @@ public class RoutePlanner implements RouteFinder {
         OsmDataMiner miner = new OsmDataMiner();
         ArrayList<OsmWay> osmWays = new ArrayList<OsmWay>();
         try {
-            long time = System.currentTimeMillis();
             osmWays = miner.getRoadData(current_position);
-            System.out.println("Network time: " + (System.currentTimeMillis() - time));
         } catch(Exception e) {
             System.out.println("Data miner returned with an error: ");
             e.printStackTrace();
