@@ -2,10 +2,7 @@ package uk.ac.cam.teamdelta.andy;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -34,19 +31,8 @@ public class RunnableFetcher extends Thread {
 
     @Override
     public void run() {
-        InputStream in = null;
         try {
-            in = fetchLocation.openStream();
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            while ((bytesRead = in.read(buffer)) > 0) {
-                stream.write(buffer, 0, bytesRead);
-            }
-            stream.flush();
-            stream.close();
-            InputStream input = new ByteArrayInputStream(stream.toByteArray());
-            result = ImageIO.read(input);
+            result = ImageIO.read(fetchLocation);
         } catch (IOException e) {
             System.err.println("Failed to fetch image.");
         }

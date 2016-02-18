@@ -2,25 +2,9 @@ package uk.ac.cam.teamdelta.andy;
 
 import uk.ac.cam.teamdelta.ImageInputSet;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 
 public class ImageFetcher {
-	public static void main(String[] args) throws IOException {
-		//ImageFetcher imageFetch = new ImageFetcher();
-		//ImageInputSet result = imageFetch.sendGet(400, 400, 40.720032, -73.988354, 90, 10);
-		//File leftFile = new File("left.jpg");
-		//File leftFrontFile = new File("leftFront.jpg");
-		//File rightFrontFile = new File("rightFront.jpg");
-		//File rightFile = new File("right.jpg");
-		//File backFile = new File("back.jpg");
-		//ImageIO.write(result.getLeft(), "jpg", leftFile);
-		//ImageIO.write(result.getFrontLeft(), "jpg", leftFrontFile);
-		//ImageIO.write(result.getFrontRight(), "jpg", rightFrontFile);
-		//ImageIO.write(result.getRight(), "jpg", rightFile);
-		//ImageIO.write(result.getBack(), "jpg", backFile);
-	}
-
 	public ImageInputSet sendGet(int width, int height, double latitude, double longitude,
 								 int fov, int heading, int pitch) throws MalformedURLException {
 		RunnableFetcher[] results = {new RunnableFetcher(width, height, latitude, longitude, fov, heading - 30, pitch),
