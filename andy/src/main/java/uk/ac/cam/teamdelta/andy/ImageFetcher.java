@@ -2,7 +2,6 @@ package uk.ac.cam.teamdelta.andy;
 
 import uk.ac.cam.teamdelta.ImageInputSet;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 
 public class ImageFetcher {
@@ -26,9 +25,5 @@ public class ImageFetcher {
 
 		return new ImageInputSet(results[0].getImage(), results[1].getImage(), results[2].getImage(),
 							   	 results[3].getImage(), results[4].getImage());
-	}
-
-	public static void main(String[] args) throws IOException {
-
 	}
 }
