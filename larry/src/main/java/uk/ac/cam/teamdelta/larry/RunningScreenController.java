@@ -242,6 +242,7 @@ public class RunningScreenController implements ScreenController {
     private void goToNextFrame() {
         nextFrameService.reset();
         //TODO: pass useful information
+        facingDirection = intendDirection;
         nextFrameService.setInput(facingDirection);
         nextFrameService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
