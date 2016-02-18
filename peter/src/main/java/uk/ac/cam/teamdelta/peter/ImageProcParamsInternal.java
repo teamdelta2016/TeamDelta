@@ -5,13 +5,13 @@ import uk.ac.cam.teamdelta.ImageProcParams;
 public class ImageProcParamsInternal {
 
     private static int BLUR_VALUE_MIN = 0;
-    private static int BLUR_VALUE_MAX = 30;
+    private static int BLUR_VALUE_MAX = 14;
 
     private static double GHOST_FACTOR_MIN = 1;
     private static double GHOST_FACTOR_MAX = 2;
 
     private static double NIGHT_TIME_FACTOR_MIN = 0;
-    private static double NIGHT_TIME_FACTOR_MAX = 0.9;
+    private static double NIGHT_TIME_FACTOR_MAX = 0.95;
 
     private static double DARK_EDGES_FACTOR_MIN = 0;
     private static double DARK_EDGES_FACTOR_MAX = 1;

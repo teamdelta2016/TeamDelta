@@ -127,6 +127,9 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints fillHeight="false" maxHeight="-1.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
           </rowConstraints>
+          <GridPane.margin>
+            <Insets left="10.0" />
+          </GridPane.margin>
         </GridPane>
         <padding>
           <Insets left="5.0" />
