@@ -12,6 +12,8 @@ import java.io.IOException;
 
 class ImageProcImpl extends ImageProc {
 
+    private static final double NIGHT_MIN = 0.3;
+
     private Peripheral peripheralFront;
 
     ImageProcImpl(ImageProcParams params) {
@@ -39,7 +41,7 @@ class ImageProcImpl extends ImageProc {
         Mat i = Utils.bufferedImageToMat(iI);
 
 
-        if (params.nightTimeFactor > 0) {
+        if (params.nightTimeFactor > NIGHT_MIN) {
             Night.nightTime(i, params.nightTimeFactor);
         }
 
@@ -70,7 +72,7 @@ class ImageProcImpl extends ImageProc {
         // Stitch
         Mat i = Stitcher.stitchImages(fL, fR);
 
-        if (params.nightTimeFactor > 0) {
+        if (params.nightTimeFactor > NIGHT_MIN) {
             Night.nightTime(i, params.nightTimeFactor);
         }
 

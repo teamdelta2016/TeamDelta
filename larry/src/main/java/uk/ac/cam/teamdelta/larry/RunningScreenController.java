@@ -242,7 +242,7 @@ public class RunningScreenController implements ScreenController {
     private void goToNextFrame() {
         nextFrameService.reset();
         //TODO: pass useful information
-        nextFrameService.setInput(null);
+        nextFrameService.setInput(facingDirection);
         nextFrameService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
@@ -423,7 +423,7 @@ public class RunningScreenController implements ScreenController {
                 @Override
                 protected Frame call() throws Exception {
                     debug("Background image fetch task started");
-                    return larrySettings.getEngine().nextFrame(null);
+                    return larrySettings.getEngine().nextFrame(input);
                 }
             };
         }
