@@ -108,7 +108,7 @@ public class OsmDataMiner {
                     continue;
                 } else {
                     if (!isValidRoadType(tags.get("highway"))) {
-                        System.out.println("Irrelevant road type: " + tags.get("highway"));
+                        //System.out.println("Irrelevant road type: " + tags.get("highway"));
                         osmWays.remove(wayCounter);
                         continue;
                     }
@@ -232,9 +232,9 @@ public class OsmDataMiner {
     
     public ArrayList<OsmWay> getRoadData(Location location) throws IOException, SAXException, ParserConfigurationException { 
         ArrayList<OsmWay> osmWays = getNodesAndRoadsInRadius(location, 20);
-        for (OsmWay osmWay : osmWays) {
+        /*for (OsmWay osmWay : osmWays) {
             prettyPrint(osmWay);
-        }
+        }*/
         return osmWays;
     }
 }
