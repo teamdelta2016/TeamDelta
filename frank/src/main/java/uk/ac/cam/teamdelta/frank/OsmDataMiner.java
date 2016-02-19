@@ -6,7 +6,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -27,11 +29,17 @@ import uk.ac.cam.teamdelta.*;
 
 public class OsmDataMiner {
     private static final String OVERPASS_API = "http://api.openstreetmap.fr/oapi/interpreter";
+    private static final List<String> roadTypes = Arrays.asList("motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential");
     
-    public static Document getXMLFile(String location) throws ParserConfigurationException, SAXException, IOException {
-        DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
-        return docBuilder.parse(location);
+    private static boolean isValidRoadType(String type) {
+        boolean isOk = false;
+        for (String roadType : roadTypes) {
+            if (roadType.equals(type)) {
+                isOk = true;
+                break;
+            }
+        }
+        return isOk;
     }
     
     public static ArrayList<OsmWay> getNodesAndRoads(Document xmlDocument) {
@@ -83,7 +91,6 @@ public class OsmDataMiner {
                 osmWays.add(new OsmWay(id));
                 
                 NodeList tagXMLNodes = item.getChildNodes();
-                Map<String, String> tags = new HashMap<String, String>();
                 for (int j = 1; j < tagXMLNodes.getLength(); j++) {
                     Node tagItem = tagXMLNodes.item(j);
                     if (tagItem.getNodeName().equals("tag")) {
@@ -92,7 +99,23 @@ public class OsmDataMiner {
                             osmWays.get(osmWays.size()-1).addTag(tagAttributes.getNamedItem("k").getNodeValue(),
                                     tagAttributes.getNamedItem("v").getNodeValue());
                         }
-                    } else if (tagItem.getNodeName().equals("nd")) {
+                    }
+                }
+                Map<String, String> tags = osmWays.get(osmWays.size()-1).getTags();
+                if (!tags.containsKey("highway")) {
+                    System.out.println("Not a highway");
+                    osmWays.remove(wayCounter);
+                    continue;
+                } else {
+                    if (!isValidRoadType(tags.get("highway"))) {
+                        //System.out.println("Irrelevant road type: " + tags.get("highway"));
+                        osmWays.remove(wayCounter);
+                        continue;
+                    }
+                }
+                for (int j = 1; j < tagXMLNodes.getLength(); j++) {
+                    Node tagItem = tagXMLNodes.item(j);
+                    if (tagItem.getNodeName().equals("nd")) {
                         NamedNodeMap tagAttributes = tagItem.getAttributes();
                         if (tagAttributes != null) {
                             //Adds the node as found in loop above
@@ -196,7 +219,7 @@ public class OsmDataMiner {
         }
         
         for (int i=0; i<osmWay.nodeCount(); i++) {
-            System.out.println("  Node: " + osmWay.getNode(i).getLat() + ", " + osmWay.getNode(i).getLon());
+            System.out.println("  Node(" + osmWay.getNode(i).getId() + "): " + osmWay.getNode(i).getLat() + ", " + osmWay.getNode(i).getLon());
             if (osmWay.getNode(i).getWayCount() > 1) {
                 System.out.print("    Member of:");
                 for (int j=0; j<osmWay.getNode(i).getWayCount(); j++) {

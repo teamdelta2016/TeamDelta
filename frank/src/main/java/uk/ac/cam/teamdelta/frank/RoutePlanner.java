@@ -11,21 +11,27 @@ import uk.ac.cam.teamdelta.frank.OsmDataMiner.OsmWay;
 public class RoutePlanner implements RouteFinder {
     private static int earthRadius = 6378100; //meters
     private double singleMoveDist = 20;
+    private double distTolerance = 0.1;
+    private double standardAngleTolerance = 20;
     
     //Distance in meters between loc1 and loc2
     private static double dist(Location loc1, Location loc2) {
         double lat1 = loc1.getLatitude();
         double lon1 = loc1.getLongitude();
-        double  lat2 = loc2.getLatitude();
+        double lat2 = loc2.getLatitude();
         double lon2 = loc2.getLongitude();
         double dLat = Math.toRadians(lat2-lat1);
         double dLon = Math.toRadians(lon2-lon1);
         double a = (Math.sin(dLat/2) * Math.sin(dLat/2) +
                    Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
                    Math.sin(dLon/2) * Math.sin(dLon/2));
-        double c = (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+        double c = (2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(1-Math.abs(a))));
         double dist = (earthRadius * c);
-
+        
+        if (Double.isNaN(dist)) {
+            return 0.0;
+        }
+        
         return Math.abs(dist);
     }
     
@@ -60,6 +66,9 @@ public class RoutePlanner implements RouteFinder {
         double dist12 = dist(loc1, loc2);
         double dist13 = dist(loc1, loc3);
         double dist23 = dist(loc2, loc3);
+        if ((2*dist12*dist13) == 0) {
+            return 0.0;
+        }
         double angle = Math.acos((dist12*dist12 + dist13*dist13 - dist23*dist23) / (2*dist12*dist13));
         return Math.toDegrees(angle);
     }
@@ -86,7 +95,7 @@ public class RoutePlanner implements RouteFinder {
     }
     
     public JunctionInfo getInitialPosition(Location current_position) {
-        ClosestRoadInfo info = getInitialPosition(current_position, new Direction(0), 360);
+        ClosestRoadInfo info = getInitialPosition(current_position, new Direction(0), 360, new HashSet<Integer>(), null);
         Set<Direction> dirSet = new HashSet<Direction>();
         dirSet.add(info.getInitialDirection());
         return new JunctionInfo(info.getInitialLocation(), dirSet);
@@ -120,18 +129,21 @@ public class RoutePlanner implements RouteFinder {
         public ArrayList<OsmWay> getOsmWays(){return osmWays;}
     }
     
-    private ClosestRoadInfo getInitialPosition(Location current_position, Direction current_direction, double angleTolerance) {
-        ClosestRoadInfo info = new ClosestRoadInfo(new Location(0,0), new Direction(0.0), new ArrayList<OsmWay>(), -1, -1, 0, 0);
+    private ClosestRoadInfo getInitialPosition(Location current_position, Direction current_direction, double angleTolerance, Set<Integer> blackList, ArrayList<OsmWay> roadData) {
+        ClosestRoadInfo info = new ClosestRoadInfo(new Location(0,0), new Direction(0.0), null, -1, -1, 0, 0);
         OsmDataMiner miner = new OsmDataMiner();
-        ArrayList<OsmWay> osmWays = new ArrayList<OsmWay>();
-        try {
-            long time = System.currentTimeMillis();
-            osmWays = miner.getRoadData(current_position);
-            System.out.println("Network time: " + (System.currentTimeMillis() - time));
-        } catch(Exception e) {
-            System.out.println("Data miner returned with an error: ");
-            e.printStackTrace();
-            return info;
+        ArrayList<OsmWay> osmWays;
+        if (roadData == null) {
+            osmWays = new ArrayList<OsmWay>();
+            try {
+                osmWays = miner.getRoadData(current_position);
+            } catch(Exception e) {
+                System.out.println("Data miner returned with an error: ");
+                e.printStackTrace();
+                return info;
+            }
+        } else {
+            osmWays = roadData;
         }
         
         double minDist = 123456789;
@@ -139,11 +151,16 @@ public class RoutePlanner implements RouteFinder {
         int minDistNode = -1;
         
         for (int i=0; i<osmWays.size(); i++) {
+            if (blackList.contains(i)) {
+                continue;
+            }
             for (int j=0; j+1<osmWays.get(i).nodeCount(); j++) {
                 double curDist = 
                         distFromSegment(current_position, osmWays.get(i).getNode(j).getLocation(),osmWays.get(i).getNode(j+1).getLocation());
                 Direction curBearing =
                         bearing(osmWays.get(i).getNode(j).getLocation(),osmWays.get(i).getNode(j+1).getLocation());
+                //System.out.println("Angle to road:" + Math.abs(current_direction.getDegrees() - curBearing.getDegrees()));
+                //System.out.println("Dist to road:" + curDist);
                 if (curDist < minDist && (
                          Math.abs(current_direction.getDegrees() - curBearing.getDegrees())<angleTolerance ||
                          Math.abs(current_direction.getDegrees() - curBearing.getDegrees())>(360 - angleTolerance) ||
@@ -155,6 +172,11 @@ public class RoutePlanner implements RouteFinder {
                     minDistNode = j;
                 }
             }
+        }
+        
+        if (withinRange(minDist, 123456789, 0.1)) {
+            System.out.println("Failed to find closest road!");
+            return info;
         }
         
         //If you want to see which road (way) was the query assigned to:
@@ -181,15 +203,18 @@ public class RoutePlanner implements RouteFinder {
     }
     
     public JunctionInfo getNextPosition(Location current_position, Direction current_direction) {
-        return getNextPosition(current_position, current_direction, 20);
+        return getNextPosition(current_position, current_direction, standardAngleTolerance, new HashSet<Integer>(), null);
     }
     
-    public JunctionInfo getNextPosition(Location current_position, Direction current_direction, double angleTolerance) {
+    public JunctionInfo getNextPosition(Location current_position, Direction current_direction, double angleTolerance, HashSet<Integer> blackList, ArrayList<OsmWay> roadData) {
         JunctionInfo info = new JunctionInfo(new Location(0.0, 0.0), new TreeSet<Direction>());
         
         double moveDist = singleMoveDist;
         
-        ClosestRoadInfo initialInfo = getInitialPosition(current_position, current_direction, angleTolerance);
+        ClosestRoadInfo initialInfo = getInitialPosition(current_position, current_direction, angleTolerance, blackList, roadData);
+        if (initialInfo.getMinDistNode() == -1) {
+            return info;
+        }
         Location newLoc = initialInfo.getInitialLocation();
         Direction segDir = initialInfo.getInitialDirection();
         double segDist = initialInfo.getSegmentDistance();
@@ -198,7 +223,7 @@ public class RoutePlanner implements RouteFinder {
         int minDistWay = initialInfo.getMinDistWay();
         ArrayList<OsmWay> osmWays = initialInfo.getOsmWays();
         
-        if (segDist + 0.1 > moveDist) {
+        if (segDist + distTolerance > moveDist) {
             Direction dir;
             if (segOrder == 1) {
                 dir = segDir;
@@ -223,45 +248,53 @@ public class RoutePlanner implements RouteFinder {
         
         newLoc = osmWays.get(curWay).getNode(curNode).getLocation();
         
-        while (moveDist > 0.1) {
+        while (moveDist > distTolerance) {
+            //System.out.println("Currently considering location: " + newLoc.getLatitude() + " " + newLoc.getLongitude());
+            //System.out.println("Way count: " + osmWays.get(curWay).getNode(curNode).getWayCount());
+            
+            //We reached a junction before we moved fully forward
+            if (osmWays.get(curWay).getNode(curNode).getWayCount() > 1) {
+                if (withinRange(moveDist, singleMoveDist, distTolerance/2)) {
+                    blackList.add(curWay);
+                    return getNextPosition(current_position, current_direction, standardAngleTolerance, blackList, osmWays);
+                }
+                OsmDataMiner.OsmNode juncNode = osmWays.get(curWay).getNode(curNode);
+                Set<Direction> dirSet = new HashSet<Direction>();
+                for (int i=0; i < juncNode.getWayCount(); i++) {
+                    int wayNum = juncNode.getWay(i);
+                    int nodePos = -1;
+                    for (int j=0; j<osmWays.get(wayNum).nodeCount(); j++) {
+                        if (osmWays.get(wayNum).getNode(j) == juncNode) {
+                            nodePos = j;
+                            break;
+                        }
+                    }
+                    if (nodePos != -1) {
+                        if (nodePos > 0) {
+                            dirSet.add(bearing(osmWays.get(wayNum).getNode(nodePos).getLocation(),
+                                    osmWays.get(wayNum).getNode(nodePos-1).getLocation()));
+                        }
+                        if (nodePos+1 < osmWays.get(wayNum).nodeCount()) {
+                            dirSet.add(bearing(osmWays.get(wayNum).getNode(nodePos).getLocation(),
+                                    osmWays.get(wayNum).getNode(nodePos+1).getLocation()));
+                        }
+                    }
+                }
+                return new JunctionInfo(newLoc, dirSet);
+            }
+            
             if (segOrder == 1) {
                 if (curNode+1 < osmWays.get(curWay).nodeCount()) {
                     segDist = dist(osmWays.get(curWay).getNode(curNode).getLocation(),osmWays.get(curWay).getNode(curNode+1).getLocation());
                     segDir = bearing(osmWays.get(curWay).getNode(curNode).getLocation(),osmWays.get(curWay).getNode(curNode+1).getLocation());
                     //Answer is in this segment
-                    if (segDist + 0.1 > moveDist) {
+                    if (segDist + distTolerance > moveDist) {
                         newLoc = moveByDist(newLoc, segDir, moveDist);
                         Set<Direction> dirSet = new HashSet<Direction>();
                         dirSet.add(segDir);
                         return new JunctionInfo(newLoc, dirSet);
                     } else {
                         newLoc = osmWays.get(curWay).getNode(curNode+1).getLocation();
-                    }
-                    //We reached a junction before we moved fully forward
-                    if (osmWays.get(curWay).getNode(curNode+1).getWayCount() > 1) {
-                        OsmDataMiner.OsmNode juncNode = osmWays.get(curWay).getNode(curNode+1);
-                        Set<Direction> dirSet = new HashSet<Direction>();
-                        for (int i=0; i < juncNode.getWayCount(); i++) {
-                            int wayNum = juncNode.getWay(i);
-                            int nodePos = -1;
-                            for (int j=0; j<osmWays.get(wayNum).nodeCount(); j++) {
-                                if (osmWays.get(wayNum).getNode(j) == juncNode) {
-                                    nodePos = j;
-                                    break;
-                                }
-                            }
-                            if (nodePos != -1) {
-                                if (nodePos > 0) {
-                                    dirSet.add(bearing(osmWays.get(wayNum).getNode(nodePos).getLocation(),
-                                            osmWays.get(wayNum).getNode(nodePos-1).getLocation()));
-                                }
-                                if (nodePos+1 < osmWays.get(wayNum).nodeCount()) {
-                                    dirSet.add(bearing(osmWays.get(wayNum).getNode(nodePos).getLocation(),
-                                            osmWays.get(wayNum).getNode(nodePos+1).getLocation()));
-                                }
-                            }
-                        }
-                        return new JunctionInfo(newLoc, dirSet);
                     }
                     curNode++;
                 }else{
@@ -276,39 +309,13 @@ public class RoutePlanner implements RouteFinder {
                     segDist = dist(osmWays.get(curWay).getNode(curNode).getLocation(),osmWays.get(curWay).getNode(curNode-1).getLocation());
                     segDir = bearing(osmWays.get(curWay).getNode(curNode).getLocation(),osmWays.get(curWay).getNode(curNode-1).getLocation());
                     //Answer is in this segment
-                    if (segDist + 0.1 > moveDist) {
+                    if (segDist + distTolerance > moveDist) {
                         newLoc = moveByDist(newLoc, segDir, moveDist);
                         Set<Direction> dirSet = new HashSet<Direction>();
                         dirSet.add(segDir);
                         return new JunctionInfo(newLoc, dirSet);
                     } else {
                         newLoc = osmWays.get(curWay).getNode(curNode-1).getLocation();
-                    }
-                    //We reached a junction before we moved fully forward
-                    if (osmWays.get(curWay).getNode(curNode-1).getWayCount() > 1) {
-                        OsmDataMiner.OsmNode juncNode = osmWays.get(curWay).getNode(curNode-1);
-                        Set<Direction> dirSet = new HashSet<Direction>();
-                        for (int i=0; i < juncNode.getWayCount(); i++) {
-                            int wayNum = juncNode.getWay(i);
-                            int nodePos = -1;
-                            for (int j=0; j<osmWays.get(wayNum).nodeCount(); j++) {
-                                if (osmWays.get(wayNum).getNode(j) == juncNode) {
-                                    nodePos = j;
-                                    break;
-                                }
-                            }
-                            if (nodePos != -1) {
-                                if (nodePos > 0) {
-                                    dirSet.add(bearing(osmWays.get(wayNum).getNode(nodePos).getLocation(),
-                                            osmWays.get(wayNum).getNode(nodePos-1).getLocation()));
-                                }
-                                if (nodePos+1 < osmWays.get(wayNum).nodeCount()) {
-                                    dirSet.add(bearing(osmWays.get(wayNum).getNode(nodePos).getLocation(),
-                                            osmWays.get(wayNum).getNode(nodePos+1).getLocation()));
-                                }
-                            }
-                        }
-                        return new JunctionInfo(newLoc, dirSet);
                     }
                     curNode--;
                 }else{
@@ -324,16 +331,16 @@ public class RoutePlanner implements RouteFinder {
         return info;
     }
     
-    private boolean withinRange(double realValue, double expectedValue, double tolerance) {
+    private static boolean withinRange(double realValue, double expectedValue, double tolerance) {
         return Math.abs(realValue-expectedValue)<tolerance;
     }
     
     //Tests of private helper functions
     private boolean testHelperFunctions() {
         boolean all_passed = true;
-        all_passed &= withinRange(dist(new Location(52.208396, 0.118471), new Location(52.208350, 0.118434)), 5.7, 0.1);
+        all_passed &= withinRange(dist(new Location(52.208396, 0.118471), new Location(52.208350, 0.118434)), 5.7, distTolerance);
         all_passed &= withinRange(angle(new Location(52.208292, 0.118372), new Location(52.208350, 0.118434), new Location(52.208325, 0.118241)), 101, 3);
-        all_passed &= withinRange(distFromSegment(new Location(52.208350, 0.118434), new Location(52.208292, 0.118372), new Location(52.208325, 0.118241)), 7.7, 0.1);
+        all_passed &= withinRange(distFromSegment(new Location(52.208350, 0.118434), new Location(52.208292, 0.118372), new Location(52.208325, 0.118241)), 7.7, distTolerance);
         Location moved = moveByDist(new Location(52.208292, 0.118372), new Direction(90.0), 15);
         all_passed &= withinRange(moved.getLatitude(), 52.20829, 0.001) && withinRange(moved.getLongitude(), 0.11859, 0.001);
         all_passed &= withinRange(bearing(new Location(52.208292, 0.118372), new Location(52.20829, 0.11859)).getDegrees(), 90.8, 3);
@@ -345,14 +352,17 @@ public class RoutePlanner implements RouteFinder {
     public static void main(String[] args) {
         RoutePlanner planner = new RoutePlanner();
         
-        System.out.print("Test of helper functions running... ");
+        //System.out.print("Test of helper functions running... ");
         System.out.println(planner.testHelperFunctions()?"Succeeded":"FAILED");
         
         //planner.getNextPosition(new Location(52.208396, 0.118471), new Direction(0));
         //JunctionInfo info = planner.getNextPosition(new Location(52.208326, 0.118633), new Direction(315));
-        JunctionInfo info = planner.getNextPosition(new Location(52.207374, 0.118183), new Direction(90));
+        //JunctionInfo info = planner.getNextPosition(new Location(52.207374, 0.118183), new Direction(90));
         //JunctionInfo info = planner.getNextPosition(new Location(52.20670, 0.1110736), new Direction(90));
         //JunctionInfo info = planner.getInitialPosition(new Location(52.200160, 0.113254));
+        //JunctionInfo info = planner.getNextPosition(new Location(51.585068827132936, 0.029416655762752684), new Direction(108.22666648447432));
+        //JunctionInfo info = planner.getNextPosition(new Location(52.2111648, 0.1065411), new Direction(107.38489009711105));
+        JunctionInfo info = planner.getNextPosition(new Location(52.211111115730716, 0.106820912514565), new Direction(107.3856447293237));
         System.out.println("Next pos: ");
         System.out.println(info.getNextLocation().getLatitude() + ", " + info.getNextLocation().getLongitude());
         for (Direction dir : info.getRoadDirections()) {
