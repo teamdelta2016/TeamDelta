@@ -155,18 +155,18 @@ public class RunningScreenController implements ScreenController {
                     Direction nextDir;
                     if (event.getCode().equals(KeyCode.RIGHT)) {
                         //cycle right in navMap
-                        nextDir = getNextLargest(intendDirection);
+                        nextDir = getNextLargest();
 
 
                     } else {
                         //cycle left in navMap
-                        nextDir = getNextSmallest(intendDirection);
+                        nextDir = getNextSmallest();
                     }
                     //do highlighting
-                    highlightArrow(nextDir);
                     unhighlightArrow(intendDirection);
+                    highlightArrow(nextDir);
                     intendDirection = nextDir;
-                    Logger.debug("Intend direction: " + intendDirection);
+                    Logger.debug("Intend direction: " + intendDirection.getDegrees());
                 }
             }
         };
@@ -264,14 +264,13 @@ public class RunningScreenController implements ScreenController {
             for (Direction d : junctions.getRoadDirections()) {
                 debug("Junction at " + d.getDegrees());
             }
-            //intendDirection = junctions.getPrimaryDirection(); //TODO: IMPLEMENT
+            //facingDirection = junctions.getPrimaryDirection(); //TODO: IMPLEMENT PLZ????
             for (Iterator<Direction> it = junctions.getRoadDirections().iterator(); it.hasNext();) {
                 facingDirection = it.next();
                 break;
-            }
+            } //TODO: FIX THIS VILE MESS
             intendDirection = facingDirection;
             Logger.debug("Intend Direction: " + intendDirection.getDegrees());
-            //TODO: GET RID OF THIS MESS
 
             navMap = new TreeMap<Direction,ImageView>();
             stackPane.getChildren().remove(navOverlay);
@@ -361,36 +360,47 @@ public class RunningScreenController implements ScreenController {
         iv.setImage(arrow);
     }
 
-    private Direction getNextLargest(Direction curPoint) {
-        Set set = navMap.entrySet();
-        Iterator<Direction> it = set.iterator();
-        while(it.hasNext())
-        {
-            Map.Entry me = (Map.Entry)it.next();
-            if (((Direction)me.getKey()).compareTo(curPoint) == 0) { break;}
+    private Direction getNextLargest() {
+        if (navMap.size() > 1) {
+            Iterator<Direction> it = navMap.keySet().iterator();
+            Direction d;
+            while (it.hasNext()) {
+                d = it.next();
+                if (d.compareTo(intendDirection) == 0) { break;}
+                //reached intendDirection
+            }
+            if (it.hasNext()) {
+                return it.next(); //return next CW direction
+            }
+            //otherwise this is the largest in the treeset
+            Iterator<Direction> newit = navMap.keySet().iterator();
+            return newit.next();
         }
-        if (it.hasNext()) { return (Direction)((Map.Entry)it.next()).getKey(); }
-        //otherwise this is the largest in the treeset
-        Iterator<Direction> newit = set.iterator();
-        return (Direction)((Map.Entry)newit.next()).getKey();
+        return intendDirection;
     }
 
-    private Direction getNextSmallest(Direction curPoint) {
-        Set set = navMap.entrySet();
-        Iterator<Direction> it = set.iterator();
-        Map.Entry prev = null;
-        Map.Entry curr = null;
-        while(it.hasNext())
-        {
-            prev = curr;
-            curr = (Map.Entry)it.next();
-            if (((Direction)curr.getKey()).compareTo(curPoint) == 0) { break;}
+    private Direction getNextSmallest() {
+        if (navMap.size() > 1) {
+            Iterator<Direction> it = navMap.keySet().iterator();
+            Direction prev = null;
+            Direction curr = null;
+            while (it.hasNext()) {
+                prev = curr;
+                curr = it.next();
+                if (curr.compareTo(intendDirection) == 0) { break; }
+                //reached intendDirection
+            }
+            if (prev != null) {
+                return prev; //return next ACW direction
+            }
+            //otherwise this is the smallest in the treeSet
+            while (it.hasNext()) {
+                curr = it.next();
+            }
+            return curr;
+            //return largest in treeSet
         }
-        if (prev != null) { return (Direction)prev.getKey(); }
-        //otherwise this is the smallest in the treeSet
-        while(it.hasNext()) { curr = (Map.Entry)it.next();}
-        return (Direction)curr.getKey();
-        //return largest in treeSet
+        return intendDirection;
     }
 
     private void lookLeft() {
