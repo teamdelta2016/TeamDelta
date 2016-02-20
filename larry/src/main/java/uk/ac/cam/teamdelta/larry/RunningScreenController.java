@@ -11,8 +11,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.PerspectiveTransform;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -29,7 +29,6 @@ import uk.ac.cam.teamdelta.robert.Engine;
 import uk.ac.cam.teamdelta.robert.Frame;
 
 import java.io.IOException;
-import java.util.Set;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -58,9 +57,10 @@ public class RunningScreenController implements ScreenController {
     private WritableImage right;
 
     private StackPane navOverlay;
-    private Map<Direction,ImageView> navMap;
+    private Map<Direction, ImageView> navMap;
     private Image hArrow = new Image("/uk.ac.cam.teamdelta.larry/images/highlightarrow.png");
     private Image arrow = new Image("/uk.ac.cam.teamdelta.larry/images/arrow.png");
+    private Image sArrow = new Image("/uk.ac.cam.teamdelta.larry/images/selectedarrow.png");
     /**
      * Boolean to keep track of whether to show front or rear windscreen view
      */
@@ -145,19 +145,16 @@ public class RunningScreenController implements ScreenController {
             public void handle(KeyEvent event) {
                 if (event.getCode().equals(KeyCode.UP) || event.getCode().equals(KeyCode.DOWN)) {
                     if (event.getCode().equals(KeyCode.DOWN)) {
-                        facingDirection = new Direction((facingDirection.getDegrees() + 180) % 360);
+                        intendDirection = new Direction((facingDirection.getDegrees() + 180) % 360);
                     }
                     goToNextFrame();
                     final EventHandler<KeyEvent> ev = this;
                     container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, ev);
-                } else if (event.getCode().equals(KeyCode.RIGHT) || event.getCode().equals(KeyCode.LEFT))
-                {
+                } else if (event.getCode().equals(KeyCode.RIGHT) || event.getCode().equals(KeyCode.LEFT)) {
                     Direction nextDir;
                     if (event.getCode().equals(KeyCode.RIGHT)) {
                         //cycle right in navMap
                         nextDir = getNextLargest();
-
-
                     } else {
                         //cycle left in navMap
                         nextDir = getNextSmallest();
@@ -176,11 +173,7 @@ public class RunningScreenController implements ScreenController {
             public void handle(KeyEvent event) {
                 if (event.getCode().equals(KeyCode.SPACE)) {
                     switchView();
-                } /*else if (event.getCode().equals(KeyCode.RIGHT)) {
-                    lookRight();
-                } else if (event.getCode().equals(KeyCode.LEFT)) {
-                    lookLeft();
-                }*//////feature no longer needed?
+                }
             }
         };
 
@@ -240,6 +233,7 @@ public class RunningScreenController implements ScreenController {
      * Called when UP arrow is pressed, requests the next frame from the {@link Engine}
      */
     private void goToNextFrame() {
+        selectArrow(intendDirection);
         nextFrameService.reset();
         //TODO: pass useful information
         facingDirection = intendDirection;
@@ -265,18 +259,20 @@ public class RunningScreenController implements ScreenController {
                 debug("Junction at " + d.getDegrees());
             }
             //facingDirection = junctions.getPrimaryDirection(); //TODO: IMPLEMENT PLZ????
-            for (Iterator<Direction> it = junctions.getRoadDirections().iterator(); it.hasNext();) {
+            for (Iterator<Direction> it = junctions.getRoadDirections().iterator(); it.hasNext(); ) {
                 facingDirection = it.next();
                 break;
             } //TODO: FIX THIS VILE MESS
             intendDirection = facingDirection;
             Logger.debug("Intend Direction: " + intendDirection.getDegrees());
 
-            navMap = new TreeMap<Direction,ImageView>();
+            navMap = new TreeMap<Direction, ImageView>();
             stackPane.getChildren().remove(navOverlay);
 
             navOverlay = arrowOverlay(junctions);
             stackPane.getChildren().add(navOverlay);
+            // make sure the menu button is always on top
+            button.toFront();
 
             highlightArrow(intendDirection);
 
@@ -333,8 +329,7 @@ public class RunningScreenController implements ScreenController {
 
     private StackPane arrowOverlay(JunctionInfo junctions) {
         StackPane p = new StackPane();
-        for (Direction d : junctions.getRoadDirections())
-        {
+        for (Direction d : junctions.getRoadDirections()) {
             ImageView arrowView = new ImageView();
             arrowView.setImage(arrow);
             //soo if we are facing 10 degrees and the junction is at 5, we want it at -5. 5 - 10
@@ -348,16 +343,19 @@ public class RunningScreenController implements ScreenController {
         return p;
     }
 
-    private void highlightArrow(Direction d)
-    {
+    private void highlightArrow(Direction d) {
         ImageView iv = navMap.get(d);
         iv.setImage(hArrow);
     }
 
-    private void unhighlightArrow(Direction d)
-    {
+    private void unhighlightArrow(Direction d) {
         ImageView iv = navMap.get(d);
         iv.setImage(arrow);
+    }
+
+    private void selectArrow(Direction d){
+        ImageView iv = navMap.get(d);
+        iv.setImage(sArrow);
     }
 
     private Direction getNextLargest() {
@@ -366,7 +364,9 @@ public class RunningScreenController implements ScreenController {
             Direction d;
             while (it.hasNext()) {
                 d = it.next();
-                if (d.compareTo(intendDirection) == 0) { break;}
+                if (d.compareTo(intendDirection) == 0) {
+                    break;
+                }
                 //reached intendDirection
             }
             if (it.hasNext()) {
@@ -387,7 +387,9 @@ public class RunningScreenController implements ScreenController {
             while (it.hasNext()) {
                 prev = curr;
                 curr = it.next();
-                if (curr.compareTo(intendDirection) == 0) { break; }
+                if (curr.compareTo(intendDirection) == 0) {
+                    break;
+                }
                 //reached intendDirection
             }
             if (prev != null) {
@@ -401,14 +403,6 @@ public class RunningScreenController implements ScreenController {
             //return largest in treeSet
         }
         return intendDirection;
-    }
-
-    private void lookLeft() {
-        debug("looking left");
-    }
-
-    private void lookRight() {
-        debug("looking right");
     }
 
     @Override

@@ -27,14 +27,14 @@
           <GridPane>
             <children>
               <Label fx:id="locationText" text="" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
-              <Label text="Label" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="BOTTOM" />
+              <Label text="UP: proceed, LEFT/RIGHT: select direction, SPACE: show rear view " GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="BOTTOM" />
             </children>
             <columnConstraints>
               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             </columnConstraints>
             <rowConstraints>
               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
             </rowConstraints>
           </GridPane>
           <Button id="" fx:id="button" defaultButton="false" ellipsisString="" focusTraversable="false" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showMenu" prefHeight="-1.0" prefWidth="-1.0" text="menu" underline="false" wrapText="false" StackPane.alignment="BOTTOM_RIGHT">
