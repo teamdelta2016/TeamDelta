@@ -98,7 +98,7 @@ public class RoutePlanner implements RouteFinder {
         ClosestRoadInfo info = getInitialPosition(current_position, new Direction(0), 360, new HashSet<Integer>(), null);
         Set<Direction> dirSet = new HashSet<Direction>();
         dirSet.add(info.getInitialDirection());
-        return new JunctionInfo(info.getInitialLocation(), dirSet);
+        return new JunctionInfo(info.getInitialLocation(), dirSet, info.getInitialDirection());
     }
     
     private static class ClosestRoadInfo {
@@ -207,7 +207,7 @@ public class RoutePlanner implements RouteFinder {
     }
     
     public JunctionInfo getNextPosition(Location current_position, Direction current_direction, double angleTolerance, HashSet<Integer> blackList, ArrayList<OsmWay> roadData) {
-        JunctionInfo info = new JunctionInfo(new Location(0.0, 0.0), new TreeSet<Direction>());
+        JunctionInfo info = new JunctionInfo(new Location(0.0, 0.0), new TreeSet<Direction>(), new Direction(0));
         
         double moveDist = singleMoveDist;
         
@@ -233,7 +233,7 @@ public class RoutePlanner implements RouteFinder {
             newLoc = moveByDist(newLoc, dir, moveDist);
             Set<Direction> dirSet = new HashSet<Direction>();
             dirSet.add(dir);
-            return new JunctionInfo(newLoc, dirSet);
+            return new JunctionInfo(newLoc, dirSet, dir);
         } else {
             moveDist -= segDist;
         }
@@ -259,6 +259,12 @@ public class RoutePlanner implements RouteFinder {
                     return getNextPosition(current_position, current_direction, standardAngleTolerance, blackList, osmWays);
                 }
                 OsmDataMiner.OsmNode juncNode = osmWays.get(curWay).getNode(curNode);
+                Direction primary_dir;
+                if (segOrder == 1) {
+                    primary_dir = bearing(osmWays.get(curWay).getNode(curNode-1).getLocation(),osmWays.get(curWay).getNode(curNode).getLocation());
+                } else {
+                    primary_dir = bearing(osmWays.get(curWay).getNode(curNode).getLocation(),osmWays.get(curWay).getNode(curNode+1).getLocation());
+                }
                 Set<Direction> dirSet = new HashSet<Direction>();
                 for (int i=0; i < juncNode.getWayCount(); i++) {
                     int wayNum = juncNode.getWay(i);
@@ -280,7 +286,7 @@ public class RoutePlanner implements RouteFinder {
                         }
                     }
                 }
-                return new JunctionInfo(newLoc, dirSet);
+                return new JunctionInfo(newLoc, dirSet, primary_dir);
             }
             
             if (segOrder == 1) {
@@ -292,7 +298,7 @@ public class RoutePlanner implements RouteFinder {
                         newLoc = moveByDist(newLoc, segDir, moveDist);
                         Set<Direction> dirSet = new HashSet<Direction>();
                         dirSet.add(segDir);
-                        return new JunctionInfo(newLoc, dirSet);
+                        return new JunctionInfo(newLoc, dirSet, segDir);
                     } else {
                         newLoc = osmWays.get(curWay).getNode(curNode+1).getLocation();
                     }
@@ -302,7 +308,7 @@ public class RoutePlanner implements RouteFinder {
                     Direction dir = new Direction((segDir.getDegrees()+180)%360);
                     Set<Direction> dirSet = new HashSet<Direction>();
                     dirSet.add(dir);
-                    return new JunctionInfo(newLoc, dirSet);
+                    return new JunctionInfo(newLoc, dirSet, dir);
                 }
             } else {
                 if (curNode > 0) {
@@ -313,7 +319,7 @@ public class RoutePlanner implements RouteFinder {
                         newLoc = moveByDist(newLoc, segDir, moveDist);
                         Set<Direction> dirSet = new HashSet<Direction>();
                         dirSet.add(segDir);
-                        return new JunctionInfo(newLoc, dirSet);
+                        return new JunctionInfo(newLoc, dirSet, segDir);
                     } else {
                         newLoc = osmWays.get(curWay).getNode(curNode-1).getLocation();
                     }
@@ -323,7 +329,7 @@ public class RoutePlanner implements RouteFinder {
                     Direction dir = new Direction((segDir.getDegrees()+180)%360);
                     Set<Direction> dirSet = new HashSet<Direction>();
                     dirSet.add(dir);
-                    return new JunctionInfo(newLoc, dirSet);
+                    return new JunctionInfo(newLoc, dirSet, dir);
                 }
             }
         }
@@ -365,6 +371,7 @@ public class RoutePlanner implements RouteFinder {
         JunctionInfo info = planner.getNextPosition(new Location(52.211111115730716, 0.106820912514565), new Direction(107.3856447293237));
         System.out.println("Next pos: ");
         System.out.println(info.getNextLocation().getLatitude() + ", " + info.getNextLocation().getLongitude());
+        System.out.println("Primary pos:" + info.getPrimaryDirection().getDegrees());
         for (Direction dir : info.getRoadDirections()) {
             System.out.print(dir.getDegrees() + " ");
         }
