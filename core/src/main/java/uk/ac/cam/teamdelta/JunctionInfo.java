@@ -15,9 +15,10 @@ public class JunctionInfo {
     public void setPrimaryDirection(Direction d) { m_primary_direction = d;}
 
 
-    public JunctionInfo(Location next_location, Set<Direction> road_angles) {
+    public JunctionInfo(Location next_location, Set<Direction> road_angles, Direction primary_direction) {
         m_next_location = next_location;
         m_road_angles = road_angles;
+        m_primary_direction = primary_direction;
     }
 
     public JunctionInfo(Location next_location, Direction forwardDirection){

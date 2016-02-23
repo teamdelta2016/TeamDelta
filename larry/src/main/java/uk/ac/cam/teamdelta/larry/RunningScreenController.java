@@ -328,12 +328,12 @@ public class RunningScreenController implements ScreenController {
                 debug("Junction at " + d.getDegrees());
             }
 
-            //facingDirection = junctions.getPrimaryDirection(); //TODO: IMPLEMENT
-            for (Iterator<Direction> it = junctions.getRoadDirections().iterator(); it.hasNext();) {
+            facingDirection = junctions.getPrimaryDirection();
+            /*for (Iterator<Direction> it = junctions.getRoadDirections().iterator(); it.hasNext();) {
 
                 facingDirection = it.next();
                 break;
-            } //TODO: FIX THIS VILE MESS
+            } */
             intendDirection = facingDirection;
             Logger.debug("Intend Direction: " + intendDirection.getDegrees());
 
@@ -425,7 +425,8 @@ public class RunningScreenController implements ScreenController {
 
     private void highlightArrow(Direction d) {
         ImageView iv = navMap.get(d);
-        iv.setImage(hArrow);
+        if (iv == null) { Logger.error("NULL IV - d was not in direction set"); }
+        iv.setImage(arrow);
     }
 
     private void unhighlightArrow(Direction d) {
@@ -484,7 +485,7 @@ public class RunningScreenController implements ScreenController {
         }
         return intendDirection;
     }
-    
+
     @Override
     public void setScreenParent(ScreensContainer screenParent) {
         container = screenParent;
