@@ -20,13 +20,17 @@ import java.util.LinkedList;
 
 public class ScreensContainer extends StackPane {
 
+    /**
+     * A separate queue of screen names to be used when screens are needed in an order different to normal.
+     * Works in the same way as {@link ScreensContainer#screenQueue}
+     */
     private final Deque<String> outOfOrderQueue = new LinkedList<>();
 
     /**
      * Queue of screen names to specify order of screens to be shown in UI flow Order actually specified by order in
      * which screens are added in Main. Currently displayed screen will be at the head.
      */
-    private final Deque<String> screenNames = new LinkedList<>();
+    private final Deque<String> screenQueue = new LinkedList<>();
     /**
      * Map linking names of screens to nodes representing them
      */
@@ -47,17 +51,25 @@ public class ScreensContainer extends StackPane {
         screens.put(name, screen);
     }
 
+    /**
+     * Adds a screen to the {@link ScreensContainer#outOfOrderQueue}
+     * @param name the descriptive name of the screen to add
+     */
     public void putOutOfOrderScreen(String name) {
         outOfOrderQueue.add(name);
     }
 
+    /**
+     * Called by functions that need out-of-order screens to make sure the
+     * head of the out-of-order queue is currently on display
+     */
     public void showOutOfOrder(){
         String name = outOfOrderQueue.peek();
         setScreen(name);
     }
 
     /**
-     * Displays the screen which is at the front of the queue
+     * Displays the screen which is next in the queue
      */
     public void nextScreen() {
         String name;
@@ -71,8 +83,8 @@ public class ScreensContainer extends StackPane {
                     outOfOrderQueue.clear();
                 }
             } else {
-                screenNames.addLast(screenNames.pollFirst());
-                name = screenNames.peekFirst();
+                screenQueue.addLast(screenQueue.pollFirst());
+                name = screenQueue.peekFirst();
             }
             setScreen(name);
         } else {
@@ -95,8 +107,8 @@ public class ScreensContainer extends StackPane {
                     outOfOrderQueue.clear();
                 }
             } else {
-                name = screenNames.pollLast();
-                screenNames.addFirst(name);
+                name = screenQueue.pollLast();
+                screenQueue.addFirst(name);
             }
             setScreen(name);
         } else {
@@ -121,7 +133,7 @@ public class ScreensContainer extends StackPane {
             addScreen(name, loadScreen);
             screenController.setupScreen();
             controllers.put(loadScreen, screenController);
-            screenNames.addLast(name);
+            screenQueue.addLast(name);
             if (controllers.size() == 1) {
                 setScreen(name);
             }
