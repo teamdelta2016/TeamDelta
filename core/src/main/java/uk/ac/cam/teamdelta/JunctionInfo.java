@@ -10,7 +10,19 @@ public class JunctionInfo {
 	public Location getNextLocation(){return m_next_location;};
 	public Set<Direction> getRoadDirections(){return m_road_angles;};
     public Direction getPrimaryDirection() {return m_primary_direction;}
-    //TODO: Basha please implement this so it returns facing direction
+    public Direction getClosestRoadDirection() {
+        double min_diff = 360;
+        Direction closest = new Direction(0);
+        for (Direction dir : m_road_angles) {
+            double diff = Math.min(Math.abs(m_primary_direction.getDegrees() - dir.getDegrees()),
+                    Math.abs(Math.abs(m_primary_direction.getDegrees() - dir.getDegrees() - 360)));
+            if (diff < min_diff) {
+                min_diff = diff;
+                closest = dir;
+            }
+        }
+        return closest;
+    }
 
     public void setPrimaryDirection(Direction d) { m_primary_direction = d;}
 
