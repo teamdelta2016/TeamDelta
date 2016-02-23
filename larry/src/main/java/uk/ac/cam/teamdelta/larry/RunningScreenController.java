@@ -21,6 +21,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import uk.ac.cam.teamdelta.Direction;
 import uk.ac.cam.teamdelta.ImageOutputSet;
 import uk.ac.cam.teamdelta.JunctionInfo;
@@ -264,7 +265,7 @@ public class RunningScreenController implements ScreenController {
             for (Direction d : junctions.getRoadDirections()) {
                 debug("Junction at " + d.getDegrees());
             }
-            //facingDirection = junctions.getPrimaryDirection(); //TODO: IMPLEMENT PLZ????
+            //facingDirection = junctions.getPrimaryDirection(); //TODO: IMPLEMENT
             for (Iterator<Direction> it = junctions.getRoadDirections().iterator(); it.hasNext();) {
                 facingDirection = it.next();
                 break;
@@ -337,9 +338,8 @@ public class RunningScreenController implements ScreenController {
         {
             ImageView arrowView = new ImageView();
             arrowView.setImage(arrow);
-            //soo if we are facing 10 degrees and the junction is at 5, we want it at -5. 5 - 10
-            //We just want fancy values for the arrows
             double rotateVal = d.getDegrees() - facingDirection.getDegrees();
+            arrowView.getTransforms().add(new Translate(0, 150));
             arrowView.getTransforms().add(new Rotate(rotateVal, 75, 150));
             navMap.put(d, arrowView);
             p.getChildren().add(arrowView);
@@ -403,13 +403,6 @@ public class RunningScreenController implements ScreenController {
         return intendDirection;
     }
 
-    private void lookLeft() {
-        debug("looking left");
-    }
-
-    private void lookRight() {
-        debug("looking right");
-    }
 
     @Override
     public void setScreenParent(ScreensContainer screenParent) {

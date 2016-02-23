@@ -10,6 +10,10 @@ public class JunctionInfo {
 	public Location getNextLocation(){return m_next_location;};
 	public Set<Direction> getRoadDirections(){return m_road_angles;};
     public Direction getPrimaryDirection() {return m_primary_direction;}
+    //TODO: Basha please implement this so it returns facing direction
+
+    public void setPrimaryDirection(Direction d) { m_primary_direction = d;}
+
 
     public JunctionInfo(Location next_location, Set<Direction> road_angles) {
         m_next_location = next_location;
