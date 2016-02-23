@@ -107,6 +107,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        //TODO: Only using one screen now, so this is probably redundant
         // find out the index of the primary monitor
         Screen primary = Screen.getPrimary();
         for (int i = 0; i < Screen.getScreens().size(); i++) {
