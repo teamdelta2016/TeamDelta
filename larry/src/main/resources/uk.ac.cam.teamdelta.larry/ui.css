@@ -93,6 +93,10 @@
     -fx-background-color: #111111;
 }
 
+.Text {
+    -fx-font-family: "Comic Sans MS";
+}
+
 * {
     /*-fx-focus-color: transparent;*/
 }
