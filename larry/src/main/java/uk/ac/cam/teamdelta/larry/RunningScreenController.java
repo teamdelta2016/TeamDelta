@@ -83,8 +83,7 @@ public class RunningScreenController implements ScreenController {
      */
     private Image arrow = new Image("/uk.ac.cam.teamdelta.larry/images/arrow.png");
     /**
-     * Image for an arrow that is selected and the next frame has been requested (so a different choice
-     * can't be made)
+     * Image for an arrow that is selected and the next frame has been requested (so a different choice can't be made)
      */
     private Image sArrow = new Image("/uk.ac.cam.teamdelta.larry/images/selectedarrow.png");
     /**
@@ -224,8 +223,7 @@ public class RunningScreenController implements ScreenController {
     }
 
     /**
-     * Called when the change parameters button is clicked on the
-     * popup menu. Does an out-of-order screen change.
+     * Called when the change parameters button is clicked on the popup menu. Does an out-of-order screen change.
      */
     private void changeParameters() {
         cleanup();
@@ -236,8 +234,7 @@ public class RunningScreenController implements ScreenController {
     }
 
     /**
-     * Called when the change location button is clicked on the
-     * popup menu. Does an out-of-order screen change.
+     * Called when the change location button is clicked on the popup menu. Does an out-of-order screen change.
      */
     private void changeLocation() {
         cleanup();
@@ -261,6 +258,7 @@ public class RunningScreenController implements ScreenController {
 
     /**
      * Makes the popup menu visible
+     *
      * @param event the received event from JavaFX
      * @throws IOException
      */
@@ -281,6 +279,7 @@ public class RunningScreenController implements ScreenController {
 
     /**
      * Makes the popup menu invisible
+     *
      * @param event the received event from JavaFX
      * @throws IOException
      */
@@ -313,6 +312,7 @@ public class RunningScreenController implements ScreenController {
 
     /**
      * Callback method from getting the frame from the {@link Engine}
+     *
      * @param frame the {@link Frame} object received from the {@link Engine}
      */
     private void processFrame(Frame frame) {
@@ -425,8 +425,11 @@ public class RunningScreenController implements ScreenController {
 
     private void highlightArrow(Direction d) {
         ImageView iv = navMap.get(d);
-        if (iv == null) { Logger.error("NULL IV - d was not in direction set"); }
-        iv.setImage(arrow);
+        if (iv == null) {
+            error("NULL IV - d was not in direction set");
+        } else {
+            iv.setImage(arrow);
+        }
     }
 
     private void unhighlightArrow(Direction d) {
@@ -434,7 +437,7 @@ public class RunningScreenController implements ScreenController {
         iv.setImage(arrow);
     }
 
-    private void selectArrow(Direction d){
+    private void selectArrow(Direction d) {
         ImageView iv = navMap.get(d);
         iv.setImage(sArrow);
     }
