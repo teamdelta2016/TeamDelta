@@ -61,7 +61,7 @@ public class RunningScreenController implements ScreenController {
     private Map<Direction, ImageView> navMap;
     private Image hArrow = new Image("/uk.ac.cam.teamdelta.larry/images/highlightarrow.png");
     private Image arrow = new Image("/uk.ac.cam.teamdelta.larry/images/arrow.png");
-    private Image sArrow = new Image("/uk.ac.cam.teamdelta.larry/images/selectarrow.png");
+    private Image sArrow = new Image("/uk.ac.cam.teamdelta.larry/images/selectedarrow.png");
     /**
      * Boolean to keep track of whether to show front or rear windscreen view
      */
@@ -347,7 +347,7 @@ public class RunningScreenController implements ScreenController {
 
     private void highlightArrow(Direction d) {
         ImageView iv = navMap.get(d);
-        if (iv == null) { Logger.debug("NULL IV - d was not in direction set"); }
+        if (iv == null) { error("NULL IV - d was not in direction set"); }
         iv.setImage(hArrow);
     }
 
