@@ -20,6 +20,8 @@ import javax.imageio.*;
 
 class ImageProcImpl extends ImageProc {
 
+    private static final double NIGHT_MIN = 0.3;
+
     private Peripheral peripheralFront;
     private Glarer glarer;
 
@@ -33,15 +35,15 @@ class ImageProcImpl extends ImageProc {
     @Override
     public ImageOutputSet process(ImageInputSet input, boolean isJunction){
         BufferedImage front = processFront(input.getFrontLeft(), input.getFrontRight());
-        BufferedImage left = processSide(input.getLeft(), true);
-        BufferedImage right = processSide(input.getRight(), false);
-        BufferedImage back = processSide(input.getBack(), true);
+        BufferedImage left = processOther(input.getLeft(), false);
+        BufferedImage right = processOther(input.getRight(), false);
+        BufferedImage back = processOther(input.getBack(), true);
 
 
         return new ImageOutputSet(front, left, right, back);
     }
 
-    private BufferedImage processSide(BufferedImage iI, boolean isLeftSide){
+    private BufferedImage processOther(BufferedImage iI, boolean isBack){
         if(iI == null){
             return null;
         }
@@ -49,7 +51,7 @@ class ImageProcImpl extends ImageProc {
         Mat i = Utils.bufferedImageToMat(iI);
 
 
-        if(params.nightTimeFactor > 0){
+        if(params.nightTimeFactor > NIGHT_MIN){
             Night.nightTime(i, params.nightTimeFactor);
         }
 
@@ -57,8 +59,10 @@ class ImageProcImpl extends ImageProc {
             Utils.blurImage(i, params.blurValue * 2);
         }
 
-        double x = (1 - params.darkEdgesFactor) * 2;
-        Core.multiply(i, new Scalar(x, x, x), i);
+        if(!isBack){
+            double x = (1 - params.darkEdgesFactor);
+            Core.multiply(i, new Scalar(x, x, x), i);
+        }
 
         try{
             return Utils.matToBufferedImage(i);
@@ -79,7 +83,7 @@ class ImageProcImpl extends ImageProc {
         // Stitch
         Mat i = Stitcher.stitchImages(fL, fR);
 
-        if(params.nightTimeFactor > 0){
+        if(params.nightTimeFactor > NIGHT_MIN){
             Night.nightTime(i, params.nightTimeFactor);
         }
 
