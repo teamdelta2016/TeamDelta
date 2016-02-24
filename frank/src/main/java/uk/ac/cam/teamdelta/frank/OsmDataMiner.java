@@ -24,13 +24,14 @@ import org.xml.sax.SAXException;
 
 import uk.ac.cam.teamdelta.*;
 
-//Note: this data miner took inspiration (and some parts of code) from http://wiki.openstreetmap.org/wiki/Java_Access_Example example,
-//which was released under public domain
+//Note: this data miner took inspiration (and some code, namely node part of getNodesAndRoads, getNodesViaOverPass and OsmNode class)
+//from http://wiki.openstreetmap.org/wiki/Java_Access_Example, which was released under public domain
 
 public class OsmDataMiner {
     private static final String OVERPASS_API = "http://api.openstreetmap.fr/oapi/interpreter";
     private static final List<String> roadTypes = Arrays.asList("motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential");
     
+    //Checks whether the type provided is one of the recognized road types
     private static boolean isValidRoadType(String type) {
         boolean isOk = false;
         for (String roadType : roadTypes) {
@@ -42,6 +43,13 @@ public class OsmDataMiner {
         return isOk;
     }
     
+    
+    /**
+     * Returns a an ArrayList of OsmWays, which are found in the given XML file and are of one of the recognized
+     * road types. Each OsmWay contains references to its nodes found within the same XML.
+     * @param xmlDocument
+     * @return ArrayList of OsmWays found in this XML
+     */
     public static ArrayList<OsmWay> getNodesAndRoads(Document xmlDocument) {
         TreeMap<String,OsmNode> osmNodes = new TreeMap<String,OsmNode>();
 
@@ -132,6 +140,16 @@ public class OsmDataMiner {
         return osmWays;
     }
     
+    /**
+     * Returns a an ArrayList of OsmWays, which are found in the radius around location; only OsmWays of recognized
+     * road types are kept and each OsmWay found contains references to its nodes.
+     * @param location location around which to search
+     * @param radius radius in which to search
+     * @return ArrayList of OsmWays (roads) in the area
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
     public static ArrayList<OsmWay> getNodesAndRoadsInRadius(Location location, int radius) throws IOException,
         SAXException, ParserConfigurationException {
         
@@ -147,6 +165,14 @@ public class OsmDataMiner {
                 +radius +","+ lat + "," + lon + ");node(w)->.x;);out;"));
     }
     
+    /**
+     * Returns the XML document returned by running the query on OpenStreetMap Overpass API.
+     * @param query Overpass query to be run
+     * @return XML document returned by query
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     */
     public static Document getNodesViaOverpass(String query) throws IOException, ParserConfigurationException, SAXException {
         String hostname = OVERPASS_API;
         String queryString = query;
@@ -210,6 +236,7 @@ public class OsmDataMiner {
         public Map<String,String> getTags() {return tags;}
     }
     
+    //Can be used for debug and human friendly representation of OsmWays
     private void prettyPrint(OsmWay osmWay) {
         System.out.println("Way " + osmWay.getId() + ":");
         

@@ -101,6 +101,8 @@ public class RoutePlanner implements RouteFinder {
         return new JunctionInfo(info.getInitialLocation(), dirSet, info.getInitialDirection());
     }
     
+    //Helper class that is used to pass information from getInitialPosition (i.e. how the position is clipped to road) to getNextPosition
+    //so that there is less code that's basically the same between the two
     private static class ClosestRoadInfo {
         private ArrayList<OsmWay> osmWays;
         private int minDistWay = -1;
@@ -129,6 +131,9 @@ public class RoutePlanner implements RouteFinder {
         public ArrayList<OsmWay> getOsmWays(){return osmWays;}
     }
     
+    //Internal version of getInitialPosition that carries around more data - tolerance of how different can the expected bearing
+    //and actual road bearing be, blacklist of roads that it got to follow, but didn't help to move the car (i.e. finished 
+    //in the current junction) and a reference to data that was downloaded from OsmDataMiner, so we don't hit the network again
     private ClosestRoadInfo getInitialPosition(Location current_position, Direction current_direction, double angleTolerance, Set<Integer> blackList, ArrayList<OsmWay> roadData) {
         ClosestRoadInfo info = new ClosestRoadInfo(new Location(0,0), new Direction(0.0), null, -1, -1, 0, 0);
         OsmDataMiner miner = new OsmDataMiner();
@@ -206,6 +211,7 @@ public class RoutePlanner implements RouteFinder {
         return getNextPosition(current_position, current_direction, standardAngleTolerance, new HashSet<Integer>(), null);
     }
     
+    //Internal version of getNextPosition which carries around more stuff, see internal version of getInitial position for more details
     public JunctionInfo getNextPosition(Location current_position, Direction current_direction, double angleTolerance, HashSet<Integer> blackList, ArrayList<OsmWay> roadData) {
         JunctionInfo info = new JunctionInfo(new Location(0.0, 0.0), new TreeSet<Direction>(), new Direction(0));
         
@@ -358,9 +364,10 @@ public class RoutePlanner implements RouteFinder {
     public static void main(String[] args) {
         RoutePlanner planner = new RoutePlanner();
         
-        //System.out.print("Test of helper functions running... ");
+        System.out.print("Test of helper functions running... ");
         System.out.println(planner.testHelperFunctions()?"Succeeded":"FAILED");
         
+        //TODO: delete this before final submit to examiners
         //planner.getNextPosition(new Location(52.208396, 0.118471), new Direction(0));
         //JunctionInfo info = planner.getNextPosition(new Location(52.208326, 0.118633), new Direction(315));
         //JunctionInfo info = planner.getNextPosition(new Location(52.207374, 0.118183), new Direction(90));
