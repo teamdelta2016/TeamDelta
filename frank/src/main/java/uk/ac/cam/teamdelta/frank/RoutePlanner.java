@@ -263,7 +263,7 @@ public class RoutePlanner implements RouteFinder {
                 if (segOrder == 1) {
                     primary_dir = bearing(osmWays.get(curWay).getNode(curNode-1).getLocation(),osmWays.get(curWay).getNode(curNode).getLocation());
                 } else {
-                    primary_dir = bearing(osmWays.get(curWay).getNode(curNode).getLocation(),osmWays.get(curWay).getNode(curNode+1).getLocation());
+                    primary_dir = bearing(osmWays.get(curWay).getNode(curNode+1).getLocation(),osmWays.get(curWay).getNode(curNode).getLocation());
                 }
                 Set<Direction> dirSet = new HashSet<Direction>();
                 for (int i=0; i < juncNode.getWayCount(); i++) {
@@ -364,14 +364,14 @@ public class RoutePlanner implements RouteFinder {
         //planner.getNextPosition(new Location(52.208396, 0.118471), new Direction(0));
         //JunctionInfo info = planner.getNextPosition(new Location(52.208326, 0.118633), new Direction(315));
         //JunctionInfo info = planner.getNextPosition(new Location(52.207374, 0.118183), new Direction(90));
-        //JunctionInfo info = planner.getNextPosition(new Location(52.20670, 0.1110736), new Direction(90));
+        //JunctionInfo info = planner.getNextPosition(new Location(52.20670, 0.1110736), new Direction(90)); //officially a cycleway, so will fail
         //JunctionInfo info = planner.getInitialPosition(new Location(52.200160, 0.113254));
         //JunctionInfo info = planner.getNextPosition(new Location(51.585068827132936, 0.029416655762752684), new Direction(108.22666648447432));
         //JunctionInfo info = planner.getNextPosition(new Location(52.2111648, 0.1065411), new Direction(107.38489009711105));
-        JunctionInfo info = planner.getNextPosition(new Location(52.211111115730716, 0.106820912514565), new Direction(107.3856447293237));
+        JunctionInfo info = planner.getNextPosition(new Location(52.211107, 0.106519), new Direction(0));
         System.out.println("Next pos: ");
         System.out.println(info.getNextLocation().getLatitude() + ", " + info.getNextLocation().getLongitude());
-        System.out.println("Primary pos:" + info.getPrimaryDirection().getDegrees());
+        System.out.println("Primary pos:" + info.getPrimaryDirection().getDegrees() + " Closest pos: " + info.getClosestRoadDirection().getDegrees());
         for (Direction dir : info.getRoadDirections()) {
             System.out.print(dir.getDegrees() + " ");
         }
