@@ -61,7 +61,7 @@ public class RunningScreenController implements ScreenController {
     private Map<Direction, ImageView> navMap;
     private Image hArrow = new Image("/uk.ac.cam.teamdelta.larry/images/highlightarrow.png");
     private Image arrow = new Image("/uk.ac.cam.teamdelta.larry/images/arrow.png");
-    private Image sArrow = new Image("/uk.ac.cam.teamdelta.larry/images/highlightarrow.png");
+    private Image sArrow = new Image("/uk.ac.cam.teamdelta.larry/images/selectarrow.png");
     /**
      * Boolean to keep track of whether to show front or rear windscreen view
      */
@@ -337,7 +337,7 @@ public class RunningScreenController implements ScreenController {
             arrowView.setImage(arrow);
             double rotateVal = d.getDegrees() - facingDirection.getDegrees();
             arrowView.getTransforms().add(new Translate(0, 150));
-            arrowView.getTransforms().add(new Rotate(rotateVal, 75, 150));
+            arrowView.getTransforms().add(new Rotate(rotateVal, 50, 100));
             navMap.put(d, arrowView);
             p.getChildren().add(arrowView);
 
