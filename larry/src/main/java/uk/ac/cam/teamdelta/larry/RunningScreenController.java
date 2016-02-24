@@ -266,7 +266,7 @@ public class RunningScreenController implements ScreenController {
                 facingDirection = it.next();
                 break;
             } */
-            intendDirection = facingDirection;
+            intendDirection = junctions.getClosestRoadDirection();
             Logger.debug("Intend Direction: " + intendDirection.getDegrees());
 
             navMap = new TreeMap<Direction, ImageView>();
@@ -348,7 +348,7 @@ public class RunningScreenController implements ScreenController {
     private void highlightArrow(Direction d) {
         ImageView iv = navMap.get(d);
         if (iv == null) { Logger.debug("NULL IV - d was not in direction set"); }
-        iv.setImage(arrow);
+        iv.setImage(hArrow);
     }
 
     private void unhighlightArrow(Direction d) {
