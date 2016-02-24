@@ -329,7 +329,7 @@ public class RunningScreenController implements ScreenController {
         container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, switchViewHandler);
         menuPopup.setVisible(false);
     }
-    
+
     private StackPane arrowOverlay(JunctionInfo junctions) {
         StackPane p = new StackPane();
         for (Direction d : junctions.getRoadDirections()) {
