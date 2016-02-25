@@ -1,16 +1,10 @@
 package uk.ac.cam.teamdelta.peter;
 
 
-import uk.ac.cam.teamdelta.ImageInputSet;
-import uk.ac.cam.teamdelta.ImageOutputSet;
-import uk.ac.cam.teamdelta.ImageProcParams;
-
 import java.awt.image.BufferedImage;
-import java.awt.Graphics;
 
 
 import org.opencv.core.*;
-import org.opencv.highgui.*;
 import org.opencv.imgproc.*;
 import java.awt.image.*;
 
@@ -37,8 +31,7 @@ class Glarer {
 
     Glarer(){
         try{
-            File fR = new File("./res/headlight2.jpg");
-            BufferedImage bi = ImageIO.read(fR);
+            BufferedImage bi = ImageIO.read(Glarer.class.getResourceAsStream("/headlight.jpg"));
 
             Mat origMat = new Mat(bi.getHeight(), bi.getWidth(), CvType.CV_8UC3);
             byte[] data = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
@@ -66,7 +59,7 @@ class Glarer {
         y -= headlight.rows() / 2;
         Mat target = img.submat(y, y + headlight.rows(), x, x + headlight.cols());
         Core.add(target, headlight, target);
-        System.out.println(headlight.get(100, 100)[0]);
+        //System.out.println(headlight.get(100, 100)[0]);
     }
 
 }
