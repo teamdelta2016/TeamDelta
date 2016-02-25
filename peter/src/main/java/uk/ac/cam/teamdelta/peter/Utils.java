@@ -47,6 +47,14 @@ class Utils {
     }
 
     static Mat bufferedImageToMat(BufferedImage bi) {
+        if(bi.getType() != BufferedImage.TYPE_3BYTE_BGR){
+            BufferedImage newBi = new BufferedImage(bi.getWidth(),
+                                                    bi.getHeight(),
+                                                    BufferedImage.TYPE_3BYTE_BGR);
+            newBi.getGraphics().drawImage(bi, 0, 0, null);
+            bi = newBi;
+        }
+
         Mat mat = new Mat(bi.getHeight(), bi.getWidth(), CvType.CV_8UC3);
         DataBuffer buffer = bi.getRaster().getDataBuffer();
         if(buffer.getDataType() == DataBuffer.TYPE_BYTE){
