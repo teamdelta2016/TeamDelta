@@ -39,8 +39,17 @@ import static uk.ac.cam.teamdelta.Logger.error;
 
 public class RunningScreenController implements ScreenController {
 
+    /**
+     * Reference to singleton object of the current game settings
+     */
     private static LarrySettings larrySettings = LarrySettings.getInstance();
+    /**
+     * Reference to the popupMenu Node
+     */
     private static GridPane menuPopup;
+    /**
+     * Boolean indicating whether the popup menu is on display or not
+     */
     private static boolean menuIsShowing = false;
     @FXML
     Button button;
@@ -57,18 +66,32 @@ public class RunningScreenController implements ScreenController {
     private WritableImage left;
     private WritableImage right;
 
+    /**
+     * The node holding the arrow images
+     */
     private StackPane navOverlay;
+    /**
+     * Map mapping possible directions to the arrow imageViews that point in those directions
+     */
     private Map<Direction, ImageView> navMap;
+    /**
+     * Image for a highlighted arrow
+     */
     private Image hArrow = new Image("/uk.ac.cam.teamdelta.larry/images/highlightarrow.png");
+    /**
+     * Image for a normal arrow
+     */
     private Image arrow = new Image("/uk.ac.cam.teamdelta.larry/images/arrow.png");
+    /**
+     * Image for an arrow that is selected and the next frame has been requested (so a different choice can't be made)
+     */
     private Image sArrow = new Image("/uk.ac.cam.teamdelta.larry/images/selectedarrow.png");
     /**
      * Boolean to keep track of whether to show front or rear windscreen view
      */
     private boolean lookingForward = true;
     /**
-     * Event handler for detected the UP arrow key. Use of timer only allows event firing every {@link
-     * Main#KEY_HOLD_DELAY}
+     * Event handler for detecting the arrow keys being pressed.
      */
     private EventHandler<KeyEvent> nextFrameHandler;
 
@@ -77,28 +100,49 @@ public class RunningScreenController implements ScreenController {
      */
     private EventHandler<KeyEvent> switchViewHandler;
 
+    /**
+     * Background worker thread representation to get the next frame without freezing the UI
+     */
     private NextFrameService nextFrameService = new NextFrameService();
 
+    /**
+     * The direction the user is currently facing
+     */
     private Direction facingDirection;
+    /**
+     * The direction the user has selected with the arrows
+     */
     private Direction intendDirection;
 
     @Override
     public void showScreen() {
+        double totalWidth = Main.GAME_WIDTH;
+        double centerImageProportion = 0.7;
+        double sideImageProportion = 0.15;
 
+        // the popup shouldn't be showing when the screen is displayed
         menuIsShowing = false;
 
-
+        // process the initial frame fetched during loading
         processFrame(larrySettings.getEngine().getCurrentFrame());
-        double width = 1280;
-        double height = 640;
-        leftView.setEffect(new PerspectiveTransform(-300, 0, 300, 0,
-                300, height, -300, 960));
-        rightView.setEffect(new PerspectiveTransform(340, 0, 900, 0,
-                940, 960, 340, height));
+
+        // layout the images in a *nice* (lol jk) perspective view
+        frontView.setScaleX(centerImageProportion);
+        backView.setScaleX(1.25);
+        backView.setScaleY(0.8);
+        double newSideImageWidth = 320;
+        double newSideImageHeight = 640;
+        double innerX = (Main.GAME_WIDTH - (1280 * centerImageProportion)) / 2 - 20;
+        leftView.setEffect(new PerspectiveTransform(-newSideImageWidth, 0, innerX, 0,
+                innerX, newSideImageHeight, -newSideImageWidth, 960));
+        rightView.setEffect(new PerspectiveTransform(640 - innerX, 0, 640 + newSideImageWidth, 0,
+                960, 960, 640 - innerX, newSideImageHeight));
+
+        // add listeners for keyboard events
         container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
         container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, switchViewHandler);
 
-
+        // find the buttons in the menu pane and add mouse listeners to them
         BorderPane p = (BorderPane) menuPopup.getChildren().get(0);
         GridPane g = (GridPane) p.getChildren().get(0);
         Button changeLocBtn = (Button) g.getChildren().get(0);
@@ -125,33 +169,34 @@ public class RunningScreenController implements ScreenController {
                 quitGame();
             }
         });
-
-
     }
 
     @Override
     public void setupScreen() {
+        // load the menu screen
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(Main.MENU_FXML));
             menuPopup = loader.load();
         } catch (IOException e) {
+            error("Couldn't load the menu popup");
             e.printStackTrace();
         }
 
+        //TODO: possibly remove this
         // bind the value of the location text to the value which gets updated when
         // location changes in LarrySettings
-        locationText.textProperty().bind(larrySettings.getStringLocation());
+        //locationText.textProperty().bind(larrySettings.getStringLocation());
+
         nextFrameHandler = new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (event.getCode().equals(KeyCode.UP) || event.getCode().equals(KeyCode.DOWN)) {
-                    if (event.getCode().equals(KeyCode.DOWN)) {
-                        intendDirection = new Direction((facingDirection.getDegrees() + 180) % 360);
-                    }
+                if (event.getCode().equals(KeyCode.UP)) {
                     goToNextFrame();
                     final EventHandler<KeyEvent> ev = this;
+                    // disallow further nextFrame requests until the next frame has loaded
                     container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, ev);
                 } else if (event.getCode().equals(KeyCode.RIGHT) || event.getCode().equals(KeyCode.LEFT)) {
+                    // selecting a different direction to go in
                     Direction nextDir;
                     if (event.getCode().equals(KeyCode.RIGHT)) {
                         //cycle right in navMap
@@ -178,9 +223,15 @@ public class RunningScreenController implements ScreenController {
             }
         };
 
+        /**
+         * add the popup menu to the scene graph (but won't be visible yet)
+         */
         stackPane.getChildren().add(menuPopup);
     }
 
+    /**
+     * Called when the change parameters button is clicked on the popup menu. Does an out-of-order screen change.
+     */
     private void changeParameters() {
         cleanup();
         container.putOutOfOrderScreen(Main.PARAMETERS_SCREEN);
@@ -189,6 +240,9 @@ public class RunningScreenController implements ScreenController {
         container.showOutOfOrder();
     }
 
+    /**
+     * Called when the change location button is clicked on the popup menu. Does an out-of-order screen change.
+     */
     private void changeLocation() {
         cleanup();
         container.putOutOfOrderScreen(Main.LOCATION_SCREEN);
@@ -209,6 +263,12 @@ public class RunningScreenController implements ScreenController {
         container.nextScreen();
     }
 
+    /**
+     * Makes the popup menu visible
+     *
+     * @param event the received event from JavaFX
+     * @throws IOException
+     */
     @FXML
     private void showMenu(ActionEvent event) throws IOException {
         if (menuPopup != null) {
@@ -224,6 +284,12 @@ public class RunningScreenController implements ScreenController {
         }
     }
 
+    /**
+     * Makes the popup menu invisible
+     *
+     * @param event the received event from JavaFX
+     * @throws IOException
+     */
     @FXML
     private void hideMenu(MouseEvent event) throws IOException {
         menuPopup.setVisible(false);
@@ -235,10 +301,13 @@ public class RunningScreenController implements ScreenController {
      */
     private void goToNextFrame() {
         selectArrow(intendDirection);
+        // make sure the next frame worker thread has stopped
+        // (shouldn't have been able to get here unless it had)
         nextFrameService.reset();
-        //TODO: pass useful information
+        //TODO: Don't think facingDirection needs to be set here as set in processFrame()
         facingDirection = intendDirection;
         nextFrameService.setInput(facingDirection);
+
         nextFrameService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
@@ -248,7 +317,13 @@ public class RunningScreenController implements ScreenController {
         nextFrameService.start();
     }
 
+    /**
+     * Callback method from getting the frame from the {@link Engine}
+     *
+     * @param frame the {@link Frame} object received from the {@link Engine}
+     */
     private void processFrame(Frame frame) {
+        // allow the next frame to be fetched again
         container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
         debug("Processing frame");
         JunctionInfo junctions = frame.getJunctions();
@@ -274,10 +349,13 @@ public class RunningScreenController implements ScreenController {
 
             navOverlay = arrowOverlay(junctions);
             stackPane.getChildren().add(navOverlay);
-            // make sure the menu button is always on top
-            button.toFront();
 
+            // make the default-direction arrow highlighted
             highlightArrow(intendDirection);
+
+            // make sure the menu is always on top
+            button.toFront();
+            menuPopup.toFront();
 
             // update location text
             LarrySettings.getInstance().setLocation(junctions.getNextLocation().getLatitude(),
@@ -288,19 +366,22 @@ public class RunningScreenController implements ScreenController {
             frontView.setImage(SwingFXUtils.toFXImage(images.front, front));
             leftView.setImage(SwingFXUtils.toFXImage(images.left, left));
             rightView.setImage(SwingFXUtils.toFXImage(images.right, right));
+            // Only going to convert the back image if the user wants to see it
+            // set it null here, then check for null in switchView()
             back = null;
             if (!lookingForward) {
+                // unless already looking backwards
                 backView.setImage(SwingFXUtils.toFXImage(images.back, back));
             }
 
-        } else {
+        } else { // we're fucked
             error("Frame had null content");
         }
 
     }
 
     /**
-     * Called when SPACEBAR is pressed
+     * Called when SPACEBAR is pressed to hide or show the rear view
      */
     private void switchView() {
         lookingForward = !lookingForward;
@@ -323,6 +404,10 @@ public class RunningScreenController implements ScreenController {
         }
     }
 
+    /**
+     * Called when leaving this screen by either quitting or changing {@link uk.ac.cam.teamdelta.Location location} or
+     * {@link uk.ac.cam.teamdelta.ImageProcParams parameters}.
+     */
     private void cleanup() {
         larrySettings.getEngine().stop();
         container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
@@ -347,7 +432,9 @@ public class RunningScreenController implements ScreenController {
 
     private void highlightArrow(Direction d) {
         ImageView iv = navMap.get(d);
-        if (iv == null) { error("NULL IV - d was not in direction set"); }
+        if (iv == null) {
+            error("NULL IV - d was not in direction set");
+        }
         iv.setImage(hArrow);
     }
 
@@ -356,7 +443,7 @@ public class RunningScreenController implements ScreenController {
         iv.setImage(arrow);
     }
 
-    private void selectArrow(Direction d){
+    private void selectArrow(Direction d) {
         ImageView iv = navMap.get(d);
         iv.setImage(sArrow);
     }
@@ -413,6 +500,9 @@ public class RunningScreenController implements ScreenController {
         container = screenParent;
     }
 
+    /**
+     * A {@link Service} object to handle the recurrent event of requesting a new {@link Frame}
+     */
     private static class NextFrameService extends Service<Frame> {
 
         private Direction input;
@@ -430,7 +520,7 @@ public class RunningScreenController implements ScreenController {
             return new Task<Frame>() {
                 @Override
                 protected Frame call() throws Exception {
-                    debug("Background image fetch task started");
+                    debug("Image fetching Task started");
                     return larrySettings.getEngine().nextFrame(input);
                 }
             };

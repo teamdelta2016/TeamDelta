@@ -26,7 +26,7 @@
           <ImageView id="" fx:id="backView" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" styleClass="rearImg" visible="false" StackPane.alignment="TOP_CENTER" />
           <GridPane>
             <children>
-              <Label fx:id="locationText" text="" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+              <!--<Label fx:id="locationText" text="" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />-->
               <Label text="UP: proceed, LEFT/RIGHT: select direction, SPACE: show rear view " GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="BOTTOM" />
             </children>
             <columnConstraints>

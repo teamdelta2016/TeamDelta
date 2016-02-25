@@ -20,6 +20,7 @@ public class LocationScreenController implements ScreenController {
 
     private static String API_KEY;
 
+    // load the api key from the text file
     // apikey.txt shouldn't be included in git
     static {
         try {
@@ -74,18 +75,25 @@ public class LocationScreenController implements ScreenController {
             GeocodingResult[] results = GeocodingApi.geocode(context, locationText.getText()).region("gb").await();
 
             if (results != null && results.length > 0) { // Geocoding success
+
                 // add the location to LarrySettings
                 LarrySettings.getInstance().
                         setLocation(results[0].geometry.location.lat, results[0].geometry.location.lng);
+
+                // now reverse geocode to make the user's query more specific
+                // so they can check if the location is as they intended
                 GeocodingResult[] revResults =
                         GeocodingApi.reverseGeocode(context,
                                 new LatLng(results[0].geometry.location.lat,
                                         results[0].geometry.location.lng)).region("gb").await();
+
                 if (revResults.length == 0) {
                     System.err.println("Geocoding isn't bijective! Reverse query failed while forward passed");
                 }
+
                 LarrySettings.getInstance().setLocationAddress(
                         revResults[0].formattedAddress);
+
                 // advance to next screen
                 container.nextScreen();
             } else { // Geocoding failure: need to try again

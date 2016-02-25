@@ -23,6 +23,7 @@ public class LocationConfirmScreenController implements ScreenController {
 
     @Override
     public void showScreen() {
+        // show the result of the reverse-geocoded query from the Location screen
         retrievedLocation.setText(LarrySettings.getInstance().getLocationAddress());
     }
 

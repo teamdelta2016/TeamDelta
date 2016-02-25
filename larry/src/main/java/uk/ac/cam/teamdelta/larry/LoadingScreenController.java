@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 import static uk.ac.cam.teamdelta.Logger.debug;
+import static uk.ac.cam.teamdelta.Logger.error;
 
 public class LoadingScreenController implements ScreenController {
 
@@ -36,6 +37,7 @@ public class LoadingScreenController implements ScreenController {
     @Override
     public void showScreen() {
         try {
+            //TODO: Think this can be done in setup screen - only needs to happen once
             List<String> facts = readFile(factsPath);
 
             Random randomizer = new Random();
@@ -43,7 +45,7 @@ public class LoadingScreenController implements ScreenController {
             fact.setText(randomFact);
         } catch (IOException e) { //catch!
             fact.setText("Young people can find it hard to appreciate the position of elderly drivers");
-            debug("Error loading facts");
+            error("Error loading facts");
         }
 
         // set size of rotating wheel image
@@ -52,11 +54,9 @@ public class LoadingScreenController implements ScreenController {
         // spin image round for a few seconds
         final RotateTransition rt = new RotateTransition(Duration.millis(1000), img);
         // wait x seconds before continuing to next screen
-        //TODO: don't wait arbitrary time, get notified?
         Task<Void> sleeper = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                //TODO: Constructor may change
                 debug("Constructing the Engine");
                 Engine engine = new Engine(LarrySettings.getInstance().getLocation(),
                         LarrySettings.getInstance().getParameters());
@@ -83,19 +83,25 @@ public class LoadingScreenController implements ScreenController {
 
     @Override
     public void setupScreen() {
-
     }
 
+    /**
+     * Reads a text file and returns a list of the lines contained within
+     * @param path the path to the file
+     * @return the list of lines in the file
+     * @throws IOException
+     */
     private static List<String> readFile(String path) throws IOException {
         List<String> lines = new LinkedList<String>();
         File fin = new File(path);
         FileInputStream fis = new FileInputStream(fin);
 
-        //Construct BufferedReader from InputStreamReader
+        // Construct BufferedReader from InputStreamReader
         BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 
         String line = null;
         while ((line = br.readLine()) != null) {
+            // add all facts to list of facts
             lines.add(line);
         }
 
