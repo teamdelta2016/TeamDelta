@@ -46,14 +46,11 @@
       </HBox>
     </top>
     <bottom>
-      <HBox alignment="TOP_CENTER" prefHeight="80.0" prefWidth="200.0" styleClass="HBox">
+      <HBox alignment="TOP_CENTER" prefHeight="80.0" prefWidth="200.0" styleClass="TextHBox">
         <children>
           <Label alignment="CENTER" ellipsisString="" prefHeight="80.0" prefWidth="350.0" styleClass="label" textAlignment="CENTER" textFill="WHITE" wrapText="true">
             <graphic>
               <Text fx:id="fact" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="fact-text" text="Did you know that old people crash their cars a lot?" textAlignment="CENTER" wrappingWidth="1500.0">
-                <font>
-                  <Font name="ONRAMP" />
-                </font>
               </Text>
             </graphic>
           </Label>

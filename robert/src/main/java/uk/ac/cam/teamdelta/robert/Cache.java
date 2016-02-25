@@ -55,6 +55,7 @@ public class Cache extends Thread {
                 debug("starting new cache operation for direction" + d.getDegrees());
                 Cache c = new Cache(this, engine, next.getNextLocation(), d);
                 children.put(d, c);
+                c.setDaemon(true);
                 c.start();
             }
             result = engine.processFrame(next);

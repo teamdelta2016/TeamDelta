@@ -84,12 +84,12 @@ public class Main extends Application {
     public static final long KEY_HOLD_DELAY = 2000;
 
     /**
-     * The width in pixels of the game
+     * The width in pixels of the game by default
      */
     public static double GAME_WIDTH = 1000;
 
     /**
-     * The height in pixels of the game
+     * The height in pixels of the game by default
      */
     public static double GAME_HEIGHT = 800;
 
@@ -107,15 +107,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        //TODO: Only using one screen now, so this is probably redundant
-        // find out the index of the primary monitor
+        // get reference to the primary monitor (where the game will be displayed)
         Screen primary = Screen.getPrimary();
-        for (int i = 0; i < Screen.getScreens().size(); i++) {
-            if (Screen.getScreens().get(i).equals(primary)) {
-                LarrySettings.getInstance().setPrimaryScreenIndex(i);
-                break;
-            }
-        }
 
         GAME_HEIGHT = primary.getVisualBounds().getHeight();
         GAME_WIDTH = primary.getVisualBounds().getWidth();

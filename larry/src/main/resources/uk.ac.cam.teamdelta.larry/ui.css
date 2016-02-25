@@ -54,7 +54,8 @@
 
 .fact-text {
     -fx-fill: white;
-    -fx-font-size: 16pt;
+    -fx-font-size: 32pt;
+    -fx-font-family: "Comic Sans MS";
 }
 
 .slider .track {
@@ -80,9 +81,15 @@
     -fx-background-radius: 10px;
 }
 
+.TextHBox {
+    -fx-background-color: #4c8858;
+    -fx-background-insets: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px 0 10px 0;
+}
+
 .gridPane {
     -fx-background-color: #4f9476;
-    /*-fx-background-insets: 10px;*/
 }
 
 .rearImg {
@@ -91,12 +98,4 @@
 
 .gridPane.run {
     -fx-background-color: #111111;
-}
-
-.Text {
-    -fx-font-family: "Comic Sans MS";
-}
-
-* {
-    /*-fx-focus-color: transparent;*/
 }

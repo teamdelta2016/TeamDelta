@@ -83,7 +83,6 @@ public class LoadingScreenController implements ScreenController {
 
     @Override
     public void setupScreen() {
-
     }
 
     /**

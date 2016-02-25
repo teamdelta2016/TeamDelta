@@ -36,6 +36,7 @@ public class Engine {
         location = query.getNextLocation();
         direction = query.getRoadDirections().iterator().next();
         cache = new Cache(null, this, location, direction);
+        cache.setDaemon(true);
         cache.start();
         Logger.debug("engine started");
     }
