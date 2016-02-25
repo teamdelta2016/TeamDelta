@@ -35,7 +35,7 @@ public class ImageProcParamsInternal {
         this.darkEdgesFactor = scaleFactor(params.darkEdgesFactor,
                                            DARK_EDGES_FACTOR_MIN,
                                            DARK_EDGES_FACTOR_MAX);
-        this.showHeadlights = params.showHeadlights;
+        this.showHeadlights = this.nightTimeFactor > 0.6;
     }
 
     private double scaleFactor(double val, double min, double max){

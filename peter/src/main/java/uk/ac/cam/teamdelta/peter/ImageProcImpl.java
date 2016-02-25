@@ -10,18 +10,24 @@ import uk.ac.cam.teamdelta.ImageProcParams;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import java.util.Random;
+
 class ImageProcImpl extends ImageProc {
 
     private static final double NIGHT_MIN = 0.3;
+    private static final double HEADLIGHT_PERC = 0.3;
 
     private Peripheral peripheralFront;
     private Glarer glarer;
+
+    private Random r;
 
     ImageProcImpl(ImageProcParams params) {
         super(params);
 
         peripheralFront = new Peripheral(Utils.FRONT_ROWS, Utils.FRONT_COLS, Utils.MAT_TYPE);
         glarer = new Glarer();
+        r = new Random();
     }
 
     @Override
@@ -98,7 +104,7 @@ class ImageProcImpl extends ImageProc {
                     new Scalar(x, x, x));
         }
 
-        if(params.showHeadlights){
+        if(params.showHeadlights && r.nextDouble() < HEADLIGHT_PERC){
             glarer.addCar(i);
         }
 
