@@ -304,6 +304,9 @@ public class RunningScreenController implements ScreenController {
         // make sure the next frame worker thread has stopped
         // (shouldn't have been able to get here unless it had)
         nextFrameService.reset();
+
+        System.out.println("AAAAAA: " + intendDirection.getDegrees() + " -- " + facingDirection.getDegrees());
+
         //TODO: Don't think facingDirection needs to be set here as set in processFrame()
         facingDirection = intendDirection;
         nextFrameService.setInput(facingDirection);

@@ -54,6 +54,7 @@ public class Cache extends Thread {
             for (Direction d : next.getRoadDirections()) {
                 debug("starting new cache operation for direction" + d.getDegrees());
                 Cache c = new Cache(this, engine, next.getNextLocation(), d);
+                debug("ADDING NEW:    " + d.getDegrees());
                 children.put(d, c);
                 c.setDaemon(true);
                 c.start();
@@ -79,9 +80,20 @@ public class Cache extends Thread {
     }
 
     public Cache chooseDirection(Direction d) {
+
+        try{
+            throw new Exception();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
         debug("cache choosing direction: " + d.getDegrees());
         Cache correctThread = null;
+
+        debug("SIZE1: " + children.keySet().size());
+
         for (Direction entry : children.keySet()) {
+            debug("COMP: " + d.getDegrees() + ", " + entry.getDegrees());
             if (d.getDegrees() != entry.getDegrees()) {
                 children.get(entry).interrupt();
             } else {
