@@ -6,7 +6,7 @@ build
 
 core/*.class
 /larry/src/main/resources/uk.ac.cam.teamdelta.larry/apikey.txt
-
+larry/build.gradle
 /.idea
 
 */*.iml
