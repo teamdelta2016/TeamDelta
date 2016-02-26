@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 
 import uk.ac.cam.teamdelta.*;
 
-//Note: this data miner took inspiration (and some code, namely node part of getNodesAndRoads, getNodesViaOverPass and OsmNode class)
+//Author note: this data miner took inspiration (and some code, namely node finding part of getNodesAndRoads, getNodesViaOverPass and OsmNode class)
 //from http://wiki.openstreetmap.org/wiki/Java_Access_Example, which was released under public domain
 
 public class OsmDataMiner {
