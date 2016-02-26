@@ -95,7 +95,7 @@ public class RoutePlanner implements RouteFinder {
     }
     
     public JunctionInfo getInitialPosition(Location current_position) {
-        ClosestRoadInfo info = getInitialPosition(current_position, new Direction(0), 360, new HashSet<Integer>(), null);
+        ClosestRoadInfo info = getInitialPosition(current_position, new Direction(0), 190, new HashSet<Integer>(), null);
         Set<Direction> dirSet = new HashSet<Direction>();
         dirSet.add(info.getInitialDirection());
         return new JunctionInfo(info.getInitialLocation(), dirSet, info.getInitialDirection());
@@ -149,7 +149,13 @@ public class RoutePlanner implements RouteFinder {
             }
         } else {
             osmWays = roadData;
+            /*System.out.println("Number of roads found: " + osmWays.size());
+            for (OsmWay way : osmWays) {
+                System.out.println("Number of nodes in way: " + way.nodeCount());
+            }*/
         }
+        
+        //System.out.println("Angle tolerance for initial position: " + angleTolerance);
         
         double minDist = 123456789;
         int minDistWay = -1;
@@ -166,12 +172,8 @@ public class RoutePlanner implements RouteFinder {
                         bearing(osmWays.get(i).getNode(j).getLocation(),osmWays.get(i).getNode(j+1).getLocation());
                 //System.out.println("Angle to road:" + Math.abs(current_direction.getDegrees() - curBearing.getDegrees()));
                 //System.out.println("Dist to road:" + curDist);
-                if (curDist < minDist && (
-                         Math.abs(current_direction.getDegrees() - curBearing.getDegrees())<angleTolerance ||
-                         Math.abs(current_direction.getDegrees() - curBearing.getDegrees())>(360 - angleTolerance) ||
-                         Math.abs((current_direction.getDegrees() - curBearing.getDegrees() + 180.0)%360)<angleTolerance ||
-                         Math.abs((current_direction.getDegrees() - curBearing.getDegrees() + 180.0)%360)>(360-angleTolerance)
-                   )) {
+                double dir_diff = Math.abs(current_direction.getDegrees() - curBearing.getDegrees()); 
+                if (curDist < minDist && (withinRange(dir_diff, 0, angleTolerance) || withinRange(dir_diff, 180, angleTolerance))) {
                     minDist = curDist;
                     minDistWay = i;
                     minDistNode = j;
@@ -181,7 +183,7 @@ public class RoutePlanner implements RouteFinder {
         
         if (withinRange(minDist, 123456789, 0.1)) {
             System.out.println("Failed to find closest road!");
-            return info;
+            return new ClosestRoadInfo(new Location(0,0), new Direction(0.0), osmWays, -1, -1, 0, 0);
         }
         
         //If you want to see which road (way) was the query assigned to:
@@ -218,6 +220,9 @@ public class RoutePlanner implements RouteFinder {
         double moveDist = singleMoveDist;
         
         ClosestRoadInfo initialInfo = getInitialPosition(current_position, current_direction, angleTolerance, blackList, roadData);
+        if (initialInfo.getMinDistNode() == -1) {
+            initialInfo = getInitialPosition(current_position, current_direction, 190, blackList, initialInfo.getOsmWays());
+        }
         if (initialInfo.getMinDistNode() == -1) {
             return info;
         }
@@ -375,10 +380,13 @@ public class RoutePlanner implements RouteFinder {
         //JunctionInfo info = planner.getInitialPosition(new Location(52.200160, 0.113254));
         //JunctionInfo info = planner.getNextPosition(new Location(51.585068827132936, 0.029416655762752684), new Direction(108.22666648447432));
         //JunctionInfo info = planner.getNextPosition(new Location(52.2111648, 0.1065411), new Direction(107.38489009711105));
-        JunctionInfo info = planner.getNextPosition(new Location(52.211107, 0.106519), new Direction(0));
+        //JunctionInfo info = planner.getNextPosition(new Location(51.6207259, 0.0236171), new Direction(290));
+        //JunctionInfo info = planner.getInitialPosition(new Location(51.62026789999999,0.0222617));
+        //JunctionInfo info = planner.getNextPosition(new Location(51.58529360513903, 0.028318081935092203), new Direction(0));
+        JunctionInfo info = planner.getInitialPosition(new Location(51.5853079, 0.0282482));
         System.out.println("Next pos: ");
         System.out.println(info.getNextLocation().getLatitude() + ", " + info.getNextLocation().getLongitude());
-        System.out.println("Primary pos:" + info.getPrimaryDirection().getDegrees() + " Closest pos: " + info.getClosestRoadDirection().getDegrees());
+        System.out.println("Primary dir:" + info.getPrimaryDirection().getDegrees() + " Closest dir: " + info.getClosestRoadDirection().getDegrees());
         for (Direction dir : info.getRoadDirections()) {
             System.out.print(dir.getDegrees() + " ");
         }
