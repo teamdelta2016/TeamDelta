@@ -311,6 +311,7 @@ public class RoutePlanner implements RouteFinder {
                     curNode++;
                 }else{
                     //Should only happen in dead ends
+                    Logger.debug("DEAD END");
                     Direction dir = new Direction((segDir.getDegrees()+180)%360);
                     Set<Direction> dirSet = new HashSet<Direction>();
                     dirSet.add(dir);
