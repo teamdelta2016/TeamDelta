@@ -437,6 +437,10 @@ public class RunningScreenController implements ScreenController {
         iv.setImage(arrow);
     }
 
+    /**
+     * Replaces the arrow image of a junction with a selected arrow image
+     * @param d
+     */
     private void selectArrow(Direction d) {
         ImageView iv = navMap.get(d);
         iv.setImage(sArrow);
