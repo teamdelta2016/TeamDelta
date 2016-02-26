@@ -49,7 +49,7 @@ public class Engine {
                                       next.getNextLocation().getLatitude(),
                                       next.getNextLocation().getLongitude(),
                                       Constants.fov,
-                                      (int)direction.getDegrees(),
+                                      (int)next.getPrimaryDirection().getDegrees(),
                                       0);
             Logger.debug("images retrieved");
             Logger.debug("processing images...");
@@ -70,15 +70,16 @@ public class Engine {
 
     public void firstFrame() {
         Logger.debug("retrieving first frame");
-        nextFrame(direction);
+        frame = cache.getResult();
+        // nextFrame(direction);
     }
 
     //update state to the next appropriate location
     //return frame at the new location
     public Frame nextFrame(Direction d) {
         Logger.debug("asking for next frame from " + cache.hashCode());
-        frame = cache.getResult();
         cache = cache.chooseDirection(d);
+        frame = cache.getResult();
         return frame;
     }
 

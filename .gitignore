@@ -24,3 +24,7 @@ larry/.gitignore
 peter/.gitignore
 robert/.gitignore
 core/.gitignore
+
+
+peter/libs/*
+

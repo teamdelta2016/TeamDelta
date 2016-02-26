@@ -10,38 +10,46 @@ import uk.ac.cam.teamdelta.ImageProcParams;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import java.util.Random;
+
 class ImageProcImpl extends ImageProc {
 
     private static final double NIGHT_MIN = 0.3;
+    private static final double HEADLIGHT_PERC = 0.3;
 
     private Peripheral peripheralFront;
+    private Glarer glarer;
+
+    private Random r;
 
     ImageProcImpl(ImageProcParams params) {
         super(params);
 
         peripheralFront = new Peripheral(Utils.FRONT_ROWS, Utils.FRONT_COLS, Utils.MAT_TYPE);
+        glarer = new Glarer();
+        r = new Random();
     }
 
     @Override
     public ImageOutputSet process(ImageInputSet input, boolean isJunction) {
         BufferedImage front = processFront(input.getFrontLeft(), input.getFrontRight());
-        BufferedImage left = processSide(input.getLeft(), true);
-        BufferedImage right = processSide(input.getRight(), false);
-        BufferedImage back = processSide(input.getBack(), true);
+        BufferedImage left = processOther(input.getLeft(), false);
+        BufferedImage right = processOther(input.getRight(), false);
+        BufferedImage back = processOther(input.getBack(), true);
 
 
         return new ImageOutputSet(front, left, right, back);
     }
 
-    private BufferedImage processSide(BufferedImage iI, boolean isLeftSide) {
-        if (iI == null) {
+    private BufferedImage processOther(BufferedImage iI, boolean isBack){
+        if(iI == null){
             return null;
         }
 
         Mat i = Utils.bufferedImageToMat(iI);
 
 
-        if (params.nightTimeFactor > NIGHT_MIN) {
+        if(params.nightTimeFactor > NIGHT_MIN){
             Night.nightTime(i, params.nightTimeFactor);
         }
 
@@ -49,9 +57,10 @@ class ImageProcImpl extends ImageProc {
             Utils.blurImage(i, params.blurValue * 2);
         }
 
-
-        double x = (1 - params.darkEdgesFactor);
-        Core.multiply(i, new Scalar(x, x, x), i);
+        if(!isBack){
+            double x = (1 - params.darkEdgesFactor);
+            Core.multiply(i, new Scalar(x, x, x), i);
+        }
 
         try {
             return Utils.matToBufferedImage(i);
@@ -72,7 +81,7 @@ class ImageProcImpl extends ImageProc {
         // Stitch
         Mat i = Stitcher.stitchImages(fL, fR);
 
-        if (params.nightTimeFactor > NIGHT_MIN) {
+        if(params.nightTimeFactor > NIGHT_MIN){
             Night.nightTime(i, params.nightTimeFactor);
         }
 
@@ -95,7 +104,11 @@ class ImageProcImpl extends ImageProc {
                     new Scalar(x, x, x));
         }
 
-        try {
+        if(params.showHeadlights && r.nextDouble() < HEADLIGHT_PERC){
+            glarer.addCar(i);
+        }
+
+        try{
             return Utils.matToBufferedImage(i);
         } catch (IOException e) {
             e.printStackTrace();

@@ -11,9 +11,6 @@ dependencies {
 }
 
 // The following makes "gradle build", "gradle test" work
-test {
-    jvmArgs = ['-Djava.library.path=/home/anna/OpenCV/opencv-2.4.11/build/lib/']
-}
 
 // The following makes "gradle run" work
 /*run {

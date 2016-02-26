@@ -7,9 +7,31 @@ public class JunctionInfo {
     private Direction m_primary_direction;
 	private Set<Direction> m_road_angles;
 	
+	/**
+	 * Returns the next location as stored in this JunctionInfo
+	 * @return next location
+	 */
 	public Location getNextLocation(){return m_next_location;};
+	
+	/**
+	 * Returns the set of all road directions from this JunctionInfo
+	 * @return set of road directions
+	 */
 	public Set<Direction> getRoadDirections(){return m_road_angles;};
-    public Direction getPrimaryDirection() {return m_primary_direction;}
+    
+	/**
+	 * Returns the primary direction as stored in this Junction info.
+	 * Note that it doesn't have to be in the set returned from RoadDirections,
+	 * if a direction from the set is needed, use getClosestDirection instead
+	 * @return primary direction
+	 */
+	public Direction getPrimaryDirection() {return m_primary_direction;}
+	
+    /**
+     * Returns the direction that is included in the Set returned by getRoadDirections
+     * and closest to primary direction.
+     * @return road direction closest to primary direction
+     */
     public Direction getClosestRoadDirection() {
         double min_diff = 360;
         Direction closest = new Direction(0);
@@ -24,6 +46,11 @@ public class JunctionInfo {
         return closest;
     }
 
+    
+    /**
+     * Sets PrimaryDirection to d
+     * @param d new primary direction
+     */
     public void setPrimaryDirection(Direction d) { m_primary_direction = d;}
 
 

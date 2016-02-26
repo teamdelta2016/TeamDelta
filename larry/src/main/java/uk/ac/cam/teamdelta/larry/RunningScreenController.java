@@ -116,18 +116,27 @@ public class RunningScreenController implements ScreenController {
 
     @Override
     public void showScreen() {
+        double totalWidth = Main.GAME_WIDTH;
+        double centerImageProportion = 0.7;
+        double sideImageProportion = 0.15;
+
         // the popup shouldn't be showing when the screen is displayed
         menuIsShowing = false;
 
         // process the initial frame fetched during loading
         processFrame(larrySettings.getEngine().getCurrentFrame());
+
         // layout the images in a *nice* (lol jk) perspective view
-        double width = 1280;
-        double height = 640;
-        leftView.setEffect(new PerspectiveTransform(-300, 0, 300, 0,
-                300, height, -300, 960));
-        rightView.setEffect(new PerspectiveTransform(340, 0, 900, 0,
-                940, 960, 340, height));
+        frontView.setScaleX(centerImageProportion);
+        backView.setScaleX(1.25);
+        backView.setScaleY(0.8);
+        double newSideImageWidth = 320;
+        double newSideImageHeight = 640;
+        double innerX = (Main.GAME_WIDTH - (1280 * centerImageProportion)) / 2 - 20;
+        leftView.setEffect(new PerspectiveTransform(-newSideImageWidth, 0, innerX, 0,
+                innerX, newSideImageHeight, -newSideImageWidth, 960));
+        rightView.setEffect(new PerspectiveTransform(640 - innerX, 0, 640 + newSideImageWidth, 0,
+                960, 960, 640 - innerX, newSideImageHeight));
 
         // add listeners for keyboard events
         container.getScene().addEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
@@ -173,17 +182,15 @@ public class RunningScreenController implements ScreenController {
             e.printStackTrace();
         }
 
+        //TODO: possibly remove this
         // bind the value of the location text to the value which gets updated when
         // location changes in LarrySettings
-        locationText.textProperty().bind(larrySettings.getStringLocation());
+        //locationText.textProperty().bind(larrySettings.getStringLocation());
 
         nextFrameHandler = new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (event.getCode().equals(KeyCode.UP) || event.getCode().equals(KeyCode.DOWN)) {
-                    if (event.getCode().equals(KeyCode.DOWN)) {
-                        intendDirection = new Direction((facingDirection.getDegrees() + 180) % 360);
-                    }
+                if (event.getCode().equals(KeyCode.UP)) {
                     goToNextFrame();
                     final EventHandler<KeyEvent> ev = this;
                     // disallow further nextFrame requests until the next frame has loaded
@@ -297,6 +304,9 @@ public class RunningScreenController implements ScreenController {
         // make sure the next frame worker thread has stopped
         // (shouldn't have been able to get here unless it had)
         nextFrameService.reset();
+
+        System.out.println("AAAAAA: " + intendDirection.getDegrees() + " -- " + facingDirection.getDegrees());
+
         //TODO: Don't think facingDirection needs to be set here as set in processFrame()
         facingDirection = intendDirection;
         nextFrameService.setInput(facingDirection);
@@ -427,9 +437,8 @@ public class RunningScreenController implements ScreenController {
         ImageView iv = navMap.get(d);
         if (iv == null) {
             error("NULL IV - d was not in direction set");
-        } else {
-            iv.setImage(hArrow);
         }
+        iv.setImage(hArrow);
     }
 
     private void unhighlightArrow(Direction d) {
