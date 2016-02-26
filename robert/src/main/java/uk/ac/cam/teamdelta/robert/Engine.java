@@ -36,7 +36,6 @@ public class Engine {
         location = query.getNextLocation();
         direction = query.getRoadDirections().iterator().next();
         cache = new Cache(null, this, location, direction);
-        cache.setDaemon(true);
         cache.start();
         Logger.debug("engine started");
     }
@@ -50,7 +49,7 @@ public class Engine {
                                       next.getNextLocation().getLatitude(),
                                       next.getNextLocation().getLongitude(),
                                       Constants.fov,
-                                      (int)direction.getDegrees(),
+                                      (int)next.getPrimaryDirection().getDegrees(),
                                       0);
             Logger.debug("images retrieved");
             Logger.debug("processing images...");

@@ -20,23 +20,22 @@ public class Cache extends Thread {
     private Direction direction;
 
     public Cache(
-            Cache parent,
-            Engine engine,
-            Location location,
-            Direction direction) {
+        Cache parent,
+        Engine engine,
+        Location location,
+        Direction direction) {
         this.parent = parent;
         this.engine = engine;
         this.result = null;
         this.children = new HashMap<>();
         this.location = location;
         this.direction = direction;
+        this.setDaemon(true);
     }
 
     private int getDepth() {
         int depth = 0;
-        for (Cache i = this; i != null; i = i.parent, ++depth) {
-            ;
-        }
+        for (Cache i = this; i != null; i = i.parent, ++depth);
         return depth;
     }
 
@@ -52,11 +51,8 @@ public class Cache extends Thread {
 
             debug("processing frame");
             for (Direction d : next.getRoadDirections()) {
-                debug("starting new cache operation for direction" + d.getDegrees());
                 Cache c = new Cache(this, engine, next.getNextLocation(), d);
-                debug("ADDING NEW:    " + d.getDegrees());
                 children.put(d, c);
-                c.setDaemon(true);
                 c.start();
             }
             result = engine.processFrame(next);
@@ -80,34 +76,23 @@ public class Cache extends Thread {
     }
 
     public Cache chooseDirection(Direction d) {
-
-        try{
-            throw new Exception();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
         debug("cache choosing direction: " + d.getDegrees());
         Cache correctThread = null;
 
-        debug("SIZE1: " + children.keySet().size());
-
-        for (Direction entry : children.keySet()) {
-            debug("COMP: " + d.getDegrees() + ", " + entry.getDegrees());
-            if (d.getDegrees() != entry.getDegrees()) {
+        for (Direction entry : children.keySet())
+            if (d.getDegrees() != entry.getDegrees())
                 children.get(entry).interrupt();
-            } else {
+            else
                 correctThread = children.get(entry);
-            }
-        }
 
-        this.parent = null;
         if (correctThread == null) {
             error("No directions found matching direction " + d.getDegrees());
             for (Direction entry : children.keySet()) {
                 error(entry.getDegrees() + "");
             }
+            System.exit(-1);
         }
+        this.parent = null;
         return correctThread;
     }
 }
