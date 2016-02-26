@@ -36,8 +36,8 @@ public class JunctionInfo {
         double min_diff = 360;
         Direction closest = new Direction(0);
         for (Direction dir : m_road_angles) {
-            double diff = Math.min(Math.abs(m_primary_direction.getDegrees() - dir.getDegrees()),
-                    Math.abs(Math.abs(m_primary_direction.getDegrees() - dir.getDegrees() - 360)));
+            double diff = Math.abs(m_primary_direction.getDegrees() - dir.getDegrees());
+            diff = Math.min(diff, 360-diff);
             if (diff < min_diff) {
                 min_diff = diff;
                 closest = dir;
