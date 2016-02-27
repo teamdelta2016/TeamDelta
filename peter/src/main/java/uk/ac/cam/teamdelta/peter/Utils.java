@@ -43,6 +43,7 @@ class Utils {
         Mat image = new Mat();
         Size size = new Size(cols, rows);
         Imgproc.resize(source, image, size);
+        source.release();
         return image;
     }
 
@@ -71,6 +72,7 @@ class Utils {
         byte[] bytes = bytemat.toArray();
         InputStream in = new ByteArrayInputStream(bytes);
         BufferedImage img = ImageIO.read(in);
+        mat.release();
         return img;
     }
 

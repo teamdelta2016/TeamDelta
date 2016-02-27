@@ -18,39 +18,40 @@ public class Test {
     double ghostingValX = 1.05;
     double ghostingValY = 1.05;
 
-    Test(){
+    public Test(){
         // process();
 
-        ImageProcParams p = new ImageProcParams(0, 30, 70, 70, true);
+        ImageProcParams p = new ImageProcParams(50, 50, 50, 50, true);
 
         ImageProc ip = ImageProc.getImageProc(p);
 
         try{
 
-            String dir = "./misc";
+            String dir = "./../peter/misc";
             File fL = new File(dir + "/testleft2.jpeg");
             BufferedImage imgL = ImageIO.read(fL);
 
             File fR = new File(dir + "/testright2.jpeg");
             BufferedImage imgR = ImageIO.read(fR);
 
-            ImageInputSet set = new ImageInputSet(imgL, imgL, imgR, imgR, imgL);
+            ImageInputSet set = new ImageInputSet(imgL, imgR, imgR, imgR, imgL);
 
-            ImageOutputSet out = ip.process(set, false);
-
-
-            BufferedImage iOut = ImageProc.processTest(imgL, imgR, p);
-
-            try{
-                File outputfile = new File(dir + "/test2front.jpg");
-                ImageIO.write(out.front, "jpg", outputfile);
-                outputfile = new File(dir + "/test2side.jpg");
-                ImageIO.write(out.back, "jpg", outputfile);
-                outputfile = new File(dir + "/test3f.jpg");
-                ImageIO.write(iOut, "jpg", outputfile);
-            }catch(Exception e){
-                e.printStackTrace();
+            for(int i=0; i<1000000; i++){
+                System.out.println("number " + i);
+                ImageOutputSet out = ip.process(set, false);
             }
+            // BufferedImage iOut = ImageProc.processTest(imgL, imgR, p);
+
+            // try{
+            //     File outputfile = new File(dir + "/test2front.jpg");
+            //     ImageIO.write(out.front, "jpg", outputfile);
+            //     outputfile = new File(dir + "/test2side.jpg");
+            //     ImageIO.write(out.back, "jpg", outputfile);
+            //     outputfile = new File(dir + "/test3f.jpg");
+            //     ImageIO.write(iOut, "jpg", outputfile);
+            // }catch(Exception e){
+            //     e.printStackTrace();
+            // }
         }catch(Exception e){
             e.printStackTrace();
         }
