@@ -158,7 +158,7 @@ public class OsmDataMiner {
         
         //Should find all ways that are contained in or cross the given radius, and are tagged with "highway" - so they
         //should mostly be roads
-        System.out.println("called with: " + "(node(around:" + radius +","+ lat +"," + lon + ");way[\"highway\"](around:"
+        System.out.println("Data miner called with: " + "(node(around:" + radius +","+ lat +"," + lon + ");way[\"highway\"](around:"
                 +radius +","+ lat + "," + lon + ");node(w)->.x;);out;");
         return OsmDataMiner.getNodesAndRoads(getNodesViaOverpass(
                 "(node(around:" + radius +","+ lat +"," + lon + ");way[\"highway\"](around:"
@@ -257,8 +257,8 @@ public class OsmDataMiner {
         }
     }
     
-    public ArrayList<OsmWay> getRoadData(Location location) throws IOException, SAXException, ParserConfigurationException { 
-        ArrayList<OsmWay> osmWays = getNodesAndRoadsInRadius(location, 20);
+    public ArrayList<OsmWay> getRoadData(Location location, int radius) throws IOException, SAXException, ParserConfigurationException { 
+        ArrayList<OsmWay> osmWays = getNodesAndRoadsInRadius(location, radius);
         /*for (OsmWay osmWay : osmWays) {
             prettyPrint(osmWay);
         }*/
