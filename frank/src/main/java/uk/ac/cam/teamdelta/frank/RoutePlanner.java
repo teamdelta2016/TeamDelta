@@ -375,17 +375,6 @@ public class RoutePlanner implements RouteFinder {
         System.out.print("Test of helper functions running... ");
         Logger.debug(planner.testHelperFunctions()?"Succeeded":"FAILED");
         
-        //TODO: delete this before final submit to examiners
-        //planner.getNextPosition(new Location(52.208396, 0.118471), new Direction(0));
-        //JunctionInfo info = planner.getNextPosition(new Location(52.208326, 0.118633), new Direction(315));
-        //JunctionInfo info = planner.getNextPosition(new Location(52.207374, 0.118183), new Direction(90));
-        //JunctionInfo info = planner.getNextPosition(new Location(52.20670, 0.1110736), new Direction(90)); //officially a cycleway, so will fail
-        //JunctionInfo info = planner.getInitialPosition(new Location(52.200160, 0.113254));
-        //JunctionInfo info = planner.getNextPosition(new Location(51.585068827132936, 0.029416655762752684), new Direction(108.22666648447432));
-        //JunctionInfo info = planner.getNextPosition(new Location(52.2111648, 0.1065411), new Direction(107.38489009711105));
-        //JunctionInfo info = planner.getNextPosition(new Location(51.6207259, 0.0236171), new Direction(290));
-        //JunctionInfo info = planner.getInitialPosition(new Location(51.62026789999999,0.0222617));
-        //JunctionInfo info = planner.getNextPosition(new Location(51.58529360513903, 0.028318081935092203), new Direction(0));
         JunctionInfo info = planner.getInitialPosition(new Location(52.206300, 0.110967));
         Logger.debug("Next pos: ");
         Logger.debug(info.getNextLocation().getLatitude() + ", " + info.getNextLocation().getLongitude());
