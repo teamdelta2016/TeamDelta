@@ -81,6 +81,9 @@ class ImageProcImpl extends ImageProc {
         // Stitch
         Mat i = Stitcher.stitchImages(fL, fR);
 
+        fL.release();
+        fR.release();
+
         if(params.nightTimeFactor > NIGHT_MIN){
             Night.nightTime(i, params.nightTimeFactor);
         }
@@ -98,10 +101,12 @@ class ImageProcImpl extends ImageProc {
 
         i = peripheralFront.overlayPeripheral(ghosted, blurred);
 
+        ghosted.release();
+        blurred.release();
+
         if (params.darkEdgesFactor > 0) {
             double x = 1 - params.darkEdgesFactor;
-            i = peripheralFront.multiplyColor(i,
-                    new Scalar(x, x, x));
+            i = peripheralFront.multiplyColor(i, new Scalar(x, x, x));
         }
 
         if(params.showHeadlights && r.nextDouble() < HEADLIGHT_PERC){

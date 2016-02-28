@@ -110,9 +110,7 @@
             <VBox fx:id="vbox" alignment="TOP_RIGHT" fillWidth="false" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.valignment="BOTTOM" />
             <GridPane maxHeight="100.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
               <children>
-                <Button focusTraversable="false" mnemonicParsing="false" onAction="#handleDefault1" text="Default1" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
-                <Button focusTraversable="false" mnemonicParsing="false" onAction="#handleDefault2" text="Default2" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
-                <Button focusTraversable="false" mnemonicParsing="false" onAction="#handleDefault3" text="Default3" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
+                <Button focusTraversable="false" mnemonicParsing="false" onAction="#handleReset" text="reset" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

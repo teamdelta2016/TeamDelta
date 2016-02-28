@@ -52,6 +52,11 @@ class Peripheral {
         Mat result = new Mat();
         Core.add(maskBottom, maskTop, result);
 
+        bottom.release();
+        top.release();
+        maskBottom.release();
+        maskTop.release();
+
         return result;
     }
 

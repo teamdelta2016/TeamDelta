@@ -10,6 +10,8 @@ class Ghoster {
     static Mat ghostImage(Mat source, double ghostX, double ghostY, double intensity){
         Mat stretch = Utils.stretchImage(source, ghostX, ghostY);
         Mat ghosted = Utils.overlayImage(source, stretch, intensity);
+        source.release();
+        stretch.release();
         return ghosted;
     }
 
