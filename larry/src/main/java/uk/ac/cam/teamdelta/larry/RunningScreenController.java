@@ -51,12 +51,15 @@ public class RunningScreenController implements ScreenController {
      * Boolean indicating whether the popup menu is on display or not
      */
     private static boolean menuIsShowing = false;
+    private static GridPane errorPopup;
     @FXML
     Button button;
     @FXML
     ImageView frontView, leftView, rightView, backView;
     @FXML
     Label locationText;
+    @FXML
+    Label errorText;
     @FXML
     StackPane stackPane;
     private ScreensContainer container;
@@ -169,6 +172,24 @@ public class RunningScreenController implements ScreenController {
                 quitGame();
             }
         });
+        BorderPane p2 = (BorderPane) errorPopup.getChildren().get(0);
+        GridPane g2 = (GridPane) p2.getChildren().get(0);
+        Button errorChangeLocBtn = (Button) g2.getChildren().get(0);
+        Button errorRestartBtn = (Button) g2.getChildren().get(1);
+        errorChangeLocBtn.addEventHandler(ActionEvent.ANY, new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                debug("Change loc after error");
+                changeLocation();
+            }
+        });
+        errorRestartBtn.addEventHandler(ActionEvent.ANY, new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                debug("restart after error");
+                quitGame();
+            }
+        });
     }
 
     @Override
@@ -182,6 +203,14 @@ public class RunningScreenController implements ScreenController {
             e.printStackTrace();
         }
 
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(Main.ERROR_FXML));
+            errorPopup = loader.load();
+        } catch (IOException e) {
+            error("Couldn't load the error popup");
+            e.printStackTrace();
+        }
+
         //TODO: possibly remove this
         // bind the value of the location text to the value which gets updated when
         // location changes in LarrySettings
@@ -191,6 +220,7 @@ public class RunningScreenController implements ScreenController {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode().equals(KeyCode.UP)) {
+                    Logger.debug("Proceeding");
                     goToNextFrame();
                     final EventHandler<KeyEvent> ev = this;
                     // disallow further nextFrame requests until the next frame has loaded
@@ -210,7 +240,10 @@ public class RunningScreenController implements ScreenController {
                     highlightArrow(nextDir);
                     intendDirection = nextDir;
                     Logger.debug("Intend direction: " + intendDirection.getDegrees());
-                }
+                } /*else if (event.getCode().equals(KeyCode.DOWN))
+                {
+                    //possible going backwards
+                }*/
             }
         };
 
@@ -227,6 +260,7 @@ public class RunningScreenController implements ScreenController {
          * add the popup menu to the scene graph (but won't be visible yet)
          */
         stackPane.getChildren().add(menuPopup);
+        stackPane.getChildren().add(errorPopup);
     }
 
     /**
@@ -297,6 +331,19 @@ public class RunningScreenController implements ScreenController {
     }
 
     /**
+     * Makes the error menu visible
+     * @throws IOException
+     */
+    @FXML
+    private void showErrorPopup() throws IOException {
+        if (errorPopup != null) {
+            errorPopup.setVisible(true);
+        } else {
+            error("Couldn't add error popup to stack pane");
+        }
+    }
+
+    /**
      * Called when UP arrow is pressed, requests the next frame from the {@link Engine}
      */
     private void goToNextFrame() {
@@ -337,8 +384,18 @@ public class RunningScreenController implements ScreenController {
             for (Direction d : junctions.getRoadDirections()) {
                 debug("Junction at " + d.getDegrees());
             }
-
+            //create error popup if we have an empty junction set error
+            if (junctions.getRoadDirections().size() == 0)
+            {
+                try {
+                    showErrorPopup();
+                } catch (IOException e)
+                {
+                    error("Could not show error message....");
+                }
+            }
             facingDirection = junctions.getPrimaryDirection();
+            Logger.debug("Facing Direction: " + facingDirection.getDegrees());
             /*for (Iterator<Direction> it = junctions.getRoadDirections().iterator(); it.hasNext();) {
 
                 facingDirection = it.next();
@@ -359,6 +416,8 @@ public class RunningScreenController implements ScreenController {
             // make sure the menu is always on top
             button.toFront();
             menuPopup.toFront();
+
+            errorPopup.toFront();
 
             // update location text
             LarrySettings.getInstance().setLocation(junctions.getNextLocation().getLatitude(),
@@ -416,6 +475,7 @@ public class RunningScreenController implements ScreenController {
         container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, nextFrameHandler);
         container.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, switchViewHandler);
         menuPopup.setVisible(false);
+        errorPopup.setVisible(false);
     }
 
     private StackPane arrowOverlay(JunctionInfo junctions) {
@@ -437,8 +497,9 @@ public class RunningScreenController implements ScreenController {
         ImageView iv = navMap.get(d);
         if (iv == null) {
             error("NULL IV - direction" + d.getDegrees() +" was not in direction set");
+        } else {
+            iv.setImage(hArrow);
         }
-        iv.setImage(hArrow);
     }
 
     private void unhighlightArrow(Direction d) {
@@ -446,11 +507,19 @@ public class RunningScreenController implements ScreenController {
         iv.setImage(arrow);
     }
 
+    /**
+     * Replaces the arrow image of a junction with a selected arrow image
+     * @param d
+     */
     private void selectArrow(Direction d) {
         ImageView iv = navMap.get(d);
         iv.setImage(sArrow);
     }
 
+    /**
+     * Gets the next junction in the directions set in a clockwise direction
+     * @return {@link} Direction
+     */
     private Direction getNextLargest() {
         if (navMap.size() > 1) {
             Iterator<Direction> it = navMap.keySet().iterator();
@@ -472,6 +541,10 @@ public class RunningScreenController implements ScreenController {
         return intendDirection;
     }
 
+    /**
+     * Gets the next junction in the directions set in an anticlockwise direction
+     * @return {@link} Direction
+     */
     private Direction getNextSmallest() {
         if (navMap.size() > 1) {
             Iterator<Direction> it = navMap.keySet().iterator();

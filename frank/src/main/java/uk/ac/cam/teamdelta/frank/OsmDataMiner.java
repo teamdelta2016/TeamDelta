@@ -111,12 +111,12 @@ public class OsmDataMiner {
                 }
                 Map<String, String> tags = osmWays.get(osmWays.size()-1).getTags();
                 if (!tags.containsKey("highway")) {
-                    System.out.println("Not a highway");
+                    Logger.debug("Not a highway");
                     osmWays.remove(wayCounter);
                     continue;
                 } else {
                     if (!isValidRoadType(tags.get("highway"))) {
-                        //System.out.println("Irrelevant road type: " + tags.get("highway"));
+                        //Logger.debug("Irrelevant road type: " + tags.get("highway"));
                         osmWays.remove(wayCounter);
                         continue;
                     }
@@ -158,7 +158,7 @@ public class OsmDataMiner {
         
         //Should find all ways that are contained in or cross the given radius, and are tagged with "highway" - so they
         //should mostly be roads
-        System.out.println("called with: " + "(node(around:" + radius +","+ lat +"," + lon + ");way[\"highway\"](around:"
+        Logger.debug("Data miner called with: " + "(node(around:" + radius +","+ lat +"," + lon + ");way[\"highway\"](around:"
                 +radius +","+ lat + "," + lon + ");node(w)->.x;);out;");
         return OsmDataMiner.getNodesAndRoads(getNodesViaOverpass(
                 "(node(around:" + radius +","+ lat +"," + lon + ");way[\"highway\"](around:"
@@ -238,27 +238,27 @@ public class OsmDataMiner {
     
     //Can be used for debug and human friendly representation of OsmWays
     private void prettyPrint(OsmWay osmWay) {
-        System.out.println("Way " + osmWay.getId() + ":");
+        Logger.debug("Way " + osmWay.getId() + ":");
         
         Map<String, String> tags = osmWay.getTags();
         for (Map.Entry<String, String> entry : tags.entrySet()) {
-            System.out.println("  Tag: " + entry.getKey() + ": " + entry.getValue());
+            Logger.debug("  Tag: " + entry.getKey() + ": " + entry.getValue());
         }
         
         for (int i=0; i<osmWay.nodeCount(); i++) {
-            System.out.println("  Node(" + osmWay.getNode(i).getId() + "): " + osmWay.getNode(i).getLat() + ", " + osmWay.getNode(i).getLon());
+            Logger.debug("  Node(" + osmWay.getNode(i).getId() + "): " + osmWay.getNode(i).getLat() + ", " + osmWay.getNode(i).getLon());
             if (osmWay.getNode(i).getWayCount() > 1) {
                 System.out.print("    Member of:");
                 for (int j=0; j<osmWay.getNode(i).getWayCount(); j++) {
                     System.out.print(" " + osmWay.getNode(i).getWay(j));
                 }
-                System.out.println();
+                Logger.debug("");
             }
         }
     }
     
-    public ArrayList<OsmWay> getRoadData(Location location) throws IOException, SAXException, ParserConfigurationException { 
-        ArrayList<OsmWay> osmWays = getNodesAndRoadsInRadius(location, 20);
+    public ArrayList<OsmWay> getRoadData(Location location, int radius) throws IOException, SAXException, ParserConfigurationException { 
+        ArrayList<OsmWay> osmWays = getNodesAndRoadsInRadius(location, radius);
         /*for (OsmWay osmWay : osmWays) {
             prettyPrint(osmWay);
         }*/

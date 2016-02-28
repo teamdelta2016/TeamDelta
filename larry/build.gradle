@@ -19,4 +19,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-
+/*
+run {
+    jvmArgs = ['-Djava.library.path=/home/anna/OpenCV/opencv-2.4.11/build/lib/']
+}*/
