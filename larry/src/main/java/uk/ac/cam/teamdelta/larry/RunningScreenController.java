@@ -59,6 +59,8 @@ public class RunningScreenController implements ScreenController {
     @FXML
     Label locationText;
     @FXML
+    Label errorText;
+    @FXML
     StackPane stackPane;
     private ScreensContainer container;
     private ImageOutputSet images;
@@ -328,6 +330,10 @@ public class RunningScreenController implements ScreenController {
         menuIsShowing = false;
     }
 
+    /**
+     * Makes the error menu visible
+     * @throws IOException
+     */
     @FXML
     private void showErrorPopup() throws IOException {
         if (errorPopup != null) {
@@ -510,6 +516,10 @@ public class RunningScreenController implements ScreenController {
         iv.setImage(sArrow);
     }
 
+    /**
+     * Gets the next junction in the directions set in a clockwise direction
+     * @return {@link} Direction
+     */
     private Direction getNextLargest() {
         if (navMap.size() > 1) {
             Iterator<Direction> it = navMap.keySet().iterator();
@@ -531,6 +541,10 @@ public class RunningScreenController implements ScreenController {
         return intendDirection;
     }
 
+    /**
+     * Gets the next junction in the directions set in an anticlockwise direction
+     * @return {@link} Direction
+     */
     private Direction getNextSmallest() {
         if (navMap.size() > 1) {
             Iterator<Direction> it = navMap.keySet().iterator();

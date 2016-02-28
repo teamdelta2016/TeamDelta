@@ -23,6 +23,7 @@ public class LoadingScreenController implements ScreenController {
     ScreensContainer container;
 
     private static final String factsPath = "./src/main/resources/uk.ac.cam.teamdelta.larry/facts.txt";
+    private static List<String> facts;
 
     @FXML
     ImageView img;
@@ -36,17 +37,9 @@ public class LoadingScreenController implements ScreenController {
 
     @Override
     public void showScreen() {
-        try {
-            //TODO: Think this can be done in setup screen - only needs to happen once
-            List<String> facts = readFile(factsPath);
-
             Random randomizer = new Random();
             String randomFact = facts.get(randomizer.nextInt(facts.size()));
             fact.setText(randomFact);
-        } catch (IOException e) { //catch!
-            fact.setText("Young people can find it hard to appreciate the position of elderly drivers");
-            error("Error loading facts");
-        }
 
         // set size of rotating wheel image
         img.setFitHeight(Main.GAME_HEIGHT / 2);
@@ -83,6 +76,13 @@ public class LoadingScreenController implements ScreenController {
 
     @Override
     public void setupScreen() {
+        try {
+            facts = readFile(factsPath);
+        } catch (IOException e)
+        {
+            error("Error reading facts");
+            fact.setText("Young people can find it hard to appreciate the position of elderly drivers");
+        }
     }
 
     /**
