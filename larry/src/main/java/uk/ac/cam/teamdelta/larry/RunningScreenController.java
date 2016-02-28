@@ -436,7 +436,7 @@ public class RunningScreenController implements ScreenController {
     private void highlightArrow(Direction d) {
         ImageView iv = navMap.get(d);
         if (iv == null) {
-            error("NULL IV - d was not in direction set");
+            error("NULL IV - direction" + d.getDegrees() +" was not in direction set");
         }
         iv.setImage(hArrow);
     }

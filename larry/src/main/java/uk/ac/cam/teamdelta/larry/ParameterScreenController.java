@@ -75,50 +75,18 @@ public class ParameterScreenController implements ScreenController {
     }
 
     /**
-     * Handles the press of Default1 button
+     * Handles the press of Reset button
      *
      * @param event the event object
      * @throws IOException
      */
     @FXML
-    private void handleDefault1(ActionEvent event) throws IOException {
+    private void handleReset(ActionEvent event) throws IOException {
         setByButton = true;
-        slider1.setValue(100.0);
+        slider1.setValue(0);
         slider2.setValue(0);
-        slider3.setValue(10);
-        slider4.setValue(30);
-        updateImg();
-    }
-
-    /**
-     * Handles the press of Default2 button
-     *
-     * @param event the event object
-     * @throws IOException
-     */
-    @FXML
-    private void handleDefault2(ActionEvent event) throws IOException {
-        setByButton = true;
-        slider1.setValue(50);
-        slider2.setValue(67);
-        slider3.setValue(80);
-        slider4.setValue(20);
-        updateImg();
-    }
-
-    /**
-     * Handles the press of Default3 button
-     *
-     * @param event the event object
-     * @throws IOException
-     */
-    @FXML
-    private void handleDefault3(ActionEvent event) throws IOException {
-        setByButton = true;
-        slider1.setValue(30);
-        slider2.setValue(11);
         slider3.setValue(0);
-        slider4.setValue(100);
+        slider4.setValue(0);
         updateImg();
     }
 
