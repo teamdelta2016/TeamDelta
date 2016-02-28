@@ -143,7 +143,7 @@ public class RoutePlanner implements RouteFinder {
             try {
                 osmWays = miner.getRoadData(current_position);
             } catch(Exception e) {
-                System.out.println("Data miner returned with an error: ");
+                Logger.debug("Data miner returned with an error: ");
                 e.printStackTrace();
                 return info;
             }
@@ -164,8 +164,8 @@ public class RoutePlanner implements RouteFinder {
                         distFromSegment(current_position, osmWays.get(i).getNode(j).getLocation(),osmWays.get(i).getNode(j+1).getLocation());
                 Direction curBearing =
                         bearing(osmWays.get(i).getNode(j).getLocation(),osmWays.get(i).getNode(j+1).getLocation());
-                //System.out.println("Angle to road:" + Math.abs(current_direction.getDegrees() - curBearing.getDegrees()));
-                //System.out.println("Dist to road:" + curDist);
+                //Logger.debug("Angle to road:" + Math.abs(current_direction.getDegrees() - curBearing.getDegrees()));
+                //Logger.debug("Dist to road:" + curDist);
                 if (curDist < minDist && (
                          Math.abs(current_direction.getDegrees() - curBearing.getDegrees())<angleTolerance ||
                          Math.abs(current_direction.getDegrees() - curBearing.getDegrees())>(360 - angleTolerance) ||
@@ -180,14 +180,14 @@ public class RoutePlanner implements RouteFinder {
         }
         
         if (withinRange(minDist, 123456789, 0.1)) {
-            System.out.println("Failed to find closest road!");
+            Logger.debug("Failed to find closest road!");
             return info;
         }
         
         //If you want to see which road (way) was the query assigned to:
-        /*System.out.println("Minimal distance to road: " + minDist + ". Formed by:"); 
-        System.out.println(osmWays.get(minDistWay).getNode(minDistNode).getLat() + " " + osmWays.get(minDistWay).getNode(minDistNode).getLon());
-        System.out.println(osmWays.get(minDistWay).getNode(minDistNode+1).getLat() + " " + osmWays.get(minDistWay).getNode(minDistNode+1).getLon());*/
+        /*Logger.debug("Minimal distance to road: " + minDist + ". Formed by:"); 
+        Logger.debug(osmWays.get(minDistWay).getNode(minDistNode).getLat() + " " + osmWays.get(minDistWay).getNode(minDistNode).getLon());
+        Logger.debug(osmWays.get(minDistWay).getNode(minDistNode+1).getLat() + " " + osmWays.get(minDistWay).getNode(minDistNode+1).getLon());*/
         
         Location newLoc = clipToSegment(current_position, osmWays.get(minDistWay).getNode(minDistNode).getLocation(),
                 osmWays.get(minDistWay).getNode(minDistNode+1).getLocation());
@@ -255,8 +255,8 @@ public class RoutePlanner implements RouteFinder {
         newLoc = osmWays.get(curWay).getNode(curNode).getLocation();
         
         while (moveDist > distTolerance) {
-            //System.out.println("Currently considering location: " + newLoc.getLatitude() + " " + newLoc.getLongitude());
-            //System.out.println("Way count: " + osmWays.get(curWay).getNode(curNode).getWayCount());
+            //Logger.debug("Currently considering location: " + newLoc.getLatitude() + " " + newLoc.getLongitude());
+            //Logger.debug("Way count: " + osmWays.get(curWay).getNode(curNode).getWayCount());
             
             //We reached a junction before we moved fully forward
             if (osmWays.get(curWay).getNode(curNode).getWayCount() > 1) {
@@ -365,24 +365,16 @@ public class RoutePlanner implements RouteFinder {
         RoutePlanner planner = new RoutePlanner();
         
         System.out.print("Test of helper functions running... ");
-        System.out.println(planner.testHelperFunctions()?"Succeeded":"FAILED");
+        Logger.debug(planner.testHelperFunctions()?"Succeeded":"FAILED");
         
-        //TODO: delete this before final submit to examiners
-        //planner.getNextPosition(new Location(52.208396, 0.118471), new Direction(0));
-        //JunctionInfo info = planner.getNextPosition(new Location(52.208326, 0.118633), new Direction(315));
-        //JunctionInfo info = planner.getNextPosition(new Location(52.207374, 0.118183), new Direction(90));
-        //JunctionInfo info = planner.getNextPosition(new Location(52.20670, 0.1110736), new Direction(90)); //officially a cycleway, so will fail
-        //JunctionInfo info = planner.getInitialPosition(new Location(52.200160, 0.113254));
-        //JunctionInfo info = planner.getNextPosition(new Location(51.585068827132936, 0.029416655762752684), new Direction(108.22666648447432));
-        //JunctionInfo info = planner.getNextPosition(new Location(52.2111648, 0.1065411), new Direction(107.38489009711105));
         JunctionInfo info = planner.getNextPosition(new Location(52.211107, 0.106519), new Direction(0));
-        System.out.println("Next pos: ");
-        System.out.println(info.getNextLocation().getLatitude() + ", " + info.getNextLocation().getLongitude());
-        System.out.println("Primary pos:" + info.getPrimaryDirection().getDegrees() + " Closest pos: " + info.getClosestRoadDirection().getDegrees());
+        Logger.debug("Next pos: ");
+        Logger.debug(info.getNextLocation().getLatitude() + ", " + info.getNextLocation().getLongitude());
+        Logger.debug("Primary pos:" + info.getPrimaryDirection().getDegrees() + " Closest pos: " + info.getClosestRoadDirection().getDegrees());
         for (Direction dir : info.getRoadDirections()) {
-            System.out.print(dir.getDegrees() + " ");
+            Logger.debug(dir.getDegrees() + " ");
         }
-        System.out.println();
+        Logger.debug("");
     }
 
 }
