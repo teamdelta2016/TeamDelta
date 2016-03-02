@@ -15,7 +15,7 @@ import java.util.Random;
 class ImageProcImpl extends ImageProc {
 
     private static final double NIGHT_MIN = 0.3;
-    private static final double HEADLIGHT_PERC = 0.3;
+    private static final double HEADLIGHT_PERC = 0.15;
 
     private Peripheral peripheralFront;
     private Glarer glarer;

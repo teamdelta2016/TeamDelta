@@ -92,7 +92,7 @@ public class ParameterScreenController implements ScreenController {
 
     private void updateImg() {
         ImageProcParams p = new ImageProcParams(slider1.getValue(),
-                slider2.getValue(), slider3.getValue(), slider4.getValue(), true);
+                slider2.getValue(), slider3.getValue(), slider4.getValue(), false);
         BufferedImage b = ImageProc.processTest(
                 imgL, imgR, p);
         setByButton = false;
