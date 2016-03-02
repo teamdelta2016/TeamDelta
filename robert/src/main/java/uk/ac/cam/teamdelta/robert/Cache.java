@@ -80,10 +80,12 @@ public class Cache extends Thread {
         Cache correctThread = null;
 
         for (Direction entry : children.keySet())
-            if (d.getDegrees() != entry.getDegrees())
+            if (d.getDegrees() != entry.getDegrees()) {
                 children.get(entry).interrupt();
-            else
+            }
+            else {
                 correctThread = children.get(entry);
+            }
 
         if (correctThread == null) {
             error("No directions found matching direction " + d.getDegrees());
@@ -93,6 +95,7 @@ public class Cache extends Thread {
             System.exit(-1);
         }
         this.parent = null;
+        this.children = null;
         return correctThread;
     }
 }

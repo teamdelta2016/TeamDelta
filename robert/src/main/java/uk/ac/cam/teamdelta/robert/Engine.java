@@ -16,6 +16,7 @@ import uk.ac.cam.teamdelta.peter.ImageProc;
 import java.net.MalformedURLException;
 
 public class Engine {
+
     private Location location;
     private Direction direction;
     private ImageFetcher fetcher;
@@ -44,16 +45,20 @@ public class Engine {
         try {
             Logger.debug("fetching images...");
             ImageInputSet input = fetcher.sendGet(
-                                      Constants.pictureWidth,
-                                      Constants.pictureHeight,
-                                      next.getNextLocation().getLatitude(),
-                                      next.getNextLocation().getLongitude(),
-                                      Constants.fov,
-                                      (int)next.getPrimaryDirection().getDegrees(),
-                                      0);
+                    Constants.pictureWidth,
+                    Constants.pictureHeight,
+                    next.getNextLocation().getLatitude(),
+                    next.getNextLocation().getLongitude(),
+                    Constants.fov,
+                    (int) next.getPrimaryDirection().getDegrees(),
+                    0);
             Logger.debug("images retrieved");
             Logger.debug("processing images...");
-            ImageOutputSet processed = proc.process(input, false);
+            boolean isJunction = false;
+            if (next.getRoadDirections().size() > 1) {
+                isJunction = true;
+            }
+            ImageOutputSet processed = proc.process(input, isJunction);
             Logger.debug("images processed, frame ready");
             return new Frame(processed, next);
         } catch (MalformedURLException e) {
