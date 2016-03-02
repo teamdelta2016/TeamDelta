@@ -54,10 +54,7 @@ public class Engine {
                     0);
             Logger.debug("images retrieved");
             Logger.debug("processing images...");
-            boolean isJunction = false;
-            if (next.getRoadDirections().size() > 1) {
-                isJunction = true;
-            }
+            boolean isJunction = next.getRoadDirections().size() > 1;
             ImageOutputSet processed = proc.process(input, isJunction);
             Logger.debug("images processed, frame ready");
             return new Frame(processed, next);
