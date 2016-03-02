@@ -211,11 +211,6 @@ public class RunningScreenController implements ScreenController {
             e.printStackTrace();
         }
 
-        //TODO: possibly remove this
-        // bind the value of the location text to the value which gets updated when
-        // location changes in LarrySettings
-        //locationText.textProperty().bind(larrySettings.getStringLocation());
-
         nextFrameHandler = new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {

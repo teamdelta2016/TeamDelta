@@ -11,7 +11,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 <?import java.net.URL?>
-<GridPane alignment="CENTER" gridLinesVisible="false" hgap="10.0" styleClass="gridPane" vgap="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="uk.ac.cam.teamdelta.larry.LocationScreenController">
+<GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" gridLinesVisible="false" hgap="10.0"
+          styleClass="gridPane" vgap="10.0" xmlns="http://javafx.com/javafx/2.2"
+          fx:controller="uk.ac.cam.teamdelta.larry.LocationScreenController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
   </columnConstraints>
@@ -65,7 +67,9 @@
           </font>
         </Label>
         <TextField fx:id="locationText" alignment="CENTER_LEFT" onAction="#handleNextAction" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <Label id="errorText" ellipsisString="" font="$x1" prefWidth="-1.0" text="Enter your desired location:" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.rowIndex="0" GridPane.valignment="BOTTOM" />
+        <Label id="errorText" ellipsisString="" font="$x1" prefWidth="-1.0" text="Address or postcode:"
+               textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="LEFT"
+               GridPane.rowIndex="0" GridPane.valignment="BOTTOM"/>
       </GridPane>
     </center>
     <top>
