@@ -40,7 +40,7 @@ public class Engine {
         Logger.debug("engine started");
     }
 
-    public Frame processFrame(JunctionInfo next) {
+    public synchronized Frame processFrame(JunctionInfo next) {
         try {
             Logger.debug("fetching images...");
             ImageInputSet input = fetcher.sendGet(
@@ -64,7 +64,7 @@ public class Engine {
         }
     }
 
-    public JunctionInfo getNextPosition(Location location, Direction direction) {
+    public synchronized JunctionInfo getNextPosition(Location location, Direction direction) {
         return routeFinder.getNextPosition(location, direction);
     }
 
@@ -84,6 +84,7 @@ public class Engine {
     }
 
     public void stop() {
+        cache = null;
         Logger.debug("stopping engine");
     }
 
