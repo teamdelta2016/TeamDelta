@@ -224,6 +224,7 @@ public class RoutePlanner implements RouteFinder {
         
         ClosestRoadInfo initialInfo = getInitialPosition(current_position, current_direction, angleTolerance, (int)singleMoveDist, blackList, roadData);
         if (initialInfo.getMinDistNode() == -1) {
+            Logger.debug("Retry triggered on " + current_position.getLatitude() + ", " + current_position.getLongitude() + " dir: " + current_direction.getDegrees());
             initialInfo = getInitialPosition(current_position, current_direction, 190, (int)singleMoveDist, blackList, initialInfo.getOsmWays());
         }
         if (initialInfo.getMinDistNode() == -1) {
@@ -376,7 +377,7 @@ public class RoutePlanner implements RouteFinder {
         System.out.print("Test of helper functions running... ");
         Logger.debug(planner.testHelperFunctions()?"Succeeded":"FAILED");
         
-        JunctionInfo info = planner.getInitialPosition(new Location(52.206300, 0.110967));
+        JunctionInfo info = planner.getNextPosition(new Location(52.206300, 0.110967), new Direction(120));
         Logger.debug("Next pos: ");
         Logger.debug(info.getNextLocation().getLatitude() + ", " + info.getNextLocation().getLongitude());
         Logger.debug("Primary dir:" + info.getPrimaryDirection().getDegrees() + " Closest dir: " + info.getClosestRoadDirection().getDegrees());
